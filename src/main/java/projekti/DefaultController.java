@@ -3,6 +3,7 @@ package projekti;
 import java.io.IOException;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ public class DefaultController {
     @Autowired
     MessageRepository messageRepo;
 
+    // Haetaan henkilön tiedot.
     @GetMapping("users/{username}")
     public String showUser(Model model, @PathVariable String username) {
         User user = userRepo.findByUsername(username);
@@ -29,6 +31,7 @@ public class DefaultController {
         return "user";
     }
     
+    // Lähetetään uusi viesti.
     @Transactional
     @PostMapping("users/{username}/messages")
     public String postMessage(@RequestParam String messageText,

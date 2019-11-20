@@ -31,6 +31,7 @@ public class Message extends AbstractPersistable<Long> {
     @ManyToMany
     private List<User> likes; // Käyttäjät, jotka ovat tykänneet.
     
+    // Oma konstruktori, jolla voidaan luoda uusi viesti.
     public Message(String message, User owner) {
         this.message = message;
         this.owner = owner;
