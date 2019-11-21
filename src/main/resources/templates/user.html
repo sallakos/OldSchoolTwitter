@@ -8,6 +8,23 @@
 
         <h1 th:text="${name}">John Doe</h1>
         <!--<img th:src="@{/images/{id}/picture(id=${user})}"/>-->
+        
+        <div>
+            You follow:
+            <ul>
+                <li th:each="user : ${followees}"
+                    th:text="${user.follower.name}"></li>
+            </ul>
+        </div>
+        
+        <div>
+            Your followers:
+            <ul>
+                <li th:each="user : ${followers}"
+                    th:text="${user.followee.name}"></li>
+            </ul>
+        </div>
+        
         <div>
             <p>Post a message!</p>
             <form th:action="@{/users/{username}/messages(username=${username})}" method="POST">

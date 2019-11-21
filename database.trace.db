@@ -1,0 +1,3 @@
+2019-11-21 09:51:41 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "SELEVT[*] * FROM USER "; expected "SELECT, SET, SAVEPOINT, SCRIPT, SHUTDOWN, SHOW, {"; SQL statement:
+selevt * from user [42001-197]

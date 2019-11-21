@@ -28,6 +28,8 @@ public class DefaultController {
         User user = userRepo.findByUsername(username);
         model.addAttribute("name", user.getName());
         model.addAttribute("messages", user.getMessages());
+        model.addAttribute("followers", user.getFollowers());
+        model.addAttribute("followees", user.getFollowees());
         return "user";
     }
     

@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Twitter 0.0</title>
+    </head>
+    <body>
+
+        <h1>Rekisteröidy</h1>
+        <form method="POST" th:action="@{/register}">
+            Käyttäjänimi: <input type="text" name="username" id="username" /><br/>
+            Nimi: <input type="text" name="name" id="name" /><br/>
+            <input type="submit"/>            
+        </form>
+
+    </body>
+</html>

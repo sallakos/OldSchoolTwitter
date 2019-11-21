@@ -3,6 +3,8 @@ package projekti;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -15,6 +17,9 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
  *
  * @author Salla Koskinen
  */
+@NamedEntityGraph(name = "User.allUserData",
+                  attributeNodes = {@NamedAttributeNode("messages"),
+                                    /*@NamedAttributeNode("followers")*/})
 @Entity
 @Data
 @NoArgsConstructor
@@ -28,11 +33,11 @@ public class User extends AbstractPersistable<Long> {
 //    private Picture profilePicture;
     
     // Käyttäjällä voi olla monta seuraajaa ja käyttäjä voi seurata montaa.    
-    @ManyToMany
-    private List<User> followees;
+    @OneToMany(mappedBy = "followee")
+    private List<Follow> followees;
 
-    @ManyToMany
-    private List<User> followers;
+    @OneToMany(mappedBy = "follower")
+    private List<Follow> followers;
 
     // Käyttäjällä voi olla monta kuvaa, mutta kuva kuuluu yhdelle käyttäjälle.
     @OneToMany(mappedBy = "owner")
@@ -50,4 +55,10 @@ public class User extends AbstractPersistable<Long> {
     @ManyToMany(mappedBy = "likes")
     private List<Message> likedMessages;
 
+    public User(String username, String name) {
+        this.username = username;
+        this.name = name;
+//        this.profilePicture = defaultProfilePicture;
+    }
+    
 }
