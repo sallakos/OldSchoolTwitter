@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Twitter 0.0</title>
+    </head>
+    <body>
+
+        <h1>Käyttäjät</h1>
+        <ul>
+            <li th:each="user : ${users}">
+                <a th:href="@{/users/{id}(id=${user.username})}" th:text="${user.name} + ' (' + ${user.username} + ')'">Nimi ja käyttäjänimi</a>
+            </li>
+        </ul>
+
+
+    </body>
+</html>

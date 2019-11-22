@@ -18,7 +18,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
  * @author Salla Koskinen
  */
 @NamedEntityGraph(name = "User.allUserData",
-                  attributeNodes = {@NamedAttributeNode("messages"),
+                  attributeNodes = {@NamedAttributeNode("messages")
                                     /*@NamedAttributeNode("followers")*/})
 @Entity
 @Data
@@ -29,8 +29,8 @@ public class User extends AbstractPersistable<Long> {
     private String name;
     private String username;
 
-//    @OneToOne
-//    private Picture profilePicture;
+    @OneToOne
+    private Picture profilePicture;
     
     // Käyttäjällä voi olla monta seuraajaa ja käyttäjä voi seurata montaa.    
     @OneToMany(mappedBy = "followee")
@@ -58,7 +58,6 @@ public class User extends AbstractPersistable<Long> {
     public User(String username, String name) {
         this.username = username;
         this.name = name;
-//        this.profilePicture = defaultProfilePicture;
     }
     
 }

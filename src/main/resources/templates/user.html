@@ -7,24 +7,34 @@
     <body>
 
         <h1 th:text="${name}">John Doe</h1>
-        <!--<img th:src="@{/images/{id}/picture(id=${user})}"/>-->
-        
+        <img th:src="@{/users/{id}/profilepicture(id=${username})}" width="100" />
+
+        <div>
+            <p>Change profile picture:</p>
+            <form method="POST" th:action="@{/users/{username}/profilepicture(username=${username})}" enctype="multipart/form-data">
+                <input type="file" name="file" id="file"/>
+                <input type="submit" value="Add!"/>
+            </form>
+        </div>
+
         <div>
             You follow:
             <ul>
-                <li th:each="user : ${followees}"
-                    th:text="${user.follower.name}"></li>
+                <li th:each="user : ${followees}">
+                    <a th:href="@{/users/{id}(id=${user.follower.username})}" th:text="${user.follower.name}">User</a>
+                </li>
             </ul>
         </div>
-        
+
         <div>
             Your followers:
             <ul>
-                <li th:each="user : ${followers}"
-                    th:text="${user.followee.name}"></li>
+                <li th:each="user : ${followers}">
+                    <a th:href="@{/users/{id}(id=${user.followee.username})}" th:text="${user.followee.name}">User</a>
+                </li>
             </ul>
         </div>
-        
+
         <div>
             <p>Post a message!</p>
             <form th:action="@{/users/{username}/messages(username=${username})}" method="POST">
@@ -32,7 +42,7 @@
                 <input type="submit"/>            
             </form>
         </div>
-        
+
         <div>
             <p>Previous messages:</p>
             <ul>
@@ -41,6 +51,15 @@
                 </li>
             </ul>
         </div>
+
+        <!--        <div>
+                    <p>Your pictures:</p>
+                    <ul>
+                        <li th:each="picture : ${pictures}">
+                            <img th:src="@{/users/{id}/profilepicture(id=${username})}" width="100" />
+                        </li>
+                    </ul>
+                </div>-->
 
 
     </body>
