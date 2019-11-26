@@ -2,6 +2,7 @@ package projekti;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +22,16 @@ public class AccountService {
     
     public List<Account> findAll() {
         return accountRepo.findAll();
+    }
+    
+    public Account currentUser() {
+        String userLoggedIn = SecurityContextHolder.getContext().getAuthentication().getName();
+        return accountRepo.findByUsername(userLoggedIn);
+    }
+    
+    public boolean isCurrentUser(String username) {
+        String userLoggedIn = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userLoggedIn.equals(username);
     }
     
 }

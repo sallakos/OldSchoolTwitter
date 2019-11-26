@@ -1,6 +1,7 @@
 package projekti;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AccountController {
 
     @Autowired
-    AccountService userService;
+    AccountService accountService;
     
     @GetMapping("/register")
     public String register() {
@@ -25,13 +26,13 @@ public class AccountController {
 
         // Jos käyttäjänimi on jo käytössä, ei voida lisätä uutta käyttäjää.
         // Toistaiseksi palautetaan virhesivu, lopuksi tehdään jotain muuta.
-        if (userService.findByUsername(username) == null) {
+        if (accountService.findByUsername(username) == null) {
             return "fail";
         }
         
         // Jos käyttäjänimeä ei löydy, lisätään uusi käyttäjä ja ohjataan
         // käyttäjä omalle profiilisivulleen.
-        userService.register(username, name);
+        accountService.register(username, name);
         return "redirect:/users/" + username;
 
     }
@@ -39,19 +40,36 @@ public class AccountController {
     // Haetaan henkilön tiedot.
     @GetMapping("/users/{username}")
     public String showUser(Model model, @PathVariable String username) {
-        Account user = userService.findByUsername(username);
-        model.addAttribute("name", user.getName());
-        model.addAttribute("messages", user.getMessages());
-        model.addAttribute("followers", user.getFollowers());
-        model.addAttribute("followees", user.getFollowees());
+        Account account = accountService.findByUsername(username);
+        model.addAttribute("name", account.getName());
+        model.addAttribute("messages", account.getMessages());
+        model.addAttribute("followers", account.getFollowers());
+        model.addAttribute("followees", account.getFollowees());
+        model.addAttribute("pictures", account.getPictures());
+        if (accountService.isCurrentUser(username)) {
+            model.addAttribute("test", "Your page!");
+            model.addAttribute("userFollowsWho", "Sinä seuraat");
+            model.addAttribute("whoFollowsUser", "Sinun seuraajasi");
+        } else {
+            model.addAttribute("test", "");
+            model.addAttribute("userFollowsWho", account.getName() + " seuraa");
+            model.addAttribute("whoFollowsUser", "Käyttäjän " + account.getName() + " seuraajat");
+        }
         return "user";
     }
     
     // Haetaan kaikki henkilöt.
     @GetMapping("/users")
     public String allUsers(Model model) {
-        model.addAttribute("users", userService.findAll());
+        model.addAttribute("users", accountService.findAll());
         return "users";
+    }
+    
+    // Haetaan kirjautuneen henkilön profiili kirjautumisen yhteydessä.
+    @GetMapping("/users/user")
+    public String currentUser() {
+        String username = accountService.currentUser().getUsername();
+        return "redirect:/users/" + username;
     }
 
 }

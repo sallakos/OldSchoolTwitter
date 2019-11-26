@@ -18,17 +18,12 @@ public class PictureService {
     PictureRepository pictureRepo;
     
     public byte[] getProfilePicture(String username) throws IOException {
-        
         Account account = accountRepo.findByUsername(username);
-
         if (account.getProfilePicture() != null) {
             return account.getProfilePicture().getPicture();
         }
-       
         byte[] defaultPicture = Files.readAllBytes(Paths.get("C:\\Users\\salla\\Documents\\NetBeansProjects\\mooc-wepa-s19-projekti\\wepa_Projekti\\src\\main\\resources\\public\\img\\default.jpg"));
-        
         return defaultPicture;
-        
     }
     
     public void saveProfilePicture(String username, MultipartFile file) throws IOException {
@@ -40,6 +35,11 @@ public class PictureService {
             pictureRepo.save(picture);
             accountRepo.save(account);
         }
+    }
+    
+    public byte[] getPicture(Long id) throws IOException {
+        Picture picture = pictureRepo.getOne(id);
+        return picture.getPicture();
     }
     
 }

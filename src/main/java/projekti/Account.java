@@ -17,7 +17,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
  *
  * @author Salla Koskinen
  */
-@NamedEntityGraph(name = "User.allUserData",
+@NamedEntityGraph(name = "Account.allUserData",
                   attributeNodes = {@NamedAttributeNode("messages")
                                     /*@NamedAttributeNode("followers")*/})
 @Entity

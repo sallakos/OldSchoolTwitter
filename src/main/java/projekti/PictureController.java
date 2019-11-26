@@ -28,5 +28,11 @@ public class PictureController {
         pictureService.saveProfilePicture(username, file);
         return "redirect:/users/{username}";
     }
+    
+    @GetMapping(path = "/pictures/{id}", produces = "image/jpeg")
+    @ResponseBody
+    public byte[] getPicture(@PathVariable Long id) throws IOException {
+        return pictureService.getPicture(id);
+    }
 
 }

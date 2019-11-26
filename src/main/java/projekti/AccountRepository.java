@@ -13,7 +13,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 //    @EntityGraph(attributePaths = {"followers", "followees", "messages"})
 //    List<User> findAll();
     
-    @EntityGraph(value = "User.allUserData")
+    @EntityGraph(value = "Account.allUserData")
     Account findByUsername(String username);
     
 }

@@ -23,6 +23,11 @@ public class DefaultController {
         return "index";
     }
     
+//    @GetMapping("/login")
+//    public String redirect(@RequestParam logout) {
+//        return "redirect:/";
+//    }
+    
     @PostConstruct
     public void init() {
         
