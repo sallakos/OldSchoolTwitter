@@ -12,17 +12,17 @@ import org.springframework.web.multipart.MultipartFile;
 public class PictureService {
     
     @Autowired
-    UserRepository userRepo;
+    AccountRepository accountRepo;
     
     @Autowired
     PictureRepository pictureRepo;
     
     public byte[] getProfilePicture(String username) throws IOException {
         
-        User user = userRepo.findByUsername(username);
+        Account account = accountRepo.findByUsername(username);
 
-        if (user.getProfilePicture() != null) {
-            return user.getProfilePicture().getPicture();
+        if (account.getProfilePicture() != null) {
+            return account.getProfilePicture().getPicture();
         }
        
         byte[] defaultPicture = Files.readAllBytes(Paths.get("C:\\Users\\salla\\Documents\\NetBeansProjects\\mooc-wepa-s19-projekti\\wepa_Projekti\\src\\main\\resources\\public\\img\\default.jpg"));
@@ -33,12 +33,12 @@ public class PictureService {
     
     public void saveProfilePicture(String username, MultipartFile file) throws IOException {
         if (file.getContentType().equals("image/jpeg")) {
-            User user = userRepo.findByUsername(username);
-            Picture picture = new Picture(file.getBytes(), "", user, new ArrayList<>());
-            user.getPictures().add(picture);
-            user.setProfilePicture(user.getPictures().get(user.getPictures().size() - 1));
+            Account account = accountRepo.findByUsername(username);
+            Picture picture = new Picture(file.getBytes(), "", account, new ArrayList<>());
+            account.getPictures().add(picture);
+            account.setProfilePicture(account.getPictures().get(account.getPictures().size() - 1));
             pictureRepo.save(picture);
-            userRepo.save(user);
+            accountRepo.save(account);
         }
     }
     

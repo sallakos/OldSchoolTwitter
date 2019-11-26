@@ -12,16 +12,16 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class MessageService {
     
-     @Autowired
-    UserRepository userRepo;
+    @Autowired
+    AccountRepository accountRepo;
     
     @Autowired
     MessageRepository messageRepo;
     
     @Transactional
     public void sendMessage(String username, String messageText) {
-        User user = userRepo.findByUsername(username);
-        Message message = new Message(messageText, user);
+        Account account = accountRepo.findByUsername(username);
+        Message message = new Message(messageText, account);
         messageRepo.save(message);
     }
     

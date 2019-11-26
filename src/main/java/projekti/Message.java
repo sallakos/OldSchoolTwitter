@@ -22,17 +22,17 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 public class Message extends AbstractPersistable<Long> {
     
     @ManyToOne
-    private User owner; // Viestin lähettäjä.
+    private Account owner; // Viestin lähettäjä.
     
     private LocalDateTime timeSent; // Viestin lähetysaika.
     private String message; // Viestin sisältö.
     
     // Moni käyttäjä voi tykätä viestistä ja käyttäjä voi tykätä monesta viestistä.
     @ManyToMany
-    private List<User> likes; // Käyttäjät, jotka ovat tykänneet.
+    private List<Account> likes; // Käyttäjät, jotka ovat tykänneet.
     
     // Oma konstruktori, jolla voidaan luoda uusi viesti.
-    public Message(String message, User owner) {
+    public Message(String message, Account owner) {
         this.message = message;
         this.owner = owner;
         this.likes = new ArrayList<>();

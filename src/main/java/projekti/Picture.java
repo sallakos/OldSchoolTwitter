@@ -26,10 +26,10 @@ public class Picture extends AbstractPersistable<Long> {
     
     // Kuva kuuluu yhdelle käyttäjälle, jolla voi olla monta kuvaa.
     @ManyToOne
-    private User owner; // Kuvan omistaja.
+    private Account owner; // Kuvan omistaja.
     
     // Moni käyttäjä voi tykätä kuvasta ja käyttäjä voi tykätä monesta kuvasta.
     @ManyToMany
-    private List<User> likes; // Käyttäjät, jotka ovat tykänneet.
+    private List<Account> likes; // Käyttäjät, jotka ovat tykänneet.
     
 }

@@ -24,10 +24,11 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends AbstractPersistable<Long> {
+public class Account extends AbstractPersistable<Long> {
 
     private String name;
     private String username;
+    private String password;
 
     @OneToOne
     private Picture profilePicture;
@@ -55,9 +56,15 @@ public class User extends AbstractPersistable<Long> {
     @ManyToMany(mappedBy = "likes")
     private List<Message> likedMessages;
 
-    public User(String username, String name) {
+    public Account(String username, String name) {
         this.username = username;
         this.name = name;
+    }
+    
+    public Account(String username, String name, String password) {
+        this.username = username;
+        this.name = name;
+        this.password = password;
     }
     
 }

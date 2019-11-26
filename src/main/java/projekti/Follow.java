@@ -21,10 +21,10 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 public class Follow extends AbstractPersistable<Long> {
 
     @ManyToOne
-    private User follower;
+    private Account follower;
     
     @ManyToOne
-    private User followee;
+    private Account followee;
     
     private LocalDateTime startOfFollow;
     

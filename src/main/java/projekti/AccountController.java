@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class UserController {
+public class AccountController {
 
     @Autowired
-    UserService userService;
+    AccountService userService;
     
     @GetMapping("/register")
     public String register() {
@@ -39,7 +39,7 @@ public class UserController {
     // Haetaan henkilön tiedot.
     @GetMapping("/users/{username}")
     public String showUser(Model model, @PathVariable String username) {
-        User user = userService.findByUsername(username);
+        Account user = userService.findByUsername(username);
         model.addAttribute("name", user.getName());
         model.addAttribute("messages", user.getMessages());
         model.addAttribute("followers", user.getFollowers());
