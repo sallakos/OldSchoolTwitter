@@ -6,10 +6,11 @@
     </head>
     <body>
 
-        <h1 th:text="${name} + ' ' + ${test}">John Doe</h1>
+        <h1 th:text="${name}">OMA NIMI</h1>
+        <p th:if="${!isOwnProfile}">SEURAUSNAPPI TULEE TÄHÄN</p>
         <img th:src="@{/users/{id}/profilepicture(id=${username})}" width="100" />
 
-        <div>
+        <div th:if="${isOwnProfile}">
             <p>Lisää profiilikuva:</p>
             <form method="POST" th:action="@{/users/{username}/profilepicture(username=${username})}" enctype="multipart/form-data">
                 <input type="file" name="file" id="file"/>
@@ -21,7 +22,7 @@
             <span th:text="${userFollowsWho}">KUKA</span>:
             <ul>
                 <li th:each="user : ${followees}">
-                    <a th:href="@{/users/{id}(id=${user.follower.username})}" th:text="${user.follower.name} + ' (since ' + ${user.startOfFollow} + ')'">User</a>
+                    <a th:href="@{/users/{id}(id=${user.follower.username})}" th:text="${user.follower.name} + ' (since ' + ${user.startOfFollow} + ')'">SEURAAJA</a>
                 </li>
             </ul>
         </div>
@@ -30,12 +31,12 @@
             <span th:text="${whoFollowsUser}">KETÄ</span>:
             <ul>
                 <li th:each="user : ${followers}">
-                    <a th:href="@{/users/{id}(id=${user.followee.username})}" th:text="${user.followee.name} + ' (since ' + ${user.startOfFollow} + ')'">User</a>
+                    <a th:href="@{/users/{id}(id=${user.followee.username})}" th:text="${user.followee.name} + ' (since ' + ${user.startOfFollow} + ')'">SEURATTAVA</a>
                 </li>
             </ul>
         </div>
 
-        <div>
+        <div th:if="${isOwnProfile}">
             <p>Kirjoita viesti!</p>
             <form th:action="@{/users/{username}/messages(username=${username})}" method="POST">
                 Viesti: <input type="text" name="messageText" id="newMessage"/><br/>
@@ -48,12 +49,13 @@
             <ul>
                 <li th:each="message : ${messages}">
                     <span th:text="${message.message} + ' (' + ${message.timeSent} + ')'">VIESTI JA AIKA</span>
+                    <span th:if="${!isOwnProfile}">TYKKÄYSNAPPI TULEE TÄHÄN</span>
                 </li>
             </ul>
         </div>
 
         <div>
-            <p>Kuvasi:</p>
+            <p>Kuvat:</p>
             <ul>
                 <li th:each="picture : ${pictures}">
                     <img th:src="@{/pictures/{id}(id=${picture.id})}" width="100" />
@@ -62,7 +64,7 @@
         </div>
 
         <div>
-            <p>Kirjautunut sisään käyttäjänä: <span th:text="${username}">KÄYTTÄJÄ</span></p>
+            <p>Kirjautunut sisään käyttäjänä: <span th:text="${currentUsername}">KÄYTTÄJÄ</span></p>
             <form method="post" action="#" th:action="@{/logout}"><input type="submit" name="logout" value="Kirjaudu ulos"/></form>
         </div>
 

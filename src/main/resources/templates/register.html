@@ -6,12 +6,20 @@
     </head>
     <body>
 
-        <h1>Rekisteröidy</h1>
-        <form method="POST" th:action="@{/register}">
-            Käyttäjänimi: <input type="text" name="username" id="username" /><br/>
-            Nimi: <input type="text" name="name" id="name" /><br/>
-            <input type="submit"/>            
-        </form>
+        <div th:if="${!isRegistered}">
+            <h1>Rekisteröidy</h1>
+            <form method="POST" th:action="@{/register}">
+                Käyttäjänimi: <input type="text" name="username" id="username" /><br/>
+                Nimi: <input type="text" name="name" id="name" /><br/>
+                Salasana: <input type="password" name="password" id="password" /><br/>
+                <input type="submit"/>            
+            </form>
+        </div>
+        
+        <div th:if="${isRegistered}">
+            <p>Olet jo rekisteröitynyt! Jos haluat luoda uuden käyttäjätilin, kirjaudu ensin ulos.</p>
+            <form method="post" action="#" th:action="@{/logout}"><input type="submit" name="logout" value="Kirjaudu ulos"/></form>
+        </div>
 
     </body>
 </html>

@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,5 +32,15 @@ public class Picture extends AbstractPersistable<Long> {
     // Moni käyttäjä voi tykätä kuvasta ja käyttäjä voi tykätä monesta kuvasta.
     @ManyToMany
     private List<Account> likes; // Käyttäjät, jotka ovat tykänneet.
+    
+    // Moni käyttäjä voi kommentoida kuvaa ja käyttäjä voi kommentoida montaa kuvaa.
+    @OneToMany
+    private List<Comment> comments;
+    
+    public Picture(byte[] picture, String description, Account owner) {
+        this.picture = picture;
+        this.description = description;
+        this.owner = owner;
+    }
     
 }

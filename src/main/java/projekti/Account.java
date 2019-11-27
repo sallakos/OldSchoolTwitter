@@ -11,6 +11,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
+import projekti.Follow;
+import projekti.Message;
+import projekti.Picture;
 
 /**
  * Mallintaa sovelluksen käyttäjää.

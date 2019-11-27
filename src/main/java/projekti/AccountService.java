@@ -4,15 +4,19 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import projekti.SecurityConfiguration;
 
 @Service
 public class AccountService {
     
     @Autowired
+    SecurityConfiguration securityConfiguration;
+    
+    @Autowired
     AccountRepository accountRepo;
         
-    public void register(String username, String name) {
-        Account account = new Account(username, name);
+    public void register(String username, String name, String password) {
+        Account account = new Account(username, name, securityConfiguration.passwordEncoder().encode(password));
         accountRepo.save(account);
     }
         
@@ -32,6 +36,13 @@ public class AccountService {
     public boolean isCurrentUser(String username) {
         String userLoggedIn = SecurityContextHolder.getContext().getAuthentication().getName();
         return userLoggedIn.equals(username);
+    }
+    
+    public boolean isRegistered() {
+        if (currentUser() != null) {
+            return true;
+        }
+        return false;
     }
     
 }

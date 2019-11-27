@@ -29,7 +29,7 @@ public class PictureService {
     public void saveProfilePicture(String username, MultipartFile file) throws IOException {
         if (file.getContentType().equals("image/jpeg")) {
             Account account = accountRepo.findByUsername(username);
-            Picture picture = new Picture(file.getBytes(), "", account, new ArrayList<>());
+            Picture picture = new Picture(file.getBytes(), "", account);
             account.getPictures().add(picture);
             account.setProfilePicture(account.getPictures().get(account.getPictures().size() - 1));
             pictureRepo.save(picture);

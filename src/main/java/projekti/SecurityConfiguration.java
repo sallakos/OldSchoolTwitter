@@ -33,12 +33,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/h2-console", "/h2-console/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/").permitAll()
+                .antMatchers("/register").permitAll()
                 .anyRequest().authenticated();
         http.formLogin()
             .defaultSuccessUrl("/users/user", true) // Ohjataan käyttäjä omalle profiilisivulleen kirjautumisen yhteydessä.
                 .permitAll().and()
             .logout().permitAll()
-            .logoutSuccessUrl("/"); // Ohjataan käyttäjä uloskirjautuessa etusivulle.
+                .logoutSuccessUrl("/"); // Ohjataan käyttäjä uloskirjautuessa etusivulle.
     }
 
     @Autowired
