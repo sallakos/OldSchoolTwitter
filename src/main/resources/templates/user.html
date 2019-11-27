@@ -2,12 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8" />
-        <title th:text="${name}">John Doe</title>
+        <title th:text="${name}">OMA NIMI</title>
     </head>
     <body>
 
         <h1 th:text="${name}">OMA NIMI</h1>
-        <p th:if="${!isOwnProfile}">SEURAUSNAPPI TULEE TÄHÄN</p>
+        <form th:if="${!isOwnProfile && !isFriend}" method="post" action="#" th:action="@{/users/{username}/follow(username=${username})}"><input type="submit" name="follow" value="Seuraa"/></form>
+        <form th:if="${!isOwnProfile && isFriend}" method="post" action="#" th:action="@{/users/{username}/unfollow(username=${username})}"><input type="submit" name="unfollow" value="Lopeta seuraaminen"/></form>
         <img th:src="@{/users/{id}/profilepicture(id=${username})}" width="100" />
 
         <div th:if="${isOwnProfile}">
@@ -22,7 +23,7 @@
             <span th:text="${userFollowsWho}">KUKA</span>:
             <ul>
                 <li th:each="user : ${followees}">
-                    <a th:href="@{/users/{id}(id=${user.follower.username})}" th:text="${user.follower.name} + ' (since ' + ${user.startOfFollow} + ')'">SEURAAJA</a>
+                    <a th:href="@{/users/{id}(id=${user.followee.username})}" th:text="${user.followee.name} + ' (since ' + ${user.startOfFollow} + ')'">SEURAAJA</a>
                 </li>
             </ul>
         </div>
@@ -31,7 +32,7 @@
             <span th:text="${whoFollowsUser}">KETÄ</span>:
             <ul>
                 <li th:each="user : ${followers}">
-                    <a th:href="@{/users/{id}(id=${user.followee.username})}" th:text="${user.followee.name} + ' (since ' + ${user.startOfFollow} + ')'">SEURATTAVA</a>
+                    <a th:href="@{/users/{id}(id=${user.follower.username})}" th:text="${user.follower.name} + ' (since ' + ${user.startOfFollow} + ')'">SEURATTAVA</a>
                 </li>
             </ul>
         </div>

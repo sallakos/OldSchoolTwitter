@@ -1,7 +1,7 @@
 package projekti;
 
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +21,7 @@ public class AccountController {
         model.addAttribute("isRegistered", accountService.isRegistered());
         return "register";
     }
-
+    
     @PostMapping("/register")
     public String newUser(@RequestParam String username,
                           @RequestParam String name,
@@ -57,18 +57,35 @@ public class AccountController {
         model.addAttribute("followees", account.getFollowees());
         model.addAttribute("pictures", account.getPictures());
         model.addAttribute("currentUsername", accountService.currentUser().getUsername());
+        model.addAttribute("isFriend", accountService.isFriend(username));
         if (accountService.isCurrentUser(username)) {
-            model.addAttribute("test", "Your page!");
             model.addAttribute("userFollowsWho", "Sinä seuraat");
             model.addAttribute("whoFollowsUser", "Sinun seuraajasi");
             model.addAttribute("isOwnProfile", true);
         } else {
-            model.addAttribute("test", "");
             model.addAttribute("userFollowsWho", account.getName() + " seuraa");
             model.addAttribute("whoFollowsUser", "Käyttäjän " + account.getName() + " seuraajat");
             model.addAttribute("isOwnProfile", false);
         }
         return "user";
+    }
+    
+    // Seurataan henkilöä.
+    @PostMapping("/users/{username}/follow")
+    public String followUser(@PathVariable String username) {
+        Account whoFollows = accountService.currentUser();
+        Account whoToFollow = accountService.findByUsername(username);
+        accountService.follow(whoFollows, whoToFollow, LocalDateTime.now());
+        return "redirect:/users/" + username;
+    }
+    
+    // Lopetetaan seuraaminen.
+    @PostMapping("/users/{username}/unfollow")
+    public String unfollowUser(@PathVariable String username) {
+        Account whoFollows = accountService.currentUser();
+        Account whoToFollow = accountService.findByUsername(username);
+        accountService.unfollow(whoFollows, whoToFollow);
+        return "redirect:/users/" + username;
     }
     
     // Haetaan kaikki henkilöt.

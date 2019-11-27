@@ -37,10 +37,10 @@ public class Account extends AbstractPersistable<Long> {
     private Picture profilePicture;
     
     // Käyttäjällä voi olla monta seuraajaa ja käyttäjä voi seurata montaa.    
-    @OneToMany(mappedBy = "followee")
+    @OneToMany(mappedBy = "follower")
     private List<Follow> followees;
 
-    @OneToMany(mappedBy = "follower")
+    @OneToMany(mappedBy = "followee")
     private List<Follow> followers;
 
     // Käyttäjällä voi olla monta kuvaa, mutta kuva kuuluu yhdelle käyttäjälle.
