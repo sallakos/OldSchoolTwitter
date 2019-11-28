@@ -5,6 +5,7 @@ package projekti;
  *
  * @author Salla Koskinen
  */
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,5 +13,8 @@ import org.springframework.data.repository.query.Param;
 public interface FollowRepository extends JpaRepository<Follow, Long> {
     
     Follow findByFollowerAndFollowee(Account follower, Account followee);
-       
+    
+//    @Query(value = "SELECT followee_id FROM Follow WHERE follower_id = :followerId", nativeQuery = true)
+//    List<Long> findFollowersByUserId(@Param{"followerId"} Long followerId);
+    
 }

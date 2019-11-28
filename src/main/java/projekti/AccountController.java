@@ -50,17 +50,14 @@ public class AccountController {
     // Haetaan henkilön tiedot.
     @GetMapping("/{username}")
     public String showUser(Model model, @PathVariable String username) {
-        System.out.println("SQL by AccountController / findByUsername():");
         Account account = accountService.findByUsername(username); // SQL: Kenen sivu.
         model.addAttribute("name", account.getName());
         model.addAttribute("messages", account.getMessages());
         model.addAttribute("followers", account.getFollowers());
         model.addAttribute("followees", account.getFollowees());
         model.addAttribute("pictures", account.getPictures());
-        System.out.println("SQL by AccountController / currentUser():");
         model.addAttribute("currentUsername", accountService.currentUser().getUsername()); // SQL: Kuka on kirjautunut.
         model.addAttribute("isOwnProfile", accountService.isCurrentUser(username));
-        System.out.println("SQL by AccountController / isFriend():");
         model.addAttribute("isFriend", accountService.isFriend(username));
         if (accountService.isCurrentUser(username)) {
             model.addAttribute("userFollowsWho", "Sinä seuraat");

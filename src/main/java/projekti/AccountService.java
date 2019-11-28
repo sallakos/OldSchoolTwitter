@@ -41,6 +41,7 @@ public class AccountService {
     }
         
     public Account findByUsername(String username) {
+        System.out.println("SQL by AccountService / findByUsername():");
         return accountRepo.findByUsername(username);
     }
     
@@ -53,6 +54,7 @@ public class AccountService {
     }
     
     public Account currentUser() {
+        System.out.println("SQL by AccountService / currentUser():");
         String userLoggedIn = SecurityContextHolder.getContext().getAuthentication().getName();
         return accountRepo.findByUsername(userLoggedIn);
     }

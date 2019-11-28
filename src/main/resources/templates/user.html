@@ -12,7 +12,7 @@
         <img th:src="@{/{id}/profilepicture(id=${username})}" width="100" />
 
         <div>
-            <span th:text="${userFollowsWho}">KUKA</span>:
+            <span th:text="${userFollowsWho}">KEITÄ</span>:
             <ul>
                 <li th:each="user : ${followees}">
                     <a th:href="@{/{username}(username=${user.followee.username})}" th:text="${user.followee.name} + ' (since ' + ${user.startOfFollow} + ')'">SEURAAJA</a>
@@ -21,7 +21,7 @@
         </div>
 
         <div>
-            <span th:text="${whoFollowsUser}">KETÄ</span>:
+            <span th:text="${whoFollowsUser}">KETKÄ</span>:
             <ul>
                 <li th:each="user : ${followers}">
                     <a th:href="@{/{username}(username=${user.follower.username})}" th:text="${user.follower.name} + ' (since ' + ${user.startOfFollow} + ')'">SEURATTAVA</a>
@@ -55,7 +55,7 @@
                 <form th:if="${isFriend}" method="POST" th:action="@{/{username}/messages/like(username=${username})}">
                     <button name="messageId" th:value="${message.id}" type="submit">Tykkää</button>
                 </form>
-                <form th:if="${isFriend}" method="POST" th:action="@{/{username}/messages/comment(username=${username})}">
+                <form th:if="${isOwnProfile || isFriend}" method="POST" th:action="@{/{username}/messages/comment(username=${username})}">
                     Kommentoi: <input type="text" name="commentText" id="newComment"/>
                     <button name="messageId" th:value="${message.id}" type="submit">Lähetä kommentti!</button>
                 </form>
@@ -85,7 +85,7 @@
                 <form th:if="${isFriend}" method="POST" th:action="@{/{username}/pictures/like(username=${username})}">
                     <button name="pictureId" th:value="${picture.id}" type="submit">Tykkää</button>
                 </form>
-                <form th:if="${isFriend}" method="POST" th:action="@{/{username}/pictures/comment(username=${username})}">
+                <form th:if="${isOwnProfile || isFriend}" method="POST" th:action="@{/{username}/pictures/comment(username=${username})}">
                     Kommentoi: <input type="text" name="commentText" id="newComment"/>
                     <button name="pictureId" th:value="${picture.id}" type="submit">Lähetä kommentti!</button>
                 </form>
