@@ -31,6 +31,7 @@ public class AccountService {
     public void follow(Account follower, Account followee, LocalDateTime startOfFollow) {
         Follow follow = new Follow(follower, followee, startOfFollow);
         followRepo.save(follow);
+        System.out.println("SQL by AccountService.follow()");
     }
     
     @Transactional
@@ -42,6 +43,10 @@ public class AccountService {
     public Account findByUsername(String username) {
         return accountRepo.findByUsername(username);
     }
+    
+//    public Account findByUsernameAllData(String username) {
+//        return accountRepo.allUserData(username);
+//    }
     
     public List<Account> findAll() {
         return accountRepo.findAll();

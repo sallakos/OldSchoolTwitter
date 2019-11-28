@@ -7,23 +7,15 @@
     <body>
 
         <h1 th:text="${name}">OMA NIMI</h1>
-        <form th:if="${!isOwnProfile && !isFriend}" method="post" action="#" th:action="@{/users/{username}/follow(username=${username})}"><input type="submit" name="follow" value="Seuraa"/></form>
-        <form th:if="${!isOwnProfile && isFriend}" method="post" action="#" th:action="@{/users/{username}/unfollow(username=${username})}"><input type="submit" name="unfollow" value="Lopeta seuraaminen"/></form>
-        <img th:src="@{/users/{id}/profilepicture(id=${username})}" width="100" />
-
-        <div th:if="${isOwnProfile}">
-            <p>Lisää profiilikuva:</p>
-            <form method="POST" th:action="@{/users/{username}/profilepicture(username=${username})}" enctype="multipart/form-data">
-                <input type="file" name="file" id="file"/>
-                <input type="submit" value="Lisää"/>
-            </form>
-        </div>
+        <form th:if="${!isOwnProfile && !isFriend}" method="POST" th:action="@{/{username}/follow(username=${username})}"><input type="submit" name="follow" value="Seuraa"/></form>
+        <form th:if="${!isOwnProfile && isFriend}" method="POST" th:action="@{/{username}/unfollow(username=${username})}"><input type="submit" name="unfollow" value="Lopeta seuraaminen"/></form>
+        <img th:src="@{/{id}/profilepicture(id=${username})}" width="100" />
 
         <div>
             <span th:text="${userFollowsWho}">KUKA</span>:
             <ul>
                 <li th:each="user : ${followees}">
-                    <a th:href="@{/users/{id}(id=${user.followee.username})}" th:text="${user.followee.name} + ' (since ' + ${user.startOfFollow} + ')'">SEURAAJA</a>
+                    <a th:href="@{/{username}(username=${user.followee.username})}" th:text="${user.followee.name} + ' (since ' + ${user.startOfFollow} + ')'">SEURAAJA</a>
                 </li>
             </ul>
         </div>
@@ -32,41 +24,87 @@
             <span th:text="${whoFollowsUser}">KETÄ</span>:
             <ul>
                 <li th:each="user : ${followers}">
-                    <a th:href="@{/users/{id}(id=${user.follower.username})}" th:text="${user.follower.name} + ' (since ' + ${user.startOfFollow} + ')'">SEURATTAVA</a>
+                    <a th:href="@{/{username}(username=${user.follower.username})}" th:text="${user.follower.name} + ' (since ' + ${user.startOfFollow} + ')'">SEURATTAVA</a>
                 </li>
             </ul>
         </div>
 
         <div th:if="${isOwnProfile}">
             <p>Kirjoita viesti!</p>
-            <form th:action="@{/users/{username}/messages(username=${username})}" method="POST">
+            <form method="POST" th:action="@{/{username}/messages(username=${username})}">
                 Viesti: <input type="text" name="messageText" id="newMessage"/><br/>
                 <input type="submit"/>            
             </form>
         </div>
 
         <div>
-            <p>Aiemmat viestit:</p>
-            <ul>
-                <li th:each="message : ${messages}">
-                    <span th:text="${message.message} + ' (' + ${message.timeSent} + ')'">VIESTI JA AIKA</span>
-                    <span th:if="${!isOwnProfile}">TYKKÄYSNAPPI TULEE TÄHÄN</span>
-                </li>
-            </ul>
+            <h2>Aiemmat viestit:</h2>
+            <div th:each="message : ${messages}">
+                <p th:text="${message.message} + ' (' + ${message.timeSent} + ')'">VIESTI JA AIKA</p>
+                <p>Tykkääjät:</p>
+                <ul th:each="like : ${message.likes}">
+                    <li th:text="${like.name}">TYKKÄÄJÄ</li>
+                </ul>
+                <p>Kommentit:</p>
+                <ul th:each="comment : ${message.comments}">
+                    <li th:text="${comment.comment}">KOMMENTTI</li>
+                    <ul>
+                        <li th:text="${comment.commenter.name} + ' (' + ${comment.timeSent} + ')'">KOMMENTOIJA</li>
+                    </ul>
+                </ul>
+                <form th:if="${isFriend}" method="POST" th:action="@{/{username}/messages/like(username=${username})}">
+                    <button name="messageId" th:value="${message.id}" type="submit">Tykkää</button>
+                </form>
+                <form th:if="${isFriend}" method="POST" th:action="@{/{username}/messages/comment(username=${username})}">
+                    Kommentoi: <input type="text" name="commentText" id="newComment"/>
+                    <button name="messageId" th:value="${message.id}" type="submit">Lähetä kommentti!</button>
+                </form>
+            </div>
         </div>
 
+        <hr />
+
         <div>
-            <p>Kuvat:</p>
-            <ul>
-                <li th:each="picture : ${pictures}">
-                    <img th:src="@{/pictures/{id}(id=${picture.id})}" width="100" />
-                </li>
-            </ul>
+            <h2>Kuvat:</h2>
+            <div th:each="picture : ${pictures}">
+                <img th:src="@{/{username}/pictures/{id}(username=${username}, id=${picture.id})}" width="100" />
+                <form th:if="${isOwnProfile}" method="POST" th:action="@{/{username}/profilepicture(username=${username})}">
+                    <button name="profilePictureId" th:value="${picture.id}" type="submit">Aseta profiilikuvaksi</button>
+                </form>
+                <p>Tykkääjät:</p>
+                <ul th:each="like : ${picture.likes}">
+                    <li th:text="${like.name}">TYKKÄÄJÄ</li>
+                </ul>
+                <p>Kommentit:</p>
+                <ul th:each="comment : ${picture.comments}">
+                    <li th:text="${comment.comment}">KOMMENTTI</li>
+                    <ul>
+                        <li th:text="${comment.commenter.name} + ' (' + ${comment.timeSent} + ')'">KOMMENTOIJA</li>
+                    </ul>
+                </ul>
+                <form th:if="${isFriend}" method="POST" th:action="@{/{username}/pictures/like(username=${username})}">
+                    <button name="pictureId" th:value="${picture.id}" type="submit">Tykkää</button>
+                </form>
+                <form th:if="${isFriend}" method="POST" th:action="@{/{username}/pictures/comment(username=${username})}">
+                    Kommentoi: <input type="text" name="commentText" id="newComment"/>
+                    <button name="pictureId" th:value="${picture.id}" type="submit">Lähetä kommentti!</button>
+                </form>
+            </div>
         </div>
+
+        <div th:if="${isOwnProfile}">
+            <p>Lisää kuva:</p>
+            <form method="POST" th:action="@{/{username}/pictures(username=${username})}" enctype="multipart/form-data">
+                <input type="file" name="file" id="file"/>
+                <input type="submit" value="Lisää"/>
+            </form>
+        </div>
+
+        <hr />
 
         <div>
             <p>Kirjautunut sisään käyttäjänä: <span th:text="${currentUsername}">KÄYTTÄJÄ</span></p>
-            <form method="post" action="#" th:action="@{/logout}"><input type="submit" name="logout" value="Kirjaudu ulos"/></form>
+            <form method="POST" th:action="@{/logout}"><input type="submit" name="logout" value="Kirjaudu ulos"/></form>
         </div>
 
 

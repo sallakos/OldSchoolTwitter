@@ -18,10 +18,29 @@ public class MessageService {
     @Autowired
     MessageRepository messageRepo;
     
+    @Autowired
+    CommentRepository commentRepo;
+    
     @Transactional
     public void sendMessage(String username, String messageText) {
         Account account = accountRepo.findByUsername(username);
         Message message = new Message(messageText, account);
+        messageRepo.save(message);
+    }
+    
+    @Transactional
+    public void likeAMessage(String username, Long messageId) {
+        Account account = accountRepo.findByUsername(username);
+        Message message = messageRepo.getOne(messageId);
+        message.getLikes().add(account);
+        messageRepo.save(message);
+    }
+    
+    @Transactional
+    public void commentAMessage(Comment comment, Long messageId) {
+        commentRepo.save(comment);
+        Message message = messageRepo.getOne(messageId);
+        message.getComments().add(comment);
         messageRepo.save(message);
     }
     

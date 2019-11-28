@@ -31,7 +31,7 @@ public class AccountController {
         // Käyttäjän ei pitäisi edes nähdä tätä sivua, mutta estetään myös POST.
         if (accountService.isRegistered()) {
             String currentUsername = accountService.currentUser().getUsername();
-            return "redirect:/users/" + currentUsername;
+            return "redirect:/" + currentUsername;
         }
         
         // Jos käyttäjänimi on jo käytössä, ei voida lisätä uutta käyttäjää.
@@ -43,49 +43,52 @@ public class AccountController {
         // Jos käyttäjänimeä ei löydy, lisätään uusi käyttäjä ja ohjataan
         // käyttäjä omalle profiilisivulleen.
         accountService.register(username, name, password);
-        return "redirect:/users/" + username;
+        return "redirect:/" + username;
 
     }
     
     // Haetaan henkilön tiedot.
-    @GetMapping("/users/{username}")
+    @GetMapping("/{username}")
     public String showUser(Model model, @PathVariable String username) {
-        Account account = accountService.findByUsername(username);
+        System.out.println("SQL by AccountController / findByUsername():");
+        Account account = accountService.findByUsername(username); // SQL: Kenen sivu.
         model.addAttribute("name", account.getName());
         model.addAttribute("messages", account.getMessages());
         model.addAttribute("followers", account.getFollowers());
         model.addAttribute("followees", account.getFollowees());
         model.addAttribute("pictures", account.getPictures());
-        model.addAttribute("currentUsername", accountService.currentUser().getUsername());
+        System.out.println("SQL by AccountController / currentUser():");
+        model.addAttribute("currentUsername", accountService.currentUser().getUsername()); // SQL: Kuka on kirjautunut.
+        model.addAttribute("isOwnProfile", accountService.isCurrentUser(username));
+        System.out.println("SQL by AccountController / isFriend():");
         model.addAttribute("isFriend", accountService.isFriend(username));
         if (accountService.isCurrentUser(username)) {
             model.addAttribute("userFollowsWho", "Sinä seuraat");
             model.addAttribute("whoFollowsUser", "Sinun seuraajasi");
-            model.addAttribute("isOwnProfile", true);
         } else {
             model.addAttribute("userFollowsWho", account.getName() + " seuraa");
             model.addAttribute("whoFollowsUser", "Käyttäjän " + account.getName() + " seuraajat");
-            model.addAttribute("isOwnProfile", false);
         }
+        System.out.println("LOPPU");
         return "user";
     }
     
     // Seurataan henkilöä.
-    @PostMapping("/users/{username}/follow")
+    @PostMapping("/{username}/follow")
     public String followUser(@PathVariable String username) {
         Account whoFollows = accountService.currentUser();
         Account whoToFollow = accountService.findByUsername(username);
         accountService.follow(whoFollows, whoToFollow, LocalDateTime.now());
-        return "redirect:/users/" + username;
+        return "redirect:/" + username;
     }
     
     // Lopetetaan seuraaminen.
-    @PostMapping("/users/{username}/unfollow")
+    @PostMapping("/{username}/unfollow")
     public String unfollowUser(@PathVariable String username) {
         Account whoFollows = accountService.currentUser();
         Account whoToFollow = accountService.findByUsername(username);
         accountService.unfollow(whoFollows, whoToFollow);
-        return "redirect:/users/" + username;
+        return "redirect:/" + username;
     }
     
     // Haetaan kaikki henkilöt.
@@ -96,10 +99,10 @@ public class AccountController {
     }
     
     // Haetaan kirjautuneen henkilön profiili kirjautumisen yhteydessä.
-    @GetMapping("/users/user")
+    @GetMapping("/user")
     public String currentUser() {
         String username = accountService.currentUser().getUsername();
-        return "redirect:/users/" + username;
+        return "redirect:/" + username;
     }
 
 }

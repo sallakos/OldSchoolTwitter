@@ -36,7 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register").permitAll()
                 .anyRequest().authenticated();
         http.formLogin()
-            .defaultSuccessUrl("/users/user", true) // Ohjataan käyttäjä omalle profiilisivulleen kirjautumisen yhteydessä.
+            .defaultSuccessUrl("/user", true) // Ohjataan käyttäjä omalle profiilisivulleen kirjautumisen yhteydessä.
                 .permitAll().and()
             .logout().permitAll()
                 .logoutSuccessUrl("/"); // Ohjataan käyttäjä uloskirjautuessa etusivulle.

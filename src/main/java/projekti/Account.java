@@ -21,7 +21,7 @@ import projekti.Picture;
  * @author Salla Koskinen
  */
 @NamedEntityGraph(name = "Account.allUserData",
-                  attributeNodes = {@NamedAttributeNode("messages")
+                  attributeNodes = {@NamedAttributeNode("pictures")
                                     /*@NamedAttributeNode("followers")*/})
 @Entity
 @Data
@@ -33,6 +33,9 @@ public class Account extends AbstractPersistable<Long> {
     private String username;
     private String password;
 
+    // private Long profilePictureId;
+    // private Integer profilePictureIndex;
+    
     @OneToOne
     private Picture profilePicture;
     
