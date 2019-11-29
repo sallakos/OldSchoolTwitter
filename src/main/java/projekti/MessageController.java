@@ -33,7 +33,8 @@ public class MessageController {
     @PostMapping("/{username}/messages/like")
     public String likeAMessage(@RequestParam Long messageId,
                                @PathVariable String username) {
-        if (!accountService.currentUser().getUsername().equals(username) && accountService.isFriend(username)) {
+        Account account = accountService.findByUsername(username);
+        if (accountService.friendStatus(account) == 1) {
             if (accountService.currentUser().getLikedMessages().contains(messageService.findById(messageId))) {
                 messageService.unlikeAMessage(accountService.currentUser().getUsername(), messageId);
             } else {
@@ -48,7 +49,8 @@ public class MessageController {
     public String commentAMessage(@RequestParam Long messageId,
                                   @RequestParam String commentText,
                                   @PathVariable String username) {
-        if (accountService.currentUser().getUsername().equals(username) || accountService.isFriend(username)) {
+        Account account = accountService.findByUsername(username);
+        if (accountService.friendStatus(account) >= 1) {
             Comment comment = new Comment(commentText, LocalDateTime.now(), accountService.currentUser());
             messageService.commentAMessage(comment, messageId);
         }

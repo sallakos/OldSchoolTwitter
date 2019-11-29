@@ -11,13 +11,15 @@ import org.springframework.data.repository.query.Param;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
     
+    // Haetaan 25 uusinta käyttäjän ja käyttäjän seuraamien käyttäjien viestiä.
     @Query(value = "SELECT DISTINCT Message.id, message, time_sent, owner_id FROM MESSAGE " +
                    "JOIN Account ON Account.id = owner_id " +
-                   "JOIN Follow ON follower_id = Account.id " +
-                   "WHERE follower_id = :id OR followee_id = :id " +
+                   "JOIN Follow ON followee_id = Account.id " +
+                   "WHERE follower_id = 1 OR owner_id = 1 AND Follow.pending = false " +
                    "ORDER BY time_sent DESC LIMIT 25", nativeQuery = true)
     List<Message> getAllMessages(@Param("id") Long id);
     
+    // Haetaan 25 uusinta käyttäjän viestiä.
     @Query(value = "SELECT * FROM Message WHERE owner_id = :id ORDER BY time_sent DESC LIMIT 25", nativeQuery = true)
     List<Message> getUserMessages(@Param("id") Long id);
     

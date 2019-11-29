@@ -21,14 +21,14 @@ public class PictureService {
     @Autowired
     CommentRepository commentRepo;
 
-    public byte[] getProfilePicture(String username) throws IOException {
-        Account account = accountRepo.findByUsername(username);
-        if (account.getProfilePicture() != null) {
-            return account.getProfilePicture().getPicture();
-        }
-        byte[] defaultPicture = Files.readAllBytes(Paths.get("C:\\Users\\salla\\Documents\\NetBeansProjects\\mooc-wepa-s19-projekti\\wepa_Projekti\\src\\main\\resources\\public\\img\\default.jpg"));
-        return defaultPicture;
-    }
+//    public byte[] getProfilePicture(String username) throws IOException {
+//        Account account = accountRepo.findByUsername(username);
+//        if (account.getProfilePicture() != null) {
+//            return account.getProfilePicture().getPicture();
+//        }
+//        byte[] defaultPicture = Files.readAllBytes(Paths.get("C:\\Users\\salla\\Documents\\NetBeansProjects\\mooc-wepa-s19-projekti\\wepa_Projekti\\src\\main\\resources\\public\\img\\default.jpg"));
+//        return defaultPicture;
+//    }
 
 //    public void saveProfilePicture(String username, MultipartFile file) throws IOException {
 //        if (file.getContentType().equals("image/jpeg")) {

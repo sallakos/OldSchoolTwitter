@@ -28,6 +28,7 @@ public class AccountController {
         return "register";
     }
 
+    // Lähetetään rekisteröityminen. Tämän jälkeen käyttäjän tulee vielä kirjautua sisään.
     @PostMapping("/register")
     public String newUser(@RequestParam String username,
             @RequestParam String name,
@@ -56,31 +57,30 @@ public class AccountController {
     // Haetaan henkilön tiedot.
     @GetMapping("/{username}")
     public String showUser(Model model, @PathVariable String username) {
-        Account account = accountService.findByUsername(username); // SQL: Kenen sivu.
-        Account currentUser = accountService.currentUser();
+        Account account = accountService.findByUsername(username); // SQL
+        Account currentUser = accountService.currentUser(); // SQL
         model.addAttribute("name", account.getName());
         model.addAttribute("followers", account.getFollowers());
         model.addAttribute("followees", account.getFollowees());
         model.addAttribute("pictures", account.getPictures());
-        model.addAttribute("currentUsername", currentUser.getUsername()); // SQL: Kuka on kirjautunut.
-        model.addAttribute("isFriend", accountService.isFriend(username));
-        model.addAttribute("isPendingRequest", accountService.isPendingRequest(username));
+        model.addAttribute("profilePicture", account.getProfilePicture());
+        model.addAttribute("currentUsername", currentUser.getUsername());
         model.addAttribute("currentUserLikedMessages", currentUser.getLikedMessages());
         model.addAttribute("currentUserLikedPictures", currentUser.getLikedPictures());
+        model.addAttribute("friendStatus", accountService.friendStatus(account)); // SQL, jos vieras sivu, niin kaksi kyselyä.
 //        model.addAttribute("messageComments", )
         if (accountService.isCurrentUser(username)) {
             model.addAttribute("userFollowsWho", "Sinä seuraat");
             model.addAttribute("whoFollowsUser", "Sinun seuraajasi");
-            model.addAttribute("messages", messageService.getAllMessages(username));
-            model.addAttribute("isOwnProfile", true);
+            model.addAttribute("messages", messageService.getAllMessages(account)); // SQL MIKSI 3 kyselyä????
+            System.out.println("Tähän loppui.");
         } else {
             model.addAttribute("userFollowsWho", account.getName() + " seuraa");
             model.addAttribute("whoFollowsUser", "Käyttäjän " + account.getName() + " seuraajat");
 //            Pageable pageable = PageRequest.of(0, 25, Sort.by("timeSent").descending());
-            model.addAttribute("messages", messageService.getUserMessages(username));
-            model.addAttribute("isOwnProfile", false);
+            model.addAttribute("messages", messageService.getUserMessages(account)); // SQL
+            System.out.println("Tähän loppui.");
         }
-        System.out.println("LOPPU");
         return "user";
     }
 
@@ -103,9 +103,12 @@ public class AccountController {
     }
 
     // Haetaan kaikki henkilöt.
-    @GetMapping("/users")
+    @GetMapping("/kayttajat")
     public String allUsers(Model model) {
+        Account currentUser = accountService.currentUser(); // SQL
         model.addAttribute("users", accountService.findAll());
+        model.addAttribute("followedUsernames", currentUser.getFollowedUsernames());
+//        model.addAttribute("friendStatus", accountService.friendStatus(account))
         return "users";
     }
 

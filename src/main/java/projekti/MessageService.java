@@ -57,13 +57,15 @@ public class MessageService {
         return messageRepo.getOne(id);
     }
     
-    public List<Message> getAllMessages(String username) {
-        Long userId = accountRepo.findByUsername(username).getId();
+    public List<Message> getAllMessages(Account account) {
+        System.out.println("SQL by MessageService / getAllMessages():");
+        Long userId = account.getId();
         return messageRepo.getAllMessages(userId);
     }
     
-    public List<Message> getUserMessages(String username) {
-        Long userId = accountRepo.findByUsername(username).getId();
+    public List<Message> getUserMessages(Account account) {
+        System.out.println("SQL by MessageService / getUserMessages():");
+        Long userId = account.getId();
         return messageRepo.getUserMessages(userId);
     }
     

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,12 +21,32 @@ public class PictureController {
     @Autowired
     PictureService pictureService;
     
-    // Haetaan käyttäjän profiilikuva.
-    @GetMapping(path = "/{username}/profilepicture", produces = "image/jpeg")
-    @ResponseBody
-    public byte[] getProfilePicture(@PathVariable String username) throws IOException {
-        return pictureService.getProfilePicture(username);
+    // Haetaan henkilön kuvagalleria.
+    @GetMapping("/{username}/kuvat")
+    public String showUser(Model model, @PathVariable String username) {
+        Account account = accountService.findByUsername(username); // SQL
+        Account currentUser = accountService.currentUser(); // SQL
+        model.addAttribute("currentUsername", currentUser.getUsername());
+        boolean isAllowed = accountService.friendStatus(account) >= 1;
+        System.out.println(isAllowed);
+        if (isAllowed) {
+            model.addAttribute("name", account.getName());
+            model.addAttribute("pictures", account.getPictures());
+            model.addAttribute("profilePictureId", account.getProfilePicture() != null ? account.getProfilePicture().getId() : (Long) 0L);
+            model.addAttribute("currentUserLikedMessages", currentUser.getLikedMessages());
+            model.addAttribute("currentUserLikedPictures", currentUser.getLikedPictures());
+            model.addAttribute("friendStatus", accountService.friendStatus(account)); // SQL, jos vieras sivu, niin kaksi kyselyä.
+            return "galleria";
+        }
+        return "forbidden";
     }
+    
+    // Haetaan käyttäjän profiilikuva.
+//    @GetMapping(path = "/{username}/profilepicture", produces = "image/jpeg")
+//    @ResponseBody
+//    public byte[] getProfilePicture(@PathVariable String username) throws IOException {
+//        return pictureService.getProfilePicture(username);
+//    }
     
     // Lisätään profiilikuva. Sallitaan POST vain, jos käyttäjä on kirjautunut sisään.
     @PostMapping("/{username}/profilepicture")
@@ -38,14 +59,14 @@ public class PictureController {
     }
     
     // Haetaan käyttäjän yksittäinen kuva.
-    @GetMapping(path = "/{username}/pictures/{id}", produces = "image/jpeg")
+    @GetMapping(path = "/{username}/kuvat/{id}", produces = "image/jpeg")
     @ResponseBody
     public byte[] getPicture(@PathVariable Long id) throws IOException {
         return pictureService.getPicture(id);
     }
     
     // Lisätään profiilikuva. Sallitaan POST vain, jos käyttäjä on kirjautunut sisään.
-    @PostMapping("/{username}/pictures")
+    @PostMapping("/{username}/kuvat")
     public String addPicture(@RequestParam("file") MultipartFile file,
                              @PathVariable String username) throws IOException {
         if (accountService.isCurrentUser(username)) {
@@ -56,29 +77,31 @@ public class PictureController {
     
     // Tykätään kuvasta. Tykkääminen onnistuu vain, jos ei yritetä tykätä omasta
     // tai ei seurattavan kuvasta.
-    @PostMapping("/{username}/pictures/like")
+    @PostMapping("/{username}/kuvat/like")
     public String likeAPicture(@RequestParam Long pictureId,
                                @PathVariable String username) {
-        if (!accountService.currentUser().getUsername().equals(username) && accountService.isFriend(username)) {
+        Account account = accountService.findByUsername(username);
+        if (accountService.friendStatus(account) == 1) {
             if (accountService.currentUser().getLikedPictures().contains(pictureService.findById(pictureId))) {
                 pictureService.unlikeAPicture(accountService.currentUser().getUsername(), pictureId);
             } else {
                 pictureService.likeAPicture(accountService.currentUser().getUsername(), pictureId);
             }
         }
-        return "redirect:/{username}";
+        return "redirect:/{username}/galleria";
     }
     
     // Kommentoidaan kuvaa. Vain omaa tai kavereiden kuvaa voi kommentoida.
-    @PostMapping("/{username}/pictures/comment")
+    @PostMapping("/{username}/kuvat/comment")
     public String commentAPicture(@RequestParam Long pictureId,
                                   @RequestParam String commentText,
                                   @PathVariable String username) {
-        if (accountService.currentUser().getUsername().equals(username) || accountService.isFriend(username)) {
+        Account account = accountService.findByUsername(username);
+        if (accountService.friendStatus(account) >= 1) {
             Comment comment = new Comment(commentText, LocalDateTime.now(), accountService.currentUser());
             pictureService.commentAPicture(comment, pictureId);
         }
-        return "redirect:/{username}";
+        return "redirect:/{username}/kuvat";
     }
 
 }

@@ -7,11 +7,14 @@
     <body>
 
         <h1>Käyttäjät</h1>
-        <ul>
-            <li th:each="user : ${users}">
-                <a th:href="@{/users/{id}(id=${user.username})}" th:text="${user.name} + ' (' + ${user.username} + ')'">Nimi ja käyttäjänimi</a>
-            </li>
-        </ul>
+        <div th:each="user : ${users}" style="border: 1px solid black">
+            <p><a th:href="@{/{id}(id=${user.username})}" th:text="${user.name} + ' (' + ${user.username} + ')'">Nimi ja käyttäjänimi</a></p>
+            <img th:if="${user.profilePicture == null}" src="/img/default.jpg" width="100" />
+            <img th:if="${user.profilePicture != null}" th:src="@{/{username}/kuvat/{id}(username=${user.username}, id=${user.profilePicture.id})}" width="100" />
+            <form th:if="${!followedUsernames.containsKey(user.username)}" method="POST" th:action="@{/{username}/follow(username=${user.username})}"><input type="submit" name="follow" value="Seuraa"/></form>
+            <form th:if="${followedUsernames.containsKey(user.username) && followedUsernames.get(user.username)}" method="POST" th:action="@{/{username}/unfollow(username=${user.username})}"><input type="submit" name="unfollow" value="Peru seuraamispyyntö"/></form>
+            <form th:if="${followedUsernames.containsKey(user.username) && !followedUsernames.get(user.username)}" method="POST" th:action="@{/{username}/unfollow(username=${user.username})}"><input type="submit" name="unfollow" value="Lopeta seuraaminen"/></form>
+        </div>
 
 
     </body>

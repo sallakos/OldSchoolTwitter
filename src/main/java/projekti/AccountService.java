@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import projekti.SecurityConfiguration;
@@ -50,7 +51,8 @@ public class AccountService {
 //    }
     
     public List<Account> findAll() {
-        return accountRepo.findAll();
+        Sort sort = Sort.by("name");
+        return accountRepo.findAll(sort);
     }
     
     public Account currentUser() {
@@ -60,6 +62,7 @@ public class AccountService {
     }
     
     public boolean isCurrentUser(String username) {
+        System.out.println("SQL by AccountService / isCurrentUser():");
         String userLoggedIn = SecurityContextHolder.getContext().getAuthentication().getName();
         return userLoggedIn.equals(username);
     }
@@ -71,32 +74,52 @@ public class AccountService {
         return false;
     }
     
-    public boolean isFriend(String username) {
-        if (isCurrentUser(username)) {
-            return false;
-        }
-        for (Follow follow : currentUser().getFollowees()) {
-            if (follow.getFollowee().getUsername().equals(username)) {
-                if (!follow.isPending()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+//    public boolean isFriend(String username) {
+//        if (isCurrentUser(username)) {
+//            return false;
+//        }
+//        for (Follow follow : currentUser().getFollowees()) {
+//            if (follow.getFollowee().getUsername().equals(username)) {
+//                if (!follow.isPending()) {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
     
-    public boolean isPendingRequest(String username) {
-        if (isCurrentUser(username)) {
-            return false;
-        }
-        for (Follow follow : currentUser().getFollowees()) {
-            if (follow.getFollowee().getUsername().equals(username)) {
-                if (follow.isPending()) {
-                    return true;
+//    public boolean isPendingRequest(String username) {
+//        if (isCurrentUser(username)) {
+//            return false;
+//        }
+//        for (Follow follow : currentUser().getFollowees()) {
+//            if (follow.getFollowee().getUsername().equals(username)) {
+//                if (follow.isPending()) {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
+    
+    // -1 ei seurattava
+    // 0 pyyntö lähetetty
+    // 1 on seurattava
+    // 2 oma sivu
+    public int friendStatus(Account account) {
+        Account currentUser = currentUser();
+        if (account.equals(currentUser)) {
+            return 2;
+        } else {
+            System.out.println("SQL by AccountService / friendStatus() Follow for-loop: ");
+            for (Follow follow : currentUser.getFollowees()) {
+                if (follow.getFollowee().equals(account)) {
+                    if (!follow.isPending()) { return 1; }
+                    else if (follow.isPending()) { return 0; }
                 }
             }
         }
-        return false;
+        return -1;
     }
     
 }

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title th:text="${name}">OMA NIMI</title>
+    </head>
+    <body>
+
+        <h1 th:text="${name}">OMA NIMI</h1>
+        <a th:href="@{/{username}(username=${username})}">Palaa takaisin seinälle</a>
+
+        <div>
+            <h2>Kuvat:</h2>
+            <div th:if="${!pictures.empty}">
+                <div th:each="picture : ${pictures}" style="border: 1px black solid">
+                    <img th:src="@{/{username}/kuvat/{id}(username=${username}, id=${picture.id})}"  th:id="${picture.id}" width="100" />
+                    <p th:text="${picture.description}">KUVATEKSTI</p>
+                    <form th:if="${friendStatus == 2 && picture.id != profilePictureId}" method="POST" th:action="@{/{username}/profilepicture(username=${username})}">
+                        <button name="profilePictureId" th:value="${picture.id}" type="submit">Aseta profiilikuvaksi</button>
+                    </form>
+                    <p th:text="'Tykkääjiä: ' + ${picture.likes.size()}">TYKKÄÄJIÄ</p>
+                    <p>Tykkääjät:</p>
+                    <ul th:each="like : ${picture.likes}">
+                        <li th:text="${like.name}">TYKKÄÄJÄ</li>
+                    </ul>
+                    <p>Kommentit:</p>
+                    <ul th:each="comment : ${picture.comments}">
+                        <li th:text="${comment.comment}">KOMMENTTI</li>
+                        <ul>
+                            <li th:text="${comment.commenter.name} + ' (' + ${comment.timeSent} + ')'">KOMMENTOIJA</li>
+                        </ul>
+                    </ul>
+                    <form th:if="${friendStatus == 1}" method="POST" th:action="@{/{username}/kuvat/like(username=${username})}">
+                        <button name="pictureId" th:value="${picture.id}" type="submit">
+                            <span th:text="${!currentUserLikedPictures.contains(picture)} ? 'Tykkää' : 'Enpäs tykkää'">Tykkäätkö?</span>
+                        </button>
+                    </form>
+                    <form th:if="${friendStatus >= 1}" method="POST" th:action="@{/{username}/kuvat/comment(username=${username})}">
+                        Kommentoi: <input type="text" name="commentText" id="newComment"/>
+                        <button name="pictureId" th:value="${picture.id}" type="submit">Lähetä kommentti!</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${friendStatus == 2}">
+            <p>Lisää kuva:</p>
+            <form method="POST" th:action="@{/{username}/kuvat(username=${username})}" enctype="multipart/form-data">
+                <input type="file" name="file" id="file"/>
+                <input type="submit" value="Lisää"/>
+            </form>
+        </div>
+
+        <hr />
+
+        <div>
+            <p>Kirjautunut sisään käyttäjänä: <span th:text="${currentUsername}">KÄYTTÄJÄ</span></p>
+            <form method="POST" th:action="@{/logout}"><input type="submit" name="logout" value="Kirjaudu ulos"/></form>
+        </div>
+
+
+    </body>
+</html>

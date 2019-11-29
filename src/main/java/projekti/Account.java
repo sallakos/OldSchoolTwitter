@@ -1,6 +1,9 @@
 package projekti;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedAttributeNode;
@@ -71,6 +74,14 @@ public class Account extends AbstractPersistable<Long> {
         this.username = username;
         this.name = name;
         this.password = password;
+    }
+    
+    public HashMap<String, Boolean> getFollowedUsernames() {
+        HashMap<String, Boolean> usernames = new HashMap<>();
+        for (Follow follow : this.followees) {
+            usernames.put(follow.getFollowee().getUsername(), follow.isPending());
+        }
+        return usernames;
     }
     
 }
