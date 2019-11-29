@@ -60,7 +60,11 @@ public class PictureController {
     public String likeAPicture(@RequestParam Long pictureId,
                                @PathVariable String username) {
         if (!accountService.currentUser().getUsername().equals(username) && accountService.isFriend(username)) {
-            pictureService.likeAPicture(accountService.currentUser().getUsername(), pictureId);
+            if (accountService.currentUser().getLikedPictures().contains(pictureService.findById(pictureId))) {
+                pictureService.unlikeAPicture(accountService.currentUser().getUsername(), pictureId);
+            } else {
+                pictureService.likeAPicture(accountService.currentUser().getUsername(), pictureId);
+            }
         }
         return "redirect:/{username}";
     }

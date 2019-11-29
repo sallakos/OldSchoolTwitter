@@ -34,7 +34,11 @@ public class MessageController {
     public String likeAMessage(@RequestParam Long messageId,
                                @PathVariable String username) {
         if (!accountService.currentUser().getUsername().equals(username) && accountService.isFriend(username)) {
-            messageService.likeAMessage(accountService.currentUser().getUsername(), messageId);
+            if (accountService.currentUser().getLikedMessages().contains(messageService.findById(messageId))) {
+                messageService.unlikeAMessage(accountService.currentUser().getUsername(), messageId);
+            } else {
+                messageService.likeAMessage(accountService.currentUser().getUsername(), messageId);
+            }
         }
         return "redirect:/{username}";
     }

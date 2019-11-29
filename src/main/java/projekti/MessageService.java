@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,11 +38,41 @@ public class MessageService {
     }
     
     @Transactional
+    public void unlikeAMessage(String username, Long messageId) {
+        Account account = accountRepo.findByUsername(username);
+        Message message = messageRepo.getOne(messageId);
+        message.getLikes().remove(account);
+        messageRepo.save(message);
+    }
+    
+    @Transactional
     public void commentAMessage(Comment comment, Long messageId) {
         commentRepo.save(comment);
         Message message = messageRepo.getOne(messageId);
         message.getComments().add(comment);
         messageRepo.save(message);
+    }
+    
+    public Message findById(Long id) {
+        return messageRepo.getOne(id);
+    }
+    
+    public List<Message> getAllMessages(String username) {
+        Long userId = accountRepo.findByUsername(username).getId();
+        return messageRepo.getAllMessages(userId);
+    }
+    
+    public List<Message> getUserMessages(String username) {
+        Long userId = accountRepo.findByUsername(username).getId();
+        return messageRepo.getUserMessages(userId);
+    }
+    
+    public List<List<Comment>> getMessageComments(List<Message> messages) {
+        List<List<Comment>> comments = new ArrayList<>();
+        for (Message message : messages) {
+            comments.add(messageRepo.getMessageComments(message.getId()));
+        }
+        return comments;
     }
     
 }

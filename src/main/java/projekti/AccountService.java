@@ -20,7 +20,7 @@ public class AccountService {
     
     @Autowired
     FollowRepository followRepo;
-        
+            
     @Transactional
     public void register(String username, String name, String password) {
         Account account = new Account(username, name, securityConfiguration.passwordEncoder().encode(password));
@@ -29,7 +29,7 @@ public class AccountService {
     
     @Transactional
     public void follow(Account follower, Account followee, LocalDateTime startOfFollow) {
-        Follow follow = new Follow(follower, followee, startOfFollow);
+        Follow follow = new Follow(follower, followee, startOfFollow, true);
         followRepo.save(follow);
         System.out.println("SQL by AccountService.follow()");
     }
@@ -77,7 +77,23 @@ public class AccountService {
         }
         for (Follow follow : currentUser().getFollowees()) {
             if (follow.getFollowee().getUsername().equals(username)) {
-                return true;
+                if (!follow.isPending()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public boolean isPendingRequest(String username) {
+        if (isCurrentUser(username)) {
+            return false;
+        }
+        for (Follow follow : currentUser().getFollowees()) {
+            if (follow.getFollowee().getUsername().equals(username)) {
+                if (follow.isPending()) {
+                    return true;
+                }
             }
         }
         return false;

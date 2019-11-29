@@ -64,7 +64,7 @@ public class PictureService {
         return picture.getPicture();
     }
 
-    public Picture getPic(Long id) {
+    public Picture findById(Long id) {
         return pictureRepo.getOne(id);
     }
 
@@ -73,6 +73,14 @@ public class PictureService {
         Account account = accountRepo.findByUsername(username);
         Picture picture = pictureRepo.getOne(pictureId);
         picture.getLikes().add(account);
+        pictureRepo.save(picture);
+    }
+    
+    @Transactional
+    public void unlikeAPicture(String username, Long pictureId) {
+        Account account = accountRepo.findByUsername(username);
+        Picture picture = pictureRepo.getOne(pictureId);
+        picture.getLikes().remove(account);
         pictureRepo.save(picture);
     }
 

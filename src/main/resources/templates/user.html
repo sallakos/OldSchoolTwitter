@@ -7,7 +7,8 @@
     <body>
 
         <h1 th:text="${name}">OMA NIMI</h1>
-        <form th:if="${!isOwnProfile && !isFriend}" method="POST" th:action="@{/{username}/follow(username=${username})}"><input type="submit" name="follow" value="Seuraa"/></form>
+        <form th:if="${!isOwnProfile && !isFriend && !isPendingRequest}" method="POST" th:action="@{/{username}/follow(username=${username})}"><input type="submit" name="follow" value="Seuraa"/></form>
+        <p th:if="${!isOwnProfile && isPendingRequest}">SEURAUSPYYNTÖ LÄHETETTY</p>
         <form th:if="${!isOwnProfile && isFriend}" method="POST" th:action="@{/{username}/unfollow(username=${username})}"><input type="submit" name="unfollow" value="Lopeta seuraaminen"/></form>
         <img th:src="@{/{id}/profilepicture(id=${username})}" width="100" />
 
@@ -38,9 +39,10 @@
         </div>
 
         <div>
-            <h2>Aiemmat viestit:</h2>
+            <h2>Viestit:</h2>
             <div th:each="message : ${messages}">
                 <p th:text="${message.message} + ' (' + ${message.timeSent} + ')'">VIESTI JA AIKA</p>
+                <p th:text="${message.owner.name}">LÄHETTÄJÄ</p>
                 <p>Tykkääjät:</p>
                 <ul th:each="like : ${message.likes}">
                     <li th:text="${like.name}">TYKKÄÄJÄ</li>
@@ -53,7 +55,9 @@
                     </ul>
                 </ul>
                 <form th:if="${isFriend}" method="POST" th:action="@{/{username}/messages/like(username=${username})}">
-                    <button name="messageId" th:value="${message.id}" type="submit">Tykkää</button>
+                    <button name="messageId" th:value="${message.id}" type="submit">
+                        <span th:text="${!currentUserLikedMessages.contains(message)} ? 'Tykkää' : 'Enpäs tykkää'">Tykkäätkö?</span>
+                    </button>
                 </form>
                 <form th:if="${isOwnProfile || isFriend}" method="POST" th:action="@{/{username}/messages/comment(username=${username})}">
                     Kommentoi: <input type="text" name="commentText" id="newComment"/>
@@ -83,7 +87,9 @@
                     </ul>
                 </ul>
                 <form th:if="${isFriend}" method="POST" th:action="@{/{username}/pictures/like(username=${username})}">
-                    <button name="pictureId" th:value="${picture.id}" type="submit">Tykkää</button>
+                    <button name="pictureId" th:value="${picture.id}" type="submit">
+                        <span th:text="${!currentUserLikedPictures.contains(picture)} ? 'Tykkää' : 'Enpäs tykkää'">Tykkäätkö?</span>
+                    </button>
                 </form>
                 <form th:if="${isOwnProfile || isFriend}" method="POST" th:action="@{/{username}/pictures/comment(username=${username})}">
                     Kommentoi: <input type="text" name="commentText" id="newComment"/>

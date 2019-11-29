@@ -28,6 +28,6 @@ public class Follow extends AbstractPersistable<Long> {
     
     private LocalDateTime startOfFollow;
     
-    // private boolean active;
+    private boolean pending;
     
 }
