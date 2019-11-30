@@ -13,7 +13,7 @@
             <h2>Kuvat:</h2>
             <div th:if="${!pictures.empty}">
                 <div th:each="picture : ${pictures}" style="border: 1px black solid">
-                    <img th:src="@{/{username}/kuvat/{id}(username=${username}, id=${picture.id})}"  th:id="${picture.id}" width="100" />
+                    <img th:src="@{/{username}/kuvat/{id}(username=${username}, id=${picture.id})}" width="100" />
                     <p th:text="${picture.description}">KUVATEKSTI</p>
                     <form th:if="${friendStatus == 2 && picture.id != profilePictureId}" method="POST" th:action="@{/{username}/profilepicture(username=${username})}">
                         <button name="profilePictureId" th:value="${picture.id}" type="submit">Aseta profiilikuvaksi</button>

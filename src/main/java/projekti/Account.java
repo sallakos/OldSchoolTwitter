@@ -1,9 +1,7 @@
 package projekti;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedAttributeNode;
@@ -14,9 +12,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
-import projekti.Follow;
-import projekti.Message;
-import projekti.Picture;
 
 /**
  * Mallintaa sovelluksen käyttäjää.
@@ -24,8 +19,7 @@ import projekti.Picture;
  * @author Salla Koskinen
  */
 @NamedEntityGraph(name = "Account.allUserData",
-                  attributeNodes = {@NamedAttributeNode("pictures")
-                                    /*@NamedAttributeNode("followers")*/})
+                  attributeNodes = {@NamedAttributeNode("pictures")})
 @Entity
 @Data
 @NoArgsConstructor
@@ -76,7 +70,10 @@ public class Account extends AbstractPersistable<Long> {
         this.password = password;
     }
     
+    // Haetaan niiden käyttäjien käyttäjänimet, joita seurataan.
+    // Tallennetaan tieto myös siitä, onko seuraus hyväksytty.
     public HashMap<String, Boolean> getFollowedUsernames() {
+        System.out.println("SQL by Account / getFollowedUsernames():");
         HashMap<String, Boolean> usernames = new HashMap<>();
         for (Follow follow : this.followees) {
             usernames.put(follow.getFollowee().getUsername(), follow.isPending());

@@ -15,7 +15,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     @Query(value = "SELECT DISTINCT Message.id, message, time_sent, owner_id FROM MESSAGE " +
                    "JOIN Account ON Account.id = owner_id " +
                    "JOIN Follow ON followee_id = Account.id " +
-                   "WHERE follower_id = 1 OR owner_id = 1 AND Follow.pending = false " +
+                   "WHERE (follower_id = :id OR owner_id = :id) AND Follow.pending = false " +
                    "ORDER BY time_sent DESC LIMIT 25", nativeQuery = true)
     List<Message> getAllMessages(@Param("id") Long id);
     

@@ -40,17 +40,26 @@ public class AccountService {
         Long id = followRepo.findByFollowerAndFollowee(follower, followee).getId();
         followRepo.deleteById(id);
     }
+    
+    @Transactional
+    public void acceptFollow(Account follower, Account followee) {
+        followRepo.findByFollowerAndFollowee(follower, followee).setPending(false);
+        followRepo.findByFollowerAndFollowee(follower, followee).setStartOfFollow(LocalDateTime.now());
+    }
+    
+    @Transactional
+    public void declineFollow(Account follower, Account followee) {
+        Long id = followRepo.findByFollowerAndFollowee(follower, followee).getId();
+        followRepo.deleteById(id);
+    }
         
     public Account findByUsername(String username) {
         System.out.println("SQL by AccountService / findByUsername():");
         return accountRepo.findByUsername(username);
     }
     
-//    public Account findByUsernameAllData(String username) {
-//        return accountRepo.allUserData(username);
-//    }
-    
     public List<Account> findAll() {
+        System.out.println("SQL by AccountService / findAll():");
         Sort sort = Sort.by("name");
         return accountRepo.findAll(sort);
     }
@@ -74,34 +83,6 @@ public class AccountService {
         return false;
     }
     
-//    public boolean isFriend(String username) {
-//        if (isCurrentUser(username)) {
-//            return false;
-//        }
-//        for (Follow follow : currentUser().getFollowees()) {
-//            if (follow.getFollowee().getUsername().equals(username)) {
-//                if (!follow.isPending()) {
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
-//    }
-    
-//    public boolean isPendingRequest(String username) {
-//        if (isCurrentUser(username)) {
-//            return false;
-//        }
-//        for (Follow follow : currentUser().getFollowees()) {
-//            if (follow.getFollowee().getUsername().equals(username)) {
-//                if (follow.isPending()) {
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
-//    }
-    
     // -1 ei seurattava
     // 0 pyyntö lähetetty
     // 1 on seurattava
@@ -121,5 +102,5 @@ public class AccountService {
         }
         return -1;
     }
-    
+  
 }

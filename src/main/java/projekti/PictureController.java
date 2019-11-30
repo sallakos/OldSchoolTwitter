@@ -1,6 +1,9 @@
 package projekti;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,18 +20,17 @@ public class PictureController {
 
     @Autowired
     AccountService accountService;
-    
+
     @Autowired
     PictureService pictureService;
-    
+
     // Haetaan henkilön kuvagalleria.
     @GetMapping("/{username}/kuvat")
-    public String showUser(Model model, @PathVariable String username) {
+    public String showUserGallery(Model model, @PathVariable String username) {
         Account account = accountService.findByUsername(username); // SQL
         Account currentUser = accountService.currentUser(); // SQL
         model.addAttribute("currentUsername", currentUser.getUsername());
         boolean isAllowed = accountService.friendStatus(account) >= 1;
-        System.out.println(isAllowed);
         if (isAllowed) {
             model.addAttribute("name", account.getName());
             model.addAttribute("pictures", account.getPictures());
@@ -40,46 +42,54 @@ public class PictureController {
         }
         return "forbidden";
     }
-    
+
     // Haetaan käyttäjän profiilikuva.
-//    @GetMapping(path = "/{username}/profilepicture", produces = "image/jpeg")
-//    @ResponseBody
-//    public byte[] getProfilePicture(@PathVariable String username) throws IOException {
-//        return pictureService.getProfilePicture(username);
-//    }
-    
+    @GetMapping(path = "/{username}/kuvat/profiilikuva", produces = "image/jpeg")
+    @ResponseBody
+    public byte[] getProfilePicture(@PathVariable String username) throws IOException {
+        Account account = accountService.findByUsername(username); // SQL
+        return pictureService.getPicture(account.getProfilePicture().getId());
+    }
+
+    // Haetaan käyttäjän yksittäinen kuva. Vain seuraajat voivat nähdä kuvat.
+    @GetMapping(path = "/{username}/kuvat/{id}", produces = "image/jpeg")
+    @ResponseBody
+    public byte[] getPicture(@PathVariable String username,
+                             @PathVariable Long id) throws IOException {
+        Account account = accountService.findByUsername(username); // SQL
+        boolean isAllowed = accountService.friendStatus(account) >= 1;
+        if (isAllowed) {
+            return pictureService.getPicture(id);
+        }
+        byte[] forbiddenPicture = Files.readAllBytes(Paths.get("C:\\Users\\salla\\Documents\\NetBeansProjects\\mooc-wepa-s19-projekti\\wepa_Projekti\\src\\main\\resources\\public\\img\\forbidden.jpg"));
+        return forbiddenPicture;
+    }
+
     // Lisätään profiilikuva. Sallitaan POST vain, jos käyttäjä on kirjautunut sisään.
     @PostMapping("/{username}/profilepicture")
     public String addProfilePicture(@RequestParam Long profilePictureId,
-                                    @PathVariable String username) throws IOException {
+            @PathVariable String username) throws IOException {
         if (accountService.isCurrentUser(username)) {
             pictureService.saveProfilePicture(username, profilePictureId);
         }
         return "redirect:/{username}";
     }
-    
-    // Haetaan käyttäjän yksittäinen kuva.
-    @GetMapping(path = "/{username}/kuvat/{id}", produces = "image/jpeg")
-    @ResponseBody
-    public byte[] getPicture(@PathVariable Long id) throws IOException {
-        return pictureService.getPicture(id);
-    }
-    
+
     // Lisätään profiilikuva. Sallitaan POST vain, jos käyttäjä on kirjautunut sisään.
     @PostMapping("/{username}/kuvat")
     public String addPicture(@RequestParam("file") MultipartFile file,
-                             @PathVariable String username) throws IOException {
+            @PathVariable String username) throws IOException {
         if (accountService.isCurrentUser(username)) {
             pictureService.savePicture(username, file);
         }
         return "redirect:/{username}";
     }
-    
+
     // Tykätään kuvasta. Tykkääminen onnistuu vain, jos ei yritetä tykätä omasta
     // tai ei seurattavan kuvasta.
     @PostMapping("/{username}/kuvat/like")
     public String likeAPicture(@RequestParam Long pictureId,
-                               @PathVariable String username) {
+            @PathVariable String username) {
         Account account = accountService.findByUsername(username);
         if (accountService.friendStatus(account) == 1) {
             if (accountService.currentUser().getLikedPictures().contains(pictureService.findById(pictureId))) {
@@ -90,12 +100,12 @@ public class PictureController {
         }
         return "redirect:/{username}/galleria";
     }
-    
+
     // Kommentoidaan kuvaa. Vain omaa tai kavereiden kuvaa voi kommentoida.
     @PostMapping("/{username}/kuvat/comment")
     public String commentAPicture(@RequestParam Long pictureId,
-                                  @RequestParam String commentText,
-                                  @PathVariable String username) {
+            @RequestParam String commentText,
+            @PathVariable String username) {
         Account account = accountService.findByUsername(username);
         if (accountService.friendStatus(account) >= 1) {
             Comment comment = new Comment(commentText, LocalDateTime.now(), accountService.currentUser());

@@ -13,7 +13,7 @@
             <form th:case="1" method="POST" th:action="@{/{username}/unfollow(username=${username})}"><input type="submit" name="unfollow" value="Lopeta seuraaminen"/></form>
             <div th:switch="${profilePicture}">
                 <img th:case="null" src="/img/default.jpg" width="100" />
-                <img th:case="*" th:src="@{/{username}/kuvat/{id}(username=${username}, id=${profilePicture.id})}" width="100" />
+                <img th:case="*" th:src="@{/{username}/kuvat/profiilikuva(username=${username})}" width="100" />
             </div>
         </div>
 
@@ -21,7 +21,9 @@
             <span th:text="${userFollowsWho}">KEITÄ</span>:
             <ul>
                 <li th:each="user : ${followees}" th:if="${!user.pending}">
-                    <a th:href="@{/{username}(username=${user.followee.username})}" th:text="${user.followee.name} + ' (since ' + ${user.startOfFollow} + ')'">SEURAAJA</a>
+                    <a th:href="@{/{username}(username=${user.followee.username})}" th:text="${user.followee.name}">SEURATTAVA</a>
+                    <span th:text="' (since ' + ${user.startOfFollow} + ')'">AIKA</span>
+                    <form th:if="${friendStatus == 2}" method="POST" th:action="@{/{username}/unfollowown(username=${user.followee.username})}"><input type="submit" name="unfollow" value="Lopeta seuraaminen"/></form>
                 </li>
             </ul>
         </div>
@@ -30,10 +32,26 @@
             <span th:text="${whoFollowsUser}">KETKÄ</span>:
             <ul>
                 <li th:each="user : ${followers}" th:if="${!user.pending}">
-                    <a th:href="@{/{username}(username=${user.follower.username})}" th:text="${user.follower.name} + ' (since ' + ${user.startOfFollow} + ')'">SEURATTAVA</a>
+                    <a th:href="@{/{username}(username=${user.follower.username})}" th:text="${user.follower.name}">SEURAAJA</a>
+                    <span th:text="' (since ' + ${user.startOfFollow} + ')'">AIKA</span>
+                    <form th:if="${friendStatus == 2 && !followedUsernames.containsKey(user.follower.username)}" method="POST" th:action="@{/{username}/followown(username=${user.follower.username})}"><input type="submit" name="follow" value="Seuraa"/></form>
+                    <form th:if="${friendStatus == 2 && followedUsernames.containsKey(user.follower.username) && followedUsernames.get(user.follower.username)}" method="POST" th:action="@{/{username}/unfollowown(username=${user.follower.username})}"><input type="submit" name="unfollow" value="Peru seuraamispyyntö"/></form>
                 </li>
             </ul>
         </div>
+
+        <div th:if="${friendStatus == 2}">
+            <p>Sinulla on uusia seuraamispyyntöjä:</p>
+            <ul>
+                <li th:each="user : ${followers}" th:if="${user.pending}">
+                    <a th:href="@{/{username}(username=${user.follower.username})}" th:text="${user.follower.name}">PYYTÄJÄ</a>
+                    <form method="POST" th:action="@{/{username}/accept/{who}(username=${username}, who=${user.follower.username})}"><input type="submit" name="accept" value="Hyväksy"/></form>
+                    <form method="POST" th:action="@{/{username}/decline/{who}(username=${username}, who=${user.follower.username})}"><input type="submit" name="decline" value="Hylkää"/></form>
+                </li>
+            </ul>
+        </div>
+
+        <hr />
 
         <div th:if="${friendStatus == 2}">
             <p>Kirjoita viesti!</p>
