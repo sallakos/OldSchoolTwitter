@@ -5,6 +5,8 @@
         <title>Twitter 0.0</title>
     </head>
     <body>
+        
+        <div th:replace="fragments/layout :: header"></div>
 
         <div th:if="${!isRegistered}">
             <h1>Rekisteröidy</h1>

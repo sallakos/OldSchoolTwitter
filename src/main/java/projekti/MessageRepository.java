@@ -23,12 +23,12 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     @Query(value = "SELECT * FROM Message WHERE owner_id = :id ORDER BY time_sent DESC LIMIT 25", nativeQuery = true)
     List<Message> getUserMessages(@Param("id") Long id);
     
-    @Query(value = "SELECT comment.id, comment.comment, comment.time_sent, comment.commenter_id FROM Message " +
-                   "JOIN Message_comments ON Message.id = message_id " +
-                   "JOIN Comment ON Comment.id = comments_id " +
-                   "WHERE Message.id = :id " +
-                   "ORDER BY time_sent DESC " +
-                   "LIMIT 10", nativeQuery = true)
-    List<Comment> getMessageComments(@Param("id") Long id);
+//    @Query(value = "SELECT comment.id, comment.comment, comment.time_sent, comment.commenter_id FROM Message " +
+//                   "JOIN Message_comments ON Message.id = message_id " +
+//                   "JOIN Comment ON Comment.id = comments_id " +
+//                   "WHERE Message.id = :id " +
+//                   "ORDER BY time_sent DESC " +
+//                   "LIMIT 10", nativeQuery = true)
+//    List<Comment> getMessageComments(@Param("id") Long id);
     
 }

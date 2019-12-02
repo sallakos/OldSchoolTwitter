@@ -6,6 +6,8 @@
     </head>
     <body>
 
+        <div th:replace="fragments/layout :: header"></div>
+        
         <h1>Käyttäjät</h1>
         
         <div th:each="user : ${users}" style="border: 1px solid black">

@@ -69,12 +69,12 @@ public class MessageService {
         return messageRepo.getUserMessages(userId);
     }
     
-    public List<List<Comment>> getMessageComments(List<Message> messages) {
-        List<List<Comment>> comments = new ArrayList<>();
-        for (Message message : messages) {
-            comments.add(messageRepo.getMessageComments(message.getId()));
-        }
-        return comments;
-    }
+//    public List<List<Comment>> getMessageComments(List<Message> messages) {
+//        List<List<Comment>> comments = new ArrayList<>();
+//        for (Message message : messages) {
+//            comments.add(messageRepo.getMessageComments(message.getId()));
+//        }
+//        return comments;
+//    }
     
 }

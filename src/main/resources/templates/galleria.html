@@ -6,6 +6,8 @@
     </head>
     <body>
 
+        <div th:replace="fragments/layout :: header"></div>
+
         <h1 th:text="${name}">OMA NIMI</h1>
         <a th:href="@{/{username}(username=${username})}">Palaa takaisin seinälle</a>
 
@@ -21,13 +23,19 @@
                     <p th:text="'Tykkääjiä: ' + ${picture.likes.size()}">TYKKÄÄJIÄ</p>
                     <p>Tykkääjät:</p>
                     <ul th:each="like : ${picture.likes}">
-                        <li th:text="${like.name}">TYKKÄÄJÄ</li>
+                        <li><a th:href="@{/{username}(username=${like.username})}" th:text="${like.name}">TYKKÄÄJÄ</a></li>
                     </ul>
                     <p>Kommentit:</p>
-                    <ul th:each="comment : ${picture.comments}">
-                        <li th:text="${comment.comment}">KOMMENTTI</li>
-                        <ul>
-                            <li th:text="${comment.commenter.name} + ' (' + ${comment.timeSent} + ')'">KOMMENTOIJA</li>
+                    <p th:if="${picture.comments.size() > 10}">Näytetään 10 uusinta kommenttia yhteensä <span th:text="${picture.comments.size()}">MÄÄRÄ</span> kommentista.</p>
+                    <ul th:each="comment,iStat : ${picture.comments}">
+                        <li th:if="${iStat.count > iStat.size - 10}" th:text="${comment.comment}">KOMMENTTI</li>
+                        <ul th:if="${iStat.count > iStat.size - 10}">
+                            <li>
+                                <a th:href="@{/{username}(username=${comment.commenter.username})}" th:text="${comment.commenter.name}">KOMMENTOIJA</a> 
+                                (<span th:text="${comment.timeSent}">AIKA</span>) 
+                                <img th:if="${comment.commenter.profilePicture == null}" src="/img/default.jpg" width="50" />
+                                <img th:if="${comment.commenter.profilePicture != null}" th:src="@{/{username}/kuvat/profiilikuva(username=${comment.commenter.username})}" width="50" />
+                            </li>
                         </ul>
                     </ul>
                     <form th:if="${friendStatus == 1}" method="POST" th:action="@{/{username}/kuvat/like(username=${username})}">
