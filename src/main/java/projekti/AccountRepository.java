@@ -4,7 +4,7 @@ package projekti;
  * 
  * @author Salla Koskinen
  */
-import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.List;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,5 +25,15 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
                    "JOIN Account ON follower_id = Account.id " +
                    "WHERE followee_id = :id AND pending = true", nativeQuery = true)
     List<Account> findPendingRequests(@Param("id") Long id);
+    
+    @Query(value = "SELECT COUNT(Account.id) FROM Follow " +
+                   "JOIN Account ON followee_id = Account.id " +
+                   "WHERE Account.id = :id AND pending = true", nativeQuery = true)
+    int numberOfPendingRequests(@Param("id") Long id);
+    
+//    @Query(value = "SELECT username, Follow.pending AS pending FROM ACCOUNT " +
+//                   "JOIN Follow ON Follow.followee_id = Account.id " +
+//                   "WHERE Follow.follower_id = :id", nativeQuery = true)
+//    HashMap<String, Boolean> findUsersIFollow(@Param("id") Long id);
     
 }

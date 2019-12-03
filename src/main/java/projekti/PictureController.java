@@ -35,6 +35,7 @@ public class PictureController {
             model.addAttribute("name", account.getName());
             model.addAttribute("pictures", account.getPictures());
             model.addAttribute("profilePictureId", account.getProfilePicture() != null ? account.getProfilePicture().getId() : (Long) 0L);
+            model.addAttribute("currentUser", currentUser);
             model.addAttribute("currentUserLikedMessages", currentUser.getLikedMessages());
             model.addAttribute("currentUserLikedPictures", currentUser.getLikedPictures());
             model.addAttribute("friendStatus", accountService.friendStatus(account)); // SQL, jos vieras sivu, niin kaksi kyselyä.
@@ -44,7 +45,7 @@ public class PictureController {
     }
 
     // Haetaan käyttäjän profiilikuva.
-    @GetMapping(path = "/{username}/kuvat/profiilikuva", produces = "image/jpeg")
+    @GetMapping(path = "/{username}/kuvat/profiilikuva", produces = "image/*")
     @ResponseBody
     public byte[] getProfilePicture(@PathVariable String username) throws IOException {
         Account account = accountService.findByUsername(username); // SQL
@@ -52,7 +53,7 @@ public class PictureController {
     }
 
     // Haetaan käyttäjän yksittäinen kuva. Vain seuraajat voivat nähdä kuvat.
-    @GetMapping(path = "/{username}/kuvat/{id}", produces = "image/jpeg")
+    @GetMapping(path = "/{username}/kuvat/{id}", produces = "image/*")
     @ResponseBody
     public byte[] getPicture(@PathVariable String username,
                              @PathVariable Long id) throws IOException {
@@ -75,14 +76,15 @@ public class PictureController {
         return "redirect:/{username}";
     }
 
-    // Lisätään profiilikuva. Sallitaan POST vain, jos käyttäjä on kirjautunut sisään.
+    // Lisätään kuva. Sallitaan POST vain, jos käyttäjä on kirjautunut sisään.
     @PostMapping("/{username}/kuvat")
     public String addPicture(@RequestParam("file") MultipartFile file,
+            @RequestParam String description,
             @PathVariable String username) throws IOException {
         if (accountService.isCurrentUser(username)) {
-            pictureService.savePicture(username, file);
+            pictureService.savePicture(username, file, description);
         }
-        return "redirect:/{username}";
+        return "redirect:/{username}/kuvat";
     }
 
     // Tykätään kuvasta. Tykkääminen onnistuu vain, jos ei yritetä tykätä omasta
@@ -98,7 +100,7 @@ public class PictureController {
                 pictureService.likeAPicture(accountService.currentUser().getUsername(), pictureId);
             }
         }
-        return "redirect:/{username}/galleria";
+        return "redirect:/{username}/kuvat";
     }
 
     // Kommentoidaan kuvaa. Vain omaa tai kavereiden kuvaa voi kommentoida.

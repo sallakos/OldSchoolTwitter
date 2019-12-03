@@ -48,10 +48,10 @@ public class PictureService {
         accountRepo.save(account);
     }
 
-    public void savePicture(String username, MultipartFile file) throws IOException {
-        if (file.getContentType().equals("image/jpeg")) {
+    public void savePicture(String username, MultipartFile file, String description) throws IOException {
+        if (file.getContentType().substring(0, 5).equals("image")) {
             Account account = accountRepo.findByUsername(username);
-            Picture picture = new Picture(file.getBytes(), "", account);
+            Picture picture = new Picture(file.getBytes(), description, account);
             account.getPictures().add(picture);
             // account.setProfilePicture(account.getPictures().get(account.getPictures().size() - 1));
             pictureRepo.save(picture);

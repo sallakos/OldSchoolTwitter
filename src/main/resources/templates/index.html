@@ -1,12 +1,12 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head>
+    <head th:replace="fragments/layout :: head(title='Twitter 0.0')">
         <meta charset="UTF-8" />
-        <title>Twitter 0.0</title>
+        <title>Title</title>
     </head>
     <body>
         
-        <div th:replace="fragments/layout :: header"></div>
+        <div th:replace="fragments/layout :: header(currentUser=${currentUsername})"></div>
 
         <h1>Tämä on etusivu.</h1>
         <p>Täältä voi vaikka kirjautua sisään. Jee.</p>

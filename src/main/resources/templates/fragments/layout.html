@@ -1,12 +1,58 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head lang="en">
+    <head th:fragment="head(title)">
         <meta charset="UTF-8" />
-        <title>Layout</title>
+        <title th:text="${title}">Layout</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="/style/style.css"/>
     </head>
     <body>
-        <header th:fragment="header">
+        <header th:fragment="header(currentUser)" class="container-fluid">
             <h1>OLD SCHOOL TWITTER!</h1>
+            <form method="POST" th:action="@{/logout}" class="form-inline">
+                <a th:href="@{/{username}(username=${currentUser})}" class="btn btn-link">Oma profiili</a> | 
+                <a href="/kayttajat" class="btn btn-link">Etsi kavereita</a> |
+                <input type="submit" name="logout" value="Kirjaudu ulos" class="btn btn-link" />
+            </form>
         </header>
+
+        <div th:fragment="listUsers(users, followedUsernames)" class="container-fluid">
+            <h1>Käyttäjät</h1>
+            <div class="row justify-content-center">
+                <div th:each="user : ${users}" class="media col-lg-4 col-md-6 col-sm-12">
+                    <img th:if="${user.profilePicture == null}" src="/img/default.jpg" class="profile-img" />
+                    <img th:if="${user.profilePicture != null}" th:src="@{/{username}/kuvat/profiilikuva(username=${user.username})}" class="profile-img" />
+                    <div class="media-body pl-3">
+                        <h4 class="mt-3"><a th:href="@{/{id}(id=${user.username})}" th:text="${user.name}">NIMI</a></h4>
+                        <p>@<span th:text="${user.username}" class="text">KÄYTTÄJÄNIMI</span></p>
+                        <form th:if="${!followedUsernames.containsKey(user.username) && !currentUser.equals(user.username)}" method="POST" th:action="@{/{username}/followstay(username=${user.username})}">
+                            <input type="submit" name="follow" value="Seuraa" class="btn btn-dark" />
+                        </form>
+                        <form th:if="${followedUsernames.containsKey(user.username) && followedUsernames.get(user.username)}" method="POST" th:action="@{/{username}/unfollowstay(username=${user.username})}">
+                            <input type="submit" name="unfollow" value="Peru pyyntö" class="btn btn-dark" />
+                        </form>
+                        <form th:if="${followedUsernames.containsKey(user.username) && !followedUsernames.get(user.username)}" method="POST" th:action="@{/{username}/unfollowstay(username=${user.username})}">
+                            <input type="submit" name="unfollow" value="Älä seuraa" class="btn btn-dark" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:fragment="profilePicture(isNull)" th:switch="${isNull}">
+            <img th:case="null" src="/img/default.jpg" class="profile-img" />
+            <img th:case="*" th:src="@{/{username}/kuvat/profiilikuva(username=${username})}" class="profile-img" />
+        </div>
+
+        <div th:fragment="profilePictureSmall(account)">
+            <img th:if="${account.profilePicture == null}" src="/img/default.jpg" class="small-profile-img" />
+            <img th:if="${account.profilePicture != null}" th:src="@{/{username}/kuvat/profiilikuva(username=${account.username})}"  class="small-profile-img" />
+        </div>
+
+        <div th:fragment="timeStamp(date)">
+            <p th:text="${#temporals.format(date, 'd.M.yyyy HH:mm')}" class="small text-muted ml-2">AIKA</p>
+        </div>
+
     </body>
 </html>

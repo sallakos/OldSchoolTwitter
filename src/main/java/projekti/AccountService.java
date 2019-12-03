@@ -2,6 +2,7 @@ package projekti;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,19 @@ public class AccountService {
         return accountRepo.findAll(sort);
     }
     
+//    public HashMap<String, Boolean> findUsernamesUserFollows(Account account) {
+//        return accountRepo.findUsersIFollow(account.getId());
+//    }
+    
+    public HashMap<String, Boolean> getFollowedUsernames(Account account) {
+        System.out.println("SQL by AccountService / getFollowedUsernames():");
+        HashMap<String, Boolean> usernames = new HashMap<>();
+        for (Follow follow : account.getFollowees()) {
+            usernames.put(follow.getFollowee().getUsername(), follow.isPending());
+        }
+        return usernames;
+    }
+    
     public Account currentUser() {
         System.out.println("SQL by AccountService / currentUser():");
         String userLoggedIn = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -101,6 +115,10 @@ public class AccountService {
             }
         }
         return -1;
+    }
+    
+    public int numberOfPendingRequests(Account account) {
+        return accountRepo.numberOfPendingRequests(account.getId());
     }
   
 }

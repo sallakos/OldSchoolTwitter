@@ -1,24 +1,14 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head>
+    <head th:replace="fragments/layout :: head(title='Twitter 0.0')">
         <meta charset="UTF-8" />
-        <title>Twitter 0.0</title>
+        <title>Title</title>
     </head>
     <body>
 
-        <div th:replace="fragments/layout :: header"></div>
+        <div th:replace="fragments/layout :: header(currentUser=${currentUser})"></div>
         
-        <h1>Käyttäjät</h1>
-        
-        <div th:each="user : ${users}" style="border: 1px solid black">
-            <h4><a th:href="@{/{id}(id=${user.username})}" th:text="${user.name}">NIMI</a></h4>
-            <p>@ <span th:text="${user.username}">KÄYTTÄJÄNIMI</span></p>
-            <img th:if="${user.profilePicture == null}" src="/img/default.jpg" width="100" />
-            <img th:if="${user.profilePicture != null}" th:src="@{/{username}/kuvat/profiilikuva(username=${user.username})}" width="100" />
-            <form th:if="${!followedUsernames.containsKey(user.username) && !currentUser.equals(user.username)}" method="POST" th:action="@{/{username}/followstay(username=${user.username})}"><input type="submit" name="follow" value="Seuraa"/></form>
-            <form th:if="${followedUsernames.containsKey(user.username) && followedUsernames.get(user.username)}" method="POST" th:action="@{/{username}/unfollowstay(username=${user.username})}"><input type="submit" name="unfollow" value="Peru seuraamispyyntö"/></form>
-            <form th:if="${followedUsernames.containsKey(user.username) && !followedUsernames.get(user.username)}" method="POST" th:action="@{/{username}/unfollowstay(username=${user.username})}"><input type="submit" name="unfollow" value="Lopeta seuraaminen"/></form>
-        </div>
+        <div th:replace="fragments/layout :: listUsers(users=${users}, followedUsernames=${followedUsernames})"></div>
 
 
     </body>

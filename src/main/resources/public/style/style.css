@@ -1,0 +1,111 @@
+h6 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.big-a {
+    color: black;
+}
+
+.big-a:hover {
+    color: grey;
+    text-decoration: none;
+}
+
+.center {
+    text-align: center;
+}
+
+.flex-left {
+    width: 70px;
+}
+
+.flex-right {
+    flex: 1;
+}
+
+.message-section {
+    background: red;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.comment-section {
+    background: #e6ffe6;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.text {
+    margin: 0;
+}
+
+.center-form {
+    text-align: center;
+}
+
+.profile-img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    border: solid black 1px;
+    margin: 10px;
+}
+
+.small-profile-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    margin: 10px;
+}
+
+.gallery-preview {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    object-position: center;
+    margin: 10px;
+    opacity: 0.8;
+    transition: 0.3s;
+}
+
+.gallery-preview:hover {
+    cursor: pointer;
+    opacity: 1;
+}
+
+.gallery-img {
+    max-width: 100%;
+}
+
+.gallery-item {
+    background: red;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.btn-xs, .btn-group-xs > .btn {
+    max-width: 70px;
+    padding: 0.15rem 0.3rem;
+    font-size: 0.7rem;
+    line-height: 1;
+    border-radius: 0.2rem;
+    margin: auto;
+}
+
+.btn-xs + .dropdown-toggle-split, .btn-group-xs > .btn + .dropdown-toggle-split {
+    padding-right: 0.375rem;
+    padding-left: 0.375rem;
+}
+
+.btn-link {
+    color: black;
+}
+
+[hidden] {
+  display: none !important;
+}

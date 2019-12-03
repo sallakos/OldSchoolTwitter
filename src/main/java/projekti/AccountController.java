@@ -2,9 +2,6 @@ package projekti;
 
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,10 +37,12 @@ public class AccountController {
         model.addAttribute("followees", account.getFollowees());
         model.addAttribute("pictures", account.getPictures());
         model.addAttribute("profilePicture", account.getProfilePicture());
+        model.addAttribute("currentUser", currentUser);
         model.addAttribute("currentUsername", currentUser.getUsername());
         model.addAttribute("currentUserLikedMessages", currentUser.getLikedMessages());
         model.addAttribute("currentUserLikedPictures", currentUser.getLikedPictures());
-        model.addAttribute("followedUsernames", currentUser.getFollowedUsernames());
+        model.addAttribute("followedUsernames", accountService.getFollowedUsernames(currentUser));
+        model.addAttribute("numberOfPendingRequests", accountService.numberOfPendingRequests(currentUser));
         model.addAttribute("friendStatus", accountService.friendStatus(account)); // SQL, jos vieras sivu, niin kaksi kyselyä.
         if (accountService.isCurrentUser(username)) {
             model.addAttribute("userFollowsWho", "Sinä seuraat");
@@ -57,14 +56,13 @@ public class AccountController {
         return "user";
     }
     
-    
     // Haetaan kaikki henkilöt.
     @GetMapping("/kayttajat")
     public String allUsers(Model model) {
         Account currentUser = accountService.currentUser(); // SQL
         model.addAttribute("users", accountService.findAll()); // SQL MIKSI 3 kyselyä????
         model.addAttribute("currentUser", currentUser.getUsername());
-        model.addAttribute("followedUsernames", currentUser.getFollowedUsernames()); // SQL
+        model.addAttribute("followedUsernames", accountService.getFollowedUsernames(currentUser)); // SQL
         model.addAttribute("followees", currentUser.getFollowees());
         return "users";
     }
