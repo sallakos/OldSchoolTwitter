@@ -69,6 +69,15 @@ public class MessageService {
         return messageRepo.getUserMessages(userId);
     }
     
+    public List<List<Comment>> getMessageComments(List<Message> messageList) {
+        List<List<Comment>> allComments = new ArrayList<>();
+        for (Message message : messageList) {
+            List<Comment> comments = commentRepo.findByMessageId(message.getId());
+            allComments.add(comments);
+        }
+        return allComments;
+    }
+    
 //    public List<List<Comment>> getMessageComments(List<Message> messages) {
 //        List<List<Comment>> comments = new ArrayList<>();
 //        for (Message message : messages) {

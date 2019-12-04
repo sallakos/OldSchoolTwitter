@@ -70,16 +70,4 @@ public class Account extends AbstractPersistable<Long> {
         this.password = password;
     }
     
-    // Haetaan niiden käyttäjien käyttäjänimet, joita seurataan.
-    // Tallennetaan tieto myös siitä, onko seuraus hyväksytty.
-    // SIIRRÄ TÄMÄ TIETOKANTAKYSELYYN!!!!!!!!!
-//    public HashMap<String, Boolean> getFollowedUsernames() {
-//        System.out.println("SQL by Account / getFollowedUsernames():");
-//        HashMap<String, Boolean> usernames = new HashMap<>();
-//        for (Follow follow : this.followees) {
-//            usernames.put(follow.getFollowee().getUsername(), follow.isPending());
-//        }
-//        return usernames;
-//    }
-    
 }

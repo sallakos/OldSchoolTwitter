@@ -44,4 +44,9 @@ public class Message extends AbstractPersistable<Long> {
         this.timeSent = LocalDateTime.now();
     }
     
+    public List<Comment> getLatest10() {
+        List<Comment> all = this.comments;
+        return all.subList(Math.max(all.size() - 10,0), all.size());
+    }
+    
 }

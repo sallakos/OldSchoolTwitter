@@ -1,6 +1,7 @@
 package projekti;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,26 +34,29 @@ public class AccountController {
         Account account = accountService.findByUsername(username); // SQL
         Account currentUser = accountService.currentUser(); // SQL
         model.addAttribute("name", account.getName());
-        model.addAttribute("followers", account.getFollowers());
-        model.addAttribute("followees", account.getFollowees());
+        model.addAttribute("followers", accountService.get6Followers(account));
+        model.addAttribute("followees", accountService.get6Followees(account));
+        model.addAttribute("numberOfFollowers", accountService.getUserFollowers(account).size());
+        model.addAttribute("numberOfFollowees", accountService.getUserFollowees(account).size());
         model.addAttribute("pictures", account.getPictures());
         model.addAttribute("profilePicture", account.getProfilePicture());
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("currentUsername", currentUser.getUsername());
         model.addAttribute("currentUserLikedMessages", currentUser.getLikedMessages());
         model.addAttribute("currentUserLikedPictures", currentUser.getLikedPictures());
-        model.addAttribute("followedUsernames", accountService.getFollowedUsernames(currentUser));
-        model.addAttribute("numberOfPendingRequests", accountService.numberOfPendingRequests(currentUser));
+        model.addAttribute("followedUsernames", accountService.getFollowedUsernames(currentUser)); // SQL
+        model.addAttribute("numberOfPendingRequests", accountService.numberOfPendingRequests(currentUser)); // SQL
         model.addAttribute("friendStatus", accountService.friendStatus(account)); // SQL, jos vieras sivu, niin kaksi kyselyä.
         if (accountService.isCurrentUser(username)) {
             model.addAttribute("userFollowsWho", "Sinä seuraat");
             model.addAttribute("whoFollowsUser", "Sinun seuraajasi");
-            model.addAttribute("messages", messageService.getAllMessages(account)); // SQL MIKSI 3 kyselyä????
+            model.addAttribute("messages", messageService.getAllMessages(account)); // SQL
         } else {
             model.addAttribute("userFollowsWho", account.getName() + " seuraa");
             model.addAttribute("whoFollowsUser", "Käyttäjän " + account.getName() + " seuraajat");
             model.addAttribute("messages", messageService.getUserMessages(account)); // SQL
         }
+        System.out.println("Thymeleafin tekemiä kyselyjä:");
         return "user";
     }
     
@@ -64,6 +68,43 @@ public class AccountController {
         model.addAttribute("currentUser", currentUser.getUsername());
         model.addAttribute("followedUsernames", accountService.getFollowedUsernames(currentUser)); // SQL
         model.addAttribute("followees", currentUser.getFollowees());
+        model.addAttribute("title", "Käyttäjät");
+        model.addAttribute("id", "search" + 0);
+        return "users";
+    }
+    
+    // Haetaan käyttäjän seuraamat henkilöt.
+    @GetMapping("/{username}/seurattavat")
+    public String allUserFollowees(Model model, @PathVariable String username) {
+        Account currentUser = accountService.currentUser(); // SQL
+        Account account = accountService.findByUsername(username);
+        model.addAttribute("users", accountService.getUserFollowees(account));
+        model.addAttribute("currentUser", currentUser.getUsername());
+        model.addAttribute("followedUsernames", accountService.getFollowedUsernames(currentUser)); // SQL
+        model.addAttribute("followees", currentUser.getFollowees());
+        model.addAttribute("id", "search" + account.getId());
+        if (accountService.isCurrentUser(username)) {
+            model.addAttribute("title", "Käyttäjät, joita seuraat:");
+        } else {
+            model.addAttribute("title", "Käyttäjät, joita " + account.getName() + " seuraa:");
+        }
+        return "users";
+    }
+    
+    // Haetaan henkilöt, jotka seuraavat käyttäjää.
+    @GetMapping("/{username}/seuraajat")
+    public String allUserFollowers(Model model, @PathVariable String username) {
+        Account currentUser = accountService.currentUser(); // SQL
+        Account account = accountService.findByUsername(username);
+        model.addAttribute("users", accountService.getUserFollowers(account));
+        model.addAttribute("currentUser", currentUser.getUsername());
+        model.addAttribute("followedUsernames", accountService.getFollowedUsernames(currentUser)); // SQL
+        model.addAttribute("followees", currentUser.getFollowees());
+        if (accountService.isCurrentUser(username)) {
+            model.addAttribute("title", "Sinun seuraajasi:");
+        } else {
+            model.addAttribute("title", "Käyttäjän " + account.getName() + " seuraajat:");
+        }
         return "users";
     }
 

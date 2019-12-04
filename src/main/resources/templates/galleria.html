@@ -85,13 +85,14 @@
                 <input type="submit" value="Lisää" class="btn btn-sm btn-dark mt-2 ml-1" />
             </form>
         </div>
-        
+
         <hr />
 
         <div>
             <p>Kirjautunut sisään käyttäjänä: <span th:text="${currentUsername}">KÄYTTÄJÄ</span></p>
         </div>
 
+        <div th:replace="fragments/layout :: footer"></div>
 
     </body>
 </html>

@@ -8,8 +8,9 @@
 
         <div th:replace="fragments/layout :: header(currentUser=${currentUser})"></div>
         
-        <div th:replace="fragments/layout :: listUsers(users=${users}, followedUsernames=${followedUsernames})"></div>
+        <div th:replace="fragments/layout :: listUsers(users=${users}, followedUsernames=${followedUsernames}, title=${title}, id=${id})"></div>
 
+        <div th:replace="fragments/layout :: footer"></div>
 
     </body>
 </html>

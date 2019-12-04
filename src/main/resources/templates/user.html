@@ -25,7 +25,7 @@
                     </div>
 
                     <div class="container-fluid mt-4">
-                        <h6 th:text="${userFollowsWho}">KEITÄ</h6>
+                        <h6><span th:text="${userFollowsWho}">KEITÄ</span> <span class="small text-muted">[<span th:text="${numberOfFollowees}">MÄÄRÄ</span>]</span></h6>
                         <div class="row justify-content-center">
                             <div th:each="user : ${followees}" th:if="${!user.pending}">
                                 <a th:href="@{/{username}(username=${user.followee.username})}" data-toggle="tooltip" data-placement="bottom" data-html="true" th:title="${user.followee.name} + '<br> alkaen ' + ${#temporals.format(user.startOfFollow, 'd.M.yyyy')}">
@@ -36,10 +36,11 @@
                                 </form>
                             </div>
                         </div>
+                        <a th:href="@{/{username}/seurattavat(username=${username})}" class="small text-muted">Näytä kaikki</a>
                     </div>
 
                     <div class="container-fluid mt-4">
-                        <h6 th:text="${whoFollowsUser}">KETKÄ</h6>
+                        <h6><span th:text="${whoFollowsUser}">KETKÄ</span> <span class="small text-muted">[<span th:text="${numberOfFollowers}">MÄÄRÄ</span>]</span></h6>
                         <div class="row justify-content-center">
                             <div th:each="user : ${followers}" th:if="${!user.pending}">
                                 <a th:href="@{/{username}(username=${user.follower.username})}" data-toggle="tooltip" data-placement="bottom" data-html="true" th:title="${user.follower.name} + '<br> alkaen ' + ${#temporals.format(user.startOfFollow, 'd.M.yyyy')}">
@@ -53,6 +54,7 @@
                                 </form>
                             </div>
                         </div>
+                        <a th:href="@{/{username}/seuraajat(username=${username})}" class="small text-muted">Näytä kaikki</a>
                     </div>
 
                     <div th:if="${friendStatus == 2}" class="container-fluid mt-5">
@@ -89,16 +91,6 @@
                         </div>
                     </div>
                 </div>
-                <!--                <ul>
-                                    <li th:each="user : ${followers}" th:if="${user.pending}">
-                                        <a th:href="@{/{username}(username=${user.follower.username})}" th:text="${user.follower.name}">PYYTÄJÄ</a>
-                                        <form method="POST" th:action="@{/{username}/accept/{who}(username=${username}, who=${user.follower.username})}"><input type="submit" name="accept" value="Hyväksy"/></form>
-                                        <form method="POST" th:action="@{/{username}/decline/{who}(username=${username}, who=${user.follower.username})}"><input type="submit" name="decline" value="Hylkää"/></form>
-                                    </li>
-                                </ul>
-                            </div>
-                
-                        </div>-->
 
                 <div class="col-xl-10 col-lg-9 col-md-12">
 
@@ -122,8 +114,8 @@
                                     </div>
                                     <div th:replace="fragments/layout :: timeStamp(${message.timeSent})"></div>
                                     <div>
+                                        <span th:text="'Tykkääjiä: ' + ${message.likes.size()}" class="text mb-2 mr-sm-2">TYKKÄÄJIÄ</span>
                                         <form th:if="${friendStatus == 1}" method="POST" th:action="@{/{username}/messages/like(username=${username})}" class="form-inline">
-                                            <p th:text="'Tykkääjiä: ' + ${message.likes.size()}" class="text mb-2 mr-sm-2">TYKKÄÄJIÄ</p>
                                             <button name="messageId" th:value="${message.id}" type="submit" class="btn btn-dark btn-sm mb-2 mr-sm-2">
                                                 <span th:text="${!currentUserLikedMessages.contains(message)} ? 'Tykkää' : 'En tykkääkään'">Tykkäätkö?</span>
                                             </button>
@@ -133,8 +125,9 @@
                                         <h6>Kommentit</h6>
                                         <p th:if="${message.comments.size() == 0}" class="small text-muted">Ei vielä kommentteja.</p>
                                         <p th:if="${message.comments.size() > 10}" class="small text-muted">Näytetään 10 uusinta kommenttia yhteensä <span th:text="${message.comments.size()}">MÄÄRÄ</span> kommentista.</p>
-                                        <div th:each="comment,iStat : ${message.comments}">
-                                            <div th:if="${iStat.count > iStat.size - 10}" class="media">
+                                        <div th:each="comment,iStat : ${message.getLatest10()}">
+                                            <!--<div th:if="${iStat.count > iStat.size - 10}" class="media">-->
+                                            <div class="media">
                                                 <div th:replace="fragments/layout :: profilePictureSmall(${comment.commenter})"></div>
                                                 <div class="media-body">
                                                     <div class="comment-section">
@@ -196,10 +189,7 @@
             <p>Kirjautunut sisään käyttäjänä: <span th:text="${currentUsername}">KÄYTTÄJÄ</span></p>
         </div>
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-        <script src="/js/index.js"></script>
+        <div th:replace="fragments/layout :: footer"></div>
 
     </body>
 </html>

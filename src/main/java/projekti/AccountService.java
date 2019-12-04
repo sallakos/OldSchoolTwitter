@@ -65,10 +65,6 @@ public class AccountService {
         return accountRepo.findAll(sort);
     }
     
-//    public HashMap<String, Boolean> findUsernamesUserFollows(Account account) {
-//        return accountRepo.findUsersIFollow(account.getId());
-//    }
-    
     public HashMap<String, Boolean> getFollowedUsernames(Account account) {
         System.out.println("SQL by AccountService / getFollowedUsernames():");
         HashMap<String, Boolean> usernames = new HashMap<>();
@@ -76,6 +72,16 @@ public class AccountService {
             usernames.put(follow.getFollowee().getUsername(), follow.isPending());
         }
         return usernames;
+    }
+    
+    public List<Account> getUserFollowees(Account account) {
+        System.out.println("SQL by AccountService / getUserFollowees():");
+        return accountRepo.findUserFollowees(account.getId());
+    }
+    
+    public List<Account> getUserFollowers(Account account) {
+        System.out.println("SQL by AccountService / getUserFollowers():");
+        return accountRepo.findUserFollowers(account.getId());
     }
     
     public Account currentUser() {
@@ -118,7 +124,15 @@ public class AccountService {
     }
     
     public int numberOfPendingRequests(Account account) {
+        System.out.println("SQL by AccountService / numberOfPendingRequests(): ");
         return accountRepo.numberOfPendingRequests(account.getId());
+    }
+    
+    public List<Follow> get6Followees(Account account) {
+        return account.getFollowees().subList(0, Math.min(account.getFollowees().size(), 6));
+    }
+    public List<Follow> get6Followers(Account account) {
+        return account.getFollowers().subList(0, Math.min(account.getFollowers().size(), 6));
     }
   
 }

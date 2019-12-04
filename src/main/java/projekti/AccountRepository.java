@@ -30,6 +30,18 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
                    "JOIN Account ON followee_id = Account.id " +
                    "WHERE Account.id = :id AND pending = true", nativeQuery = true)
     int numberOfPendingRequests(@Param("id") Long id);
+       
+    @Query(value = "SELECT * FROM Account " +
+                   "JOIN Follow ON Follow.followee_id = Account.id " +
+                   "WHERE Follow.follower_id = :id AND Follow.pending = false " + 
+                   "ORDER BY Account.name", nativeQuery = true)
+    List<Account> findUserFollowees(@Param("id") Long id);
+       
+    @Query(value = "SELECT * FROM Account " +
+                   "JOIN Follow ON Follow.follower_id = Account.id " +
+                   "WHERE Follow.followee_id = :id AND Follow.pending = false " + 
+                   "ORDER BY Account.name", nativeQuery = true)
+    List<Account> findUserFollowers(@Param("id") Long id);
     
 //    @Query(value = "SELECT username, Follow.pending AS pending FROM ACCOUNT " +
 //                   "JOIN Follow ON Follow.followee_id = Account.id " +
