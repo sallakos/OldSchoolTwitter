@@ -8,13 +8,18 @@
 
         <div th:replace="fragments/layout :: header(currentUser=${currentUsername})"></div>
 
-        <div class="m-3">
-            <h1 th:text="${name}">OMA NIMI</h1>
-            <a th:href="@{/{username}(username=${username})}">Palaa takaisin seinälle</a>
-        </div>
+        <div class="container-fluid setwidth my-content">
 
-        <div class="m-3">
+            <div>
+                <h1 th:text="${name}">OMA NIMI</h1>
+            </div>
+
             <h2>Kuvagalleria</h2>
+
+            <div class="mt-4">
+                <a th:href="@{/{username}(username=${username})}">Palaa takaisin seinälle</a>
+            </div>
+
             <div th:if="${pictures.empty}">
                 <p class="small text-muted">Ei vielä kuvia.</p>
             </div>
@@ -28,30 +33,34 @@
                     </div>
                     <div class="col-lg-9 col-md-8">
                         <div>
-                            <p th:text="${picture.description}" class="text">KUVATEKSTI</p>
-                            <p th:text="'Tykkääjiä: ' + ${picture.likes.size()}" class="text mb-2 mr-sm-2">TYKKÄÄJIÄ</p>
-                            <form th:if="${friendStatus == 1}" method="POST" th:action="@{/{username}/kuvat/like(username=${username})}" class="form-inline">
-                                <button name="pictureId" th:value="${picture.id}" type="submit" class="btn btn-dark btn-sm mb-2 mr-sm-2">
-                                    <span th:text="${!currentUserLikedPictures.contains(picture)} ? 'Tykkää' : 'En tykkääkään'">Tykkäätkö?</span>
+                            <div th:if="${picture.description.length() > 0}" class="message-section">
+                                <p th:text="${picture.description}" class="text">KUVATEKSTI</p>
+                            </div>
+                            <p th:id="'lp' + ${picture.id}" th:text="'Tykkääjiä: ' + ${picture.likes.size()}" class="text mb-2 mr-sm-2">TYKKÄÄJIÄ</p>
+                            <form th:id="'lpf' + ${picture.id}" th:if="${friendStatus == 1}" class="form-inline picturelike">
+                                <button th:id="'lpb' + ${picture.id}" name="pictureId" th:value="${username} + '-' + ${picture.id}" type="submit" class="btn btn-dark btn-sm mb-2 mr-sm-2">
+                                    <span th:id="'lps' + ${picture.id}" th:text="${!currentUserLikedPictures.contains(picture)} ? 'Tykkää' : 'En tykkääkään'">Tykkäätkö?</span>
                                 </button>
                             </form>
                         </div>
                         <div>
                             <div>
                                 <h6>Kommentit</h6>
-                                <p th:if="${picture.comments.size() == 0}" class="small text-muted">Ei vielä kommentteja.</p>
-                                <p th:if="${picture.comments.size() > 10}" class="small text-muted">Näytetään 10 uusinta kommenttia yhteensä <span th:text="${picture.comments.size()}">MÄÄRÄ</span> kommentista.</p>
-                                <div th:each="comment,iStat : ${picture.comments}">
-                                    <div th:if="${iStat.count > iStat.size - 10}" class="media">
-                                        <div th:replace="fragments/layout :: profilePictureSmall(${comment.commenter})"></div>
-                                        <div class="media-body">
-                                            <div class="comment-section">
-                                                <p class="text">
-                                                    <a th:href="@{/{username}(username=${comment.commenter.username})}" th:text="${comment.commenter.name}">KOMMENTOIJA</a>
-                                                    <span th:if="${iStat.count > iStat.size - 10}" th:text="${comment.comment}">KOMMENTTI</span>
-                                                </p>
+                                <div th:id="'c-' + ${picture.id}">
+                                    <p th:if="${picture.comments.size() == 0}" class="small text-muted">Ei vielä kommentteja.</p>
+                                    <p th:if="${picture.comments.size() > 10}" class="small text-muted">Näytetään 10 uusinta kommenttia yhteensä <span th:text="${picture.comments.size()}">MÄÄRÄ</span> kommentista.</p>
+                                    <div th:each="comment,iStat : ${picture.comments}">
+                                        <div th:if="${iStat.count > iStat.size - 10}" class="media">
+                                            <div th:replace="fragments/layout :: profilePictureSmall(${comment.commenter})"></div>
+                                            <div class="media-body">
+                                                <div class="comment-section">
+                                                    <p class="text">
+                                                        <a th:href="@{/{username}(username=${comment.commenter.username})}" th:text="${comment.commenter.name}" class="commenter-link">KOMMENTOIJA</a>
+                                                        <span th:if="${iStat.count > iStat.size - 10}" th:text="${comment.comment}">KOMMENTTI</span>
+                                                    </p>
+                                                </div>
+                                                <div th:replace="fragments/layout :: timeStamp(${comment.timeSent})"></div>
                                             </div>
-                                            <div th:replace="fragments/layout :: timeStamp(${comment.timeSent})"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -61,7 +70,7 @@
                                             <div th:replace="fragments/layout :: profilePictureSmall(${currentUser})"></div>
                                         </div>
                                         <div class="flex-right">
-                                            <form method="POST" th:action="@{/{username}/kuvat/comment(username=${username})}">
+                                            <form th:id="${username} + '-cp-' + ${picture.id}" class="commentpicture">
                                                 <textarea name="commentText" placeholder="Kirjoita kommentti..." id="newComment" class="form-control" rows="3"></textarea>
                                                 <button name="pictureId" th:value="${picture.id}" type="submit" class="btn btn-sm btn-dark mt-2 ml-1">Lähetä</button>
                                             </form>
@@ -73,18 +82,22 @@
                     </div>
                 </div>
             </div>
+
+
+            <div th:if="${friendStatus == 2}" class="m-3">
+
+                <hr /> 
+
+                <h4>Lisää kuva</h4>
+                <form method="POST" th:action="@{/{username}/kuvat(username=${username})}" enctype="multipart/form-data" class="form-group">
+                    <p><input type="file" name="file" id="file" accept="image/*" class="form-control-file" /></p>
+                    <textarea name="description" placeholder="Kerro kuvasta jotain..." id="description" class="form-control" rows="3"></textarea>
+                    <input type="submit" value="Lisää" class="btn btn-sm btn-dark mt-2 ml-1" />
+                </form>
+            </div>
+
         </div>
 
-        <div th:if="${friendStatus == 2}" class="m-3">
-            <h4>Lisää kuva</h4>
-            <form method="POST" th:action="@{/{username}/kuvat(username=${username})}" enctype="multipart/form-data" class="form-group">
-                <label class="btn btn-sm btn-dark">
-                    Valitse kuva... <input type="file" name="file" id="file" accept="image/*">
-                </label>
-                <textarea name="description" placeholder="Kerro kuvasta jotain..." id="description" class="form-control" rows="3"></textarea>
-                <input type="submit" value="Lisää" class="btn btn-sm btn-dark mt-2 ml-1" />
-            </form>
-        </div>
 
         <hr />
 

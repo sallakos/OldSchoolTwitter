@@ -6,6 +6,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,9 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 public class Picture extends AbstractPersistable<Long> {
     
     @Lob
+    @NotEmpty
     private byte[] picture; // Kuva.
+    
     private String description; // Teksti.
     
     // Kuva kuuluu yhdelle käyttäjälle, jolla voi olla monta kuvaa.

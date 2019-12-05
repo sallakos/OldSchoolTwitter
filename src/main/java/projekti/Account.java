@@ -8,6 +8,7 @@ import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,8 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
  * @author Salla Koskinen
  */
 @NamedEntityGraph(name = "Account.allUserData",
-                  attributeNodes = {@NamedAttributeNode("pictures")})
+                  attributeNodes = {@NamedAttributeNode("pictures"),
+                                    @NamedAttributeNode("profilePicture")})
 @Entity
 @Data
 @NoArgsConstructor

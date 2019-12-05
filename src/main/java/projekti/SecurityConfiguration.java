@@ -36,6 +36,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console", "/h2-console/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/").permitAll()
                 .antMatchers("/register").permitAll()
+                .antMatchers("/style/**").permitAll()
+                .antMatchers("/js/**").permitAll()
                 .anyRequest().authenticated();
         http.formLogin()
             .defaultSuccessUrl("/user", true) // Ohjataan käyttäjä omalle profiilisivulleen kirjautumisen yhteydessä.

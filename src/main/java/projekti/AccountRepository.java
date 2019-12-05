@@ -6,6 +6,7 @@ package projekti;
  */
 import java.util.HashMap;
 import java.util.List;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +16,11 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @EntityGraph(value = "Account.allUserData")
     Account findByUsername(String username);
+    
+    // Haetaan kaikki käyttäjät ja heidän kuvansa (vaikka niitä ei periaatteessa tarvita...)
+    @EntityGraph(value = "Account.allUserData")
+    @Override
+    List<Account> findAll(Sort sort);
     
     @Query(value = "SELECT followee_id FROM ACCOUNT " +
                    "JOIN Follow ON follower_id = Account.id " + 
@@ -30,7 +36,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
                    "JOIN Account ON followee_id = Account.id " +
                    "WHERE Account.id = :id AND pending = true", nativeQuery = true)
     int numberOfPendingRequests(@Param("id") Long id);
-       
+    
     @Query(value = "SELECT * FROM Account " +
                    "JOIN Follow ON Follow.followee_id = Account.id " +
                    "WHERE Follow.follower_id = :id AND Follow.pending = false " + 
@@ -42,10 +48,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
                    "WHERE Follow.followee_id = :id AND Follow.pending = false " + 
                    "ORDER BY Account.name", nativeQuery = true)
     List<Account> findUserFollowers(@Param("id") Long id);
-    
-//    @Query(value = "SELECT username, Follow.pending AS pending FROM ACCOUNT " +
-//                   "JOIN Follow ON Follow.followee_id = Account.id " +
-//                   "WHERE Follow.follower_id = :id", nativeQuery = true)
-//    HashMap<String, Boolean> findUsersIFollow(@Param("id") Long id);
     
 }

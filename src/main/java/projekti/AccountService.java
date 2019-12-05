@@ -134,5 +134,9 @@ public class AccountService {
     public List<Follow> get6Followers(Account account) {
         return account.getFollowers().subList(0, Math.min(account.getFollowers().size(), 6));
     }
+    
+    public boolean checkUniqueUsername(String username) {
+        return accountRepo.findByUsername(username) == null;
+    }
   
 }

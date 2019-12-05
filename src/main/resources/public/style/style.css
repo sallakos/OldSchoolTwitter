@@ -1,6 +1,35 @@
+body {
+    background-color: #e6ffe6;
+}
+
 h6 {
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+a {
+    color: #343a40;
+}
+
+a:hover {
+    color: grey;
+    text-decoration: none;
+}
+
+.setwidth {
+    width: 95%;
+}
+
+.my-nav {
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.my-content {
+    background-color: white;    
+    padding: 20px;
+    border-radius: 10px;
 }
 
 .big-a {
@@ -25,7 +54,7 @@ h6 {
 }
 
 .message-section {
-    background: red;
+    background: #b8deb8;
     border-radius: 5px;
     padding: 10px;
 }
@@ -34,6 +63,13 @@ h6 {
     background: #e6ffe6;
     border-radius: 5px;
     padding: 5px;
+}
+
+.userdata-section {
+    background: #e6ffe6;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
 }
 
 .text {
@@ -60,7 +96,7 @@ h6 {
     object-fit: cover;
     object-position: center;
     border-radius: 50%;
-    margin: 10px;
+    margin: 0 10px;
 }
 
 .gallery-preview {
@@ -83,9 +119,20 @@ h6 {
 }
 
 .gallery-item {
-    background: red;
-    padding: 20px;
+    background: white;
+    padding: 30px;
     border-radius: 10px;
+    border: solid 1px black;
+}
+
+.commenter-link {
+    color: grey;
+    font-weight: bold;
+}
+
+.commenter-link:hover {
+    color: #bbbbbb;
+    text-decoration: none;
 }
 
 .btn-xs, .btn-group-xs > .btn {

@@ -10,178 +10,195 @@
 
         <hr />
 
-        <div class="container-fluid">
+        <div class="container-fluid setwidth">
 
-            <div class="row">
+            <div class="row justify-content-center">
 
                 <div class="col-xl-2 col-lg-3 col-md-12 center">
 
-                    <h1 th:text="${name}">OMA NIMI</h1>
-                    <div th:switch="${friendStatus}">
+                    <div class="my-nav">
+
+                        <h1 th:text="${name}">OMA NIMI</h1>
                         <div th:replace="fragments/layout :: profilePicture(${profilePicture})"></div>
-                        <form th:case="-1" method="POST" th:action="@{/{username}/follow(username=${username})}"><input type="submit" name="follow" value="Seuraa" class="btn btn-dark" /></form>
-                        <form th:case="0" method="POST" th:action="@{/{username}/unfollow(username=${username})}"><input type="submit" name="unfollow" value="Peru pyyntö" class="btn btn-dark" /></form>
-                        <form th:case="1" method="POST" th:action="@{/{username}/unfollow(username=${username})}"><input type="submit" name="unfollow" value="Lopeta seuraaminen" class="btn btn-dark" /></form>
-                    </div>
 
-                    <div class="container-fluid mt-4">
-                        <h6><span th:text="${userFollowsWho}">KEITÄ</span> <span class="small text-muted">[<span th:text="${numberOfFollowees}">MÄÄRÄ</span>]</span></h6>
-                        <div class="row justify-content-center">
-                            <div th:each="user : ${followees}" th:if="${!user.pending}">
-                                <a th:href="@{/{username}(username=${user.followee.username})}" data-toggle="tooltip" data-placement="bottom" data-html="true" th:title="${user.followee.name} + '<br> alkaen ' + ${#temporals.format(user.startOfFollow, 'd.M.yyyy')}">
-                                    <div th:replace="fragments/layout :: profilePictureSmall(${user.followee})"></div>
-                                </a>
-                                <form th:if="${friendStatus == 2}" method="POST" th:action="@{/{username}/unfollowown(username=${user.followee.username})}" class="form-inline">
-                                    <input type="submit" name="unfollow" value="Älä seuraa" class="btn btn-xs btn-dark" />
-                                </form>
-                            </div>
+                        <div th:if="${friendStatus >= 1}">
+                            <button type="button" id="btn-allmessages" class="nav-btn btn btn-sm btn-dark d-lg-none">Viestit</button>
+                            <button type="button" id="btn-pictures" class="nav-btn btn btn-sm btn-dark">Kuvat</button>
                         </div>
-                        <a th:href="@{/{username}/seurattavat(username=${username})}" class="small text-muted">Näytä kaikki</a>
-                    </div>
 
-                    <div class="container-fluid mt-4">
-                        <h6><span th:text="${whoFollowsUser}">KETKÄ</span> <span class="small text-muted">[<span th:text="${numberOfFollowers}">MÄÄRÄ</span>]</span></h6>
-                        <div class="row justify-content-center">
-                            <div th:each="user : ${followers}" th:if="${!user.pending}">
-                                <a th:href="@{/{username}(username=${user.follower.username})}" data-toggle="tooltip" data-placement="bottom" data-html="true" th:title="${user.follower.name} + '<br> alkaen ' + ${#temporals.format(user.startOfFollow, 'd.M.yyyy')}">
-                                    <div th:replace="fragments/layout :: profilePictureSmall(${user.follower})"></div>
-                                </a>
-                                <form th:if="${friendStatus == 2 && !followedUsernames.containsKey(user.follower.username)}" method="POST" th:action="@{/{username}/followown(username=${user.follower.username})}">
-                                    <input type="submit" name="follow" value="Seuraa" class="btn btn-xs btn-dark" />
-                                </form>
-                                <form th:if="${friendStatus == 2 && followedUsernames.containsKey(user.follower.username) && followedUsernames.get(user.follower.username)}" method="POST" th:action="@{/{username}/unfollowown(username=${user.follower.username})}">
-                                    <input type="submit" name="unfollow" value="Peru pyyntö" class="btn btn-xs btn-dark" />
-                                </form>
-                            </div>
-                        </div>
-                        <a th:href="@{/{username}/seuraajat(username=${username})}" class="small text-muted">Näytä kaikki</a>
-                    </div>
-
-                    <div th:if="${friendStatus == 2}" class="container-fluid mt-5">
-                        <h6>Uudet seuraamispyynnöt</h6>
-                        <p th:if="${numberOfPendingRequests == 0}" class="small text-muted">Ei seuraamispyyntöjä.</p>
-                        <div th:each="user : ${followers}">
-                            <div th:if="${user.pending}" class="row justify-content-center mt-4 mb-4">
-                                <div class="row justify-content-center">
-                                    <div class="col-12">
-                                        <a th:href="@{/{username}(username=${user.follower.username})}" class="btn btn-light">
-                                            <div class="media">
-                                                <div th:replace="fragments/layout :: profilePictureSmall(${user.follower})"></div>
-                                                <div class="media-body">
-                                                    <p th:text="${user.follower.name}" class="text"></p>
-                                                    <p>@<span th:text="${user.follower.username}" class="text"></span></p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <form method="POST" th:action="@{/{username}/accept/{who}(username=${username}, who=${user.follower.username})}" class="form-inline">
-                                            <input type="submit" name="accept" value="Hyväksy" class="btn btn-sm btn-dark" />
-                                        </form>
-                                    </div>
-                                    <div class="col">
-                                        <form method="POST" th:action="@{/{username}/decline/{who}(username=${username}, who=${user.follower.username})}" class="form-inline">
-                                            <input type="submit" name="decline" value="Hylkää" class="btn btn-sm btn-dark" />
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xl-10 col-lg-9 col-md-12">
-
-                    <div th:if="${friendStatus == 2}">
-                        <h4>Mitä mietit?</h4>
-                        <form method="POST" th:action="@{/{username}/messages(username=${username})}">
-                            <textarea name="messageText" placeholder="Jaa ajatuksesi!" id="newMessage" class="form-control" rows="3"></textarea>
-                            <input type="submit" class="btn btn-sm btn-dark mt-2 ml-1" />            
-                        </form>
-                    </div>
-
-                    <div th:if="${friendStatus >= 1}" class="mt-4">
-                        <div>
-                            <h2>Viestit</h2>
-                            <div th:each="message : ${messages}" class="media p-3">
-                                <div th:replace="fragments/layout :: profilePictureSmall(${message.owner})"></div>
-                                <div class="media-body">
-                                    <div class="message-section">
-                                        <h5 th:text="${message.owner.name}">LÄHETTÄJÄ</h5>
-                                        <p th:text="${message.message}" class="text">VIESTI</p>
-                                    </div>
-                                    <div th:replace="fragments/layout :: timeStamp(${message.timeSent})"></div>
-                                    <div>
-                                        <span th:text="'Tykkääjiä: ' + ${message.likes.size()}" class="text mb-2 mr-sm-2">TYKKÄÄJIÄ</span>
-                                        <form th:if="${friendStatus == 1}" method="POST" th:action="@{/{username}/messages/like(username=${username})}" class="form-inline">
-                                            <button name="messageId" th:value="${message.id}" type="submit" class="btn btn-dark btn-sm mb-2 mr-sm-2">
-                                                <span th:text="${!currentUserLikedMessages.contains(message)} ? 'Tykkää' : 'En tykkääkään'">Tykkäätkö?</span>
-                                            </button>
-                                        </form>
-                                    </div>
-                                    <div>
-                                        <h6>Kommentit</h6>
-                                        <p th:if="${message.comments.size() == 0}" class="small text-muted">Ei vielä kommentteja.</p>
-                                        <p th:if="${message.comments.size() > 10}" class="small text-muted">Näytetään 10 uusinta kommenttia yhteensä <span th:text="${message.comments.size()}">MÄÄRÄ</span> kommentista.</p>
-                                        <div th:each="comment,iStat : ${message.getLatest10()}">
-                                            <!--<div th:if="${iStat.count > iStat.size - 10}" class="media">-->
-                                            <div class="media">
-                                                <div th:replace="fragments/layout :: profilePictureSmall(${comment.commenter})"></div>
-                                                <div class="media-body">
-                                                    <div class="comment-section">
-                                                        <p class="text">
-                                                            <a th:href="@{/{username}(username=${comment.commenter.username})}" th:text="${comment.commenter.name}">KOMMENTOIJA</a>
-                                                            <span th:if="${iStat.count > iStat.size - 10}" th:text="${comment.comment}">KOMMENTTI</span>
-                                                        </p>
-                                                    </div>
-                                                    <div th:replace="fragments/layout :: timeStamp(${comment.timeSent})"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="flex-left">
-                                                    <div th:replace="fragments/layout :: profilePictureSmall(${currentUser})"></div>
-                                                </div>
-                                                <div class="flex-right">
-                                                    <form method="POST" th:action="@{/{username}/messages/comment(username=${username})}">
-                                                        <textarea name="commentText" placeholder="Kirjoita kommentti..." id="newComment" class="form-control" rows="3"></textarea>
-                                                        <button name="messageId" th:value="${message.id}" type="submit" class="btn btn-sm btn-dark mt-2 ml-1">Lähetä</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr />
-
-                    <div th:if="${friendStatus >= 1}" class="mt-4">
-                        <h2><a th:href="@{/{username}/kuvat(username=${username})}" class="big-a">Kuvat</a></h2>
-                        <div th:if="${pictures.empty}">
-                            <p class="small text-muted">Ei vielä kuvia.</p>
-                        </div>
-                        <div th:if="${!pictures.empty}" class="container-fluid center">
+                        <div class="container-fluid mt-4">
+                            <h6><span th:text="${userFollowsWho}">KEITÄ</span> <span class="small text-muted">[<span th:text="${numberOfFollowees}">MÄÄRÄ</span>]</span></h6>
                             <div class="row justify-content-center">
-                                <div th:each="picture : ${pictures}" class="col">
-                                    <a th:href="@{/{username}/kuvat(username=${username})}">
-                                        <img th:src="@{/{username}/kuvat/{id}(username=${username}, id=${picture.id})}" class="gallery-preview" />
+                                <div th:each="user : ${followees}" th:if="${!user.pending}">
+                                    <a th:href="@{/{username}(username=${user.followee.username})}" data-toggle="tooltip" data-placement="bottom" data-html="true" th:title="${user.followee.name} + '<br> alkaen ' + ${#temporals.format(user.startOfFollow, 'd.M.yyyy')}">
+                                        <div th:replace="fragments/layout :: profilePictureSmall(${user.followee})"></div>
                                     </a>
                                 </div>
                             </div>
+                            <a th:href="@{/{username}/seurattavat(username=${username})}" class="small text-muted">Näytä kaikki</a>
+                        </div>
+
+                        <div class="container-fluid mt-4">
+                            <h6><span th:text="${whoFollowsUser}">KETKÄ</span> <span class="small text-muted">[<span th:text="${numberOfFollowers}">MÄÄRÄ</span>]</span></h6>
+                            <div class="row justify-content-center">
+                                <div th:each="user : ${followers}" th:if="${!user.pending}">
+                                    <a th:href="@{/{username}(username=${user.follower.username})}" data-toggle="tooltip" data-placement="bottom" data-html="true" th:title="${user.follower.name} + '<br> alkaen ' + ${#temporals.format(user.startOfFollow, 'd.M.yyyy')}">
+                                        <div th:replace="fragments/layout :: profilePictureSmall(${user.follower})"></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <a th:href="@{/{username}/seuraajat(username=${username})}" class="small text-muted">Näytä kaikki</a>
+                        </div>
+
+                        <div th:if="${friendStatus == 2}" class="container-fluid mt-5">
+                            <h6>Uudet seuraamispyynnöt</h6>
+                            <p th:if="${numberOfPendingRequests == 0}" class="small text-muted">Ei seuraamispyyntöjä.</p>
+                            <div th:each="user : ${followers}">
+                                <div th:if="${user.pending}" class="row justify-content-center mt-4 mb-4">
+                                    <div class="row justify-content-center">
+                                        <div class="col-12">
+                                            <a th:href="@{/{username}(username=${user.follower.username})}" class="btn btn-light">
+                                                <div class="media">
+                                                    <div th:replace="fragments/layout :: profilePictureSmall(${user.follower})"></div>
+                                                    <div class="media-body">
+                                                        <p th:text="${user.follower.name}" class="text"></p>
+                                                        <p>@<span th:text="${user.follower.username}" class="text"></span></p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <form method="POST" th:action="@{/{username}/accept/{who}(username=${username}, who=${user.follower.username})}" class="form-inline">
+                                                <input type="submit" name="accept" value="Hyväksy" class="btn btn-sm btn-dark" />
+                                            </form>
+                                        </div>
+                                        <div class="col">
+                                            <form method="POST" th:action="@{/{username}/decline/{who}(username=${username}, who=${user.follower.username})}" class="form-inline">
+                                                <input type="submit" name="decline" value="Hylkää" class="btn btn-sm btn-dark" />
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:if="${friendStatus < 2}" th:switch="${friendStatus}">
+
+                            <hr />
+
+                            <form th:id="'f_' + ${username}" class="follow">
+                                <button th:id="'fb_' + ${username}" name="followUser" type="submit" class="btn btn-sm btn-dark">
+                                    <span th:id="'fs_' + ${username}" th:case="-1">Seuraa</span>
+                                    <span th:id="'fs_' + ${username}" th:case="0">Peru pyyntö</span>
+                                    <span th:id="'fs_' + ${username}" th:case="1">Lopeta seuraaminen</span>
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-xl-6 col-lg-9 col-md-12 my-content">
+                    <div th:if="${friendStatus == -1}">Seuraa käyttäjää nähdäksesi hänen viestinsä ja kuvansa.</div>
+                    <div id="pending" th:if="${friendStatus == 0}">Näet käyttäjän viestit ja kuvat, kun hän on hyväksynyt seuraamispyyntösi.</div>
+
+                    <div th:if="${friendStatus >= 1}">
+
+                        <div th:if="${friendStatus == 2}" class="mb-4">
+                            <h4>Mitä mietit?</h4>
+                            <form th:id="${username} + '-sm'" class="messagesend">
+                                <textarea name="messageText" placeholder="Jaa ajatuksesi!" id="newMessage" class="form-control" rows="3"></textarea>
+                                <input type="submit" class="btn btn-sm btn-dark mt-2 ml-1" />            
+                            </form>
+                        </div>
+
+                        <div>
+                            <div id="allmessages">
+                                <h2>Viestit</h2>
+                                <div th:each="message : ${messages}" class="media p-3">
+                                    <div th:replace="fragments/layout :: profilePictureSmall(${message.owner})"></div>
+                                    <div class="media-body">
+                                        <div class="message-section">
+                                            <h5 th:text="${message.owner.name}">LÄHETTÄJÄ</h5>
+                                            <p th:text="${message.message}" class="text">VIESTI</p>
+                                        </div>
+                                        <div th:replace="fragments/layout :: timeStamp(${message.timeSent})"></div>
+                                        <div>
+                                            <span th:id="'lm' + ${message.id}" th:text="'Tykkääjiä: ' + ${message.likes.size()}" class="text mb-2 mr-sm-2">TYKKÄÄJIÄ</span>
+                                            <form th:id="'lmf' + ${message.id}" th:if="${friendStatus == 1}" class="form-inline messagelike">    
+                                                <button th:id="'lmb' + ${message.id}" name="messageId" th:value="${username} + '-' + ${message.id}" type="submit" class="btn btn-dark btn-sm mb-2 mr-sm-2">
+                                                    <span th:id="'lms' + ${message.id}" th:text="${!currentUserLikedMessages.contains(message)} ? 'Tykkää' : 'En tykkääkään'">Tykkäätkö?</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                        <div>
+                                            <h6>Kommentit</h6>
+                                            <div th:id="'c-' + ${message.id}">
+                                                <p th:if="${message.comments.size() == 0}" class="small text-muted">Ei vielä kommentteja.</p>
+                                                <p th:if="${message.comments.size() > 10}" class="small text-muted">Näytetään 10 uusinta kommenttia yhteensä <span th:text="${message.comments.size()}">MÄÄRÄ</span> kommentista.</p>
+                                                <div th:each="comment,iStat : ${message.getLatest10()}">
+                                                    <!--<div th:if="${iStat.count > iStat.size - 10}" class="media">-->
+                                                    <div class="media">
+                                                        <div th:replace="fragments/layout :: profilePictureSmall(${comment.commenter})"></div>
+                                                        <div class="media-body">
+                                                            <div class="comment-section">
+                                                                <p class="text">
+                                                                    <a th:href="@{/{username}(username=${comment.commenter.username})}" th:text="${comment.commenter.name}" class="commenter-link">KOMMENTOIJA</a>
+                                                                    <span th:if="${iStat.count > iStat.size - 10}" th:text="${comment.comment}">KOMMENTTI</span>
+                                                                </p>
+                                                            </div>
+                                                            <div th:replace="fragments/layout :: timeStamp(${comment.timeSent})"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="flex-left">
+                                                        <div th:replace="fragments/layout :: profilePictureSmall(${currentUser})"></div>
+                                                    </div>
+                                                    <div class="flex-right">
+                                                        <form th:id="${username} + '-cm-' + ${message.id}" class="commentmessage">
+                                                            <textarea name="commentText" placeholder="Kirjoita kommentti..." id="newComment" class="form-control" rows="3"></textarea>
+                                                            <button name="messageId" th:value="${message.id}" type="submit" class="btn btn-sm btn-dark mt-2 ml-1">Lähetä</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div id="pictures" class="mt-4">
+                            <h2><a th:href="@{/{username}/kuvat(username=${username})}" class="big-a">Kuvat</a></h2>
+                            <div th:if="${pictures.empty}">
+                                <p class="small text-muted">Ei vielä kuvia.</p>
+                            </div>
+                            <div th:if="${!pictures.empty}" class="container-fluid center">
+                                <div class="row justify-content-center">
+                                    <div th:each="picture : ${pictures}" class="col">
+                                        <a th:href="@{/{username}/kuvat(username=${username})}">
+                                            <img th:src="@{/{username}/kuvat/{id}(username=${username}, id=${picture.id})}" class="gallery-preview" />
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
                 </div>
 
             </div>
 
-        </div>
 
+        </div>
 
         <hr />
 

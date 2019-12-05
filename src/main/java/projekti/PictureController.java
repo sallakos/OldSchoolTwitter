@@ -5,9 +5,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,6 +50,7 @@ public class PictureController {
     @GetMapping(path = "/{username}/kuvat/profiilikuva", produces = "image/*")
     @ResponseBody
     public byte[] getProfilePicture(@PathVariable String username) throws IOException {
+        System.out.println("SQL by käyttäjän " + username + " profiilikuva: ");
         Account account = accountService.findByUsername(username); // SQL
         return pictureService.getPicture(account.getProfilePicture().getId());
     }
@@ -78,9 +81,13 @@ public class PictureController {
 
     // Lisätään kuva. Sallitaan POST vain, jos käyttäjä on kirjautunut sisään.
     @PostMapping("/{username}/kuvat")
-    public String addPicture(@RequestParam("file") MultipartFile file,
-            @RequestParam String description,
-            @PathVariable String username) throws IOException {
+    public String addPicture(@Valid @RequestParam("file") MultipartFile file,
+                             @RequestParam String description,
+                             @PathVariable String username,
+                             BindingResult bindingResult) throws IOException {
+        if (bindingResult.hasErrors()) {
+            return "{username}/kuvat";
+        }
         if (accountService.isCurrentUser(username)) {
             pictureService.savePicture(username, file, description);
         }
@@ -89,9 +96,9 @@ public class PictureController {
 
     // Tykätään kuvasta. Tykkääminen onnistuu vain, jos ei yritetä tykätä omasta
     // tai ei seurattavan kuvasta.
-    @PostMapping("/{username}/kuvat/like")
-    public String likeAPicture(@RequestParam Long pictureId,
-            @PathVariable String username) {
+    @PostMapping("/{username}/kuvat/{pictureId}/like")
+    public String likeAPicture(@PathVariable Long pictureId,
+                               @PathVariable String username) {
         Account account = accountService.findByUsername(username);
         if (accountService.friendStatus(account) == 1) {
             if (accountService.currentUser().getLikedPictures().contains(pictureService.findById(pictureId))) {
@@ -104,10 +111,10 @@ public class PictureController {
     }
 
     // Kommentoidaan kuvaa. Vain omaa tai kavereiden kuvaa voi kommentoida.
-    @PostMapping("/{username}/kuvat/comment")
-    public String commentAPicture(@RequestParam Long pictureId,
-            @RequestParam String commentText,
-            @PathVariable String username) {
+    @PostMapping("/{username}/kuvat/{pictureId}/comment")
+    public String commentAPicture(@PathVariable Long pictureId,
+                                  @RequestParam String commentText,
+                                  @PathVariable String username) {
         Account account = accountService.findByUsername(username);
         if (accountService.friendStatus(account) >= 1) {
             Comment comment = new Comment(commentText, LocalDateTime.now(), accountService.currentUser());

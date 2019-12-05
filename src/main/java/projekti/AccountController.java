@@ -2,10 +2,13 @@ package projekti;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +21,9 @@ public class AccountController {
 
     @Autowired
     MessageService messageService;
+    
+    @Autowired
+    PictureService pictureService;
     
 // ---------- GETIT ---------------------------------------------------------------------------------------------------
 
@@ -64,12 +70,14 @@ public class AccountController {
     @GetMapping("/kayttajat")
     public String allUsers(Model model) {
         Account currentUser = accountService.currentUser(); // SQL
-        model.addAttribute("users", accountService.findAll()); // SQL MIKSI 3 kyselyä????
+        model.addAttribute("users", accountService.findAll()); // SQL
         model.addAttribute("currentUser", currentUser.getUsername());
         model.addAttribute("followedUsernames", accountService.getFollowedUsernames(currentUser)); // SQL
         model.addAttribute("followees", currentUser.getFollowees());
         model.addAttribute("title", "Käyttäjät");
-        model.addAttribute("id", "search" + 0);
+        model.addAttribute("id", "search");
+        // Näiden lisäksi SQL hakee aina kunkin käyttäjän profiilikuvan erikseen.
+        // Jostain syystä tulostus menee epäloogiseen järjestykseen, mutta yksi kysely per profiilikuva.
         return "users";
     }
     
@@ -77,8 +85,8 @@ public class AccountController {
     @GetMapping("/{username}/seurattavat")
     public String allUserFollowees(Model model, @PathVariable String username) {
         Account currentUser = accountService.currentUser(); // SQL
-        Account account = accountService.findByUsername(username);
-        model.addAttribute("users", accountService.getUserFollowees(account));
+        Account account = accountService.findByUsername(username); // SQL
+        model.addAttribute("users", accountService.getUserFollowees(account)); // SQL hakee jostain syystä myös kuvat
         model.addAttribute("currentUser", currentUser.getUsername());
         model.addAttribute("followedUsernames", accountService.getFollowedUsernames(currentUser)); // SQL
         model.addAttribute("followees", currentUser.getFollowees());
@@ -88,6 +96,8 @@ public class AccountController {
         } else {
             model.addAttribute("title", "Käyttäjät, joita " + account.getName() + " seuraa:");
         }
+        // Näiden lisäksi SQL hakee aina kunkin käyttäjän profiilikuvan erikseen.
+        // Jostain syystä tulostus menee epäloogiseen järjestykseen, mutta yksi kysely per profiilikuva.
         return "users";
     }
     
@@ -95,16 +105,19 @@ public class AccountController {
     @GetMapping("/{username}/seuraajat")
     public String allUserFollowers(Model model, @PathVariable String username) {
         Account currentUser = accountService.currentUser(); // SQL
-        Account account = accountService.findByUsername(username);
-        model.addAttribute("users", accountService.getUserFollowers(account));
+        Account account = accountService.findByUsername(username); // SQL
+        model.addAttribute("users", accountService.getUserFollowers(account)); // SQL hakee jostain syystä myös kuvat
         model.addAttribute("currentUser", currentUser.getUsername());
         model.addAttribute("followedUsernames", accountService.getFollowedUsernames(currentUser)); // SQL
         model.addAttribute("followees", currentUser.getFollowees());
+        model.addAttribute("id", "search" + account.getId());
         if (accountService.isCurrentUser(username)) {
             model.addAttribute("title", "Sinun seuraajasi:");
         } else {
             model.addAttribute("title", "Käyttäjän " + account.getName() + " seuraajat:");
         }
+        // Näiden lisäksi SQL hakee aina kunkin käyttäjän profiilikuvan erikseen.
+        // Jostain syystä tulostus menee epäloogiseen järjestykseen, mutta yksi kysely per profiilikuva.
         return "users";
     }
 
@@ -119,9 +132,32 @@ public class AccountController {
 
     // Lähetetään rekisteröityminen. Tämän jälkeen käyttäjän tulee vielä kirjautua sisään.
     @PostMapping("/register")
+//    public String newUser(@Valid @ModelAttribute AccountData accountData,
+//                          BindingResult bindingResult) {
     public String newUser(@RequestParam String username,
             @RequestParam String name,
             @RequestParam String password) {
+        
+//        System.out.println("aaaaaaaaaaaajgk");
+//        
+//        if (bindingResult.hasErrors()) {
+//            System.out.println("dgjkjgkdjgk");
+//            return "register";
+//        }
+//        
+//        System.out.println(accountData.getUsername());
+//        
+//        if (!accountService.checkUniqueUsername(accountData.getUsername())){
+//            System.out.println("not unique" );
+////            model.addAttribute("isLoggedIn", false );
+////            model.addAttribute("uniqueUsername", accountService.checkUniqueUsername(accountData.getUsername()));
+//            return "register";
+//        }
+//        
+//        accountService.register(accountData.getUsername(), accountData.getName(), accountData.getPassword());
+//        
+//        return "redirect:/user";
+        
         // Jos joku käyttäjä on jo kirjautunut, ei voida rekisteröityä.
         // Ohjataan käyttäjä omalle profiilisivulleen.
         // Käyttäjän ei pitäisi edes nähdä tätä sivua, mutta estetään myös POST.
