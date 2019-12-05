@@ -24,22 +24,19 @@
             <div class="row justify-content-center" id="userList">
                 <div th:each="user : ${users}" class="media col-12 userdata-section">
                     <!--<div class="userdata-section">-->
-                        <img th:if="${user.profilePicture == null}" src="/img/default.jpg" class="profile-img" />
-                        <img th:if="${user.profilePicture != null}" th:src="@{/{username}/kuvat/profiilikuva(username=${user.username})}" class="profile-img" />
-                        <div class="media-body pl-3">
-                            <h4 class="mt-3"><a th:href="@{/{id}(id=${user.username})}" th:text="${user.name}">NIMI</a></h4>
-                            <p>@<span th:text="${user.username}" class="text">KÄYTTÄJÄNIMI</span></p>
-                            <div th:if="${!currentUser.equals(user.username)}">
-                                <p></p>
-                                <form th:id="'f_' + ${user.username}" class="follow">
-                                    <button th:id="'fb_' + ${user.username}" name="followUser" type="submit" class="btn btn-dark">
-                                        <span th:if="${!followedUsernames.containsKey(user.username)}" th:id="'fs_' + ${user.username}">Seuraa</span>
-                                        <span th:if="${followedUsernames.containsKey(user.username) && followedUsernames.get(user.username)}" th:id="'fs_' + ${user.username}">Peru pyyntö</span>
-                                        <span th:if="${followedUsernames.containsKey(user.username) && !followedUsernames.get(user.username)}" th:id="'fs_' + ${user.username}">Lopeta seuraaminen</span>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
+                    <img th:if="${user.profilePicture == null}" src="/img/default.jpg" class="profile-img" />
+                    <img th:if="${user.profilePicture != null}" th:src="@{/{username}/kuvat/profiilikuva(username=${user.username})}" class="profile-img" />
+                    <div class="media-body pl-3">
+                        <h4 class="mt-3"><a th:href="@{/{id}(id=${user.username})}" th:text="${user.name}">NIMI</a></h4>
+                        <p>@<span th:text="${user.username}" class="text">KÄYTTÄJÄNIMI</span></p>
+                        <form th:if="${!currentUser.equals(user.username)}" th:id="'f_' + ${user.username}" class="follow">
+                            <button th:id="'fb_' + ${user.username}" name="followUser" type="submit" class="btn btn-dark">
+                                <span th:if="${!followedUsernames.containsKey(user.username)}" th:id="'fs_' + ${user.username}">Seuraa</span>
+                                <span th:if="${followedUsernames.containsKey(user.username) && followedUsernames.get(user.username)}" th:id="'fs_' + ${user.username}">Peru pyyntö</span>
+                                <span th:if="${followedUsernames.containsKey(user.username) && !followedUsernames.get(user.username)}" th:id="'fs_' + ${user.username}">Lopeta seuraaminen</span>
+                            </button>
+                        </form>
+                    </div>
                     <!--</div>-->
                 </div>
             </div>

@@ -9,10 +9,13 @@ $('.usersearch').keyup(function() {
   let filter = input.value.toUpperCase();
   const ul = document.getElementById("userList")
   const li = ul.getElementsByTagName('div')
+console.log(li)
 
   for (let i = 0; i < li.length; i++) {
     let a = li[i].getElementsByTagName("a")[0];
+console.log(a)
     let txtValue = a.textContent || a.innerText;
+console.log(txtValue)
     if (txtValue.toUpperCase().indexOf(filter) > -1) {
       li[i].style.display = "";
     } else {
