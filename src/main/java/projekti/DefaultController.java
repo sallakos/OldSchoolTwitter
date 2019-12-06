@@ -13,8 +13,8 @@ public class DefaultController {
     @Autowired
     AccountRepository accountRepo;
     
-    @Autowired
-    SecurityConfiguration securityConfiguration;
+//    @Autowired
+//    SecurityConfiguration securityConfiguration;
 
     @GetMapping("/")
     public String home(Model model) {

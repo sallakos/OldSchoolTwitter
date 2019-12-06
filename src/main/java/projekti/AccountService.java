@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class AccountService {
     
-    @Autowired
-    SecurityConfiguration securityConfiguration;
+//    @Autowired
+//    SecurityConfiguration securityConfiguration;
     
     @Autowired
     AccountRepository accountRepo;
