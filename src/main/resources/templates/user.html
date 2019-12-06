@@ -55,40 +55,40 @@
                         <div>
                             <div th:id="'pr-' + ${username}" th:if="${friendStatus == 2}" class="container-fluid mt-5">
                                 <div>
-                                <h6>Uudet seuraamispyynnöt</h6>
-                                <div th:id="'nr-' + ${username}"><p th:if="${numberOfPendingRequests == 0}" class="small text-muted">Ei seuraamispyyntöjä.</p></div>
-                                <div th:each="user : ${pendingRequests}">
-                                    <div th:id="'pru-' + ${username} + '-' + ${user.username}" class="row justify-content-center mb-3">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <button th:id="'fr-' + ${username} + '-' + ${user.username}" class="btn btn-light pending-request-button">
-                                                    <div class="media">
-                                                        <div th:replace="fragments/layout :: profilePictureSmall(${user})"></div>
-                                                        <div class="media-body">
-                                                            <p th:text="${user.name.length() < 20 ? user.name : user.name.substring(0,20) + '...' }" class="text"></p>
-                                                            <p>@<span th:text="${user.username}" class="text"></span></p>
+                                    <h6>Uudet seuraamispyynnöt</h6>
+                                    <div th:id="'nr-' + ${username}"><p th:if="${numberOfPendingRequests == 0}" class="small text-muted">Ei seuraamispyyntöjä.</p></div>
+                                    <div th:each="user : ${pendingRequests}">
+                                        <div th:id="'pru-' + ${username} + '-' + ${user.username}" class="row justify-content-center mb-3">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <button th:id="'fr-' + ${username} + '-' + ${user.username}" class="btn btn-light pending-request-button">
+                                                        <div class="media">
+                                                            <div th:replace="fragments/layout :: profilePictureSmall(${user})"></div>
+                                                            <div class="media-body">
+                                                                <p th:text="${user.name.length() < 20 ? user.name : user.name.substring(0,20) + '...' }" class="text"></p>
+                                                                <p>@<span th:text="${user.username}" class="text"></span></p>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </button>
-                                                <div class="container-fluid">
-                                                    <div class="row">
-                                                        <div class="col">
-                                                            <form th:id="'pra-' + ${username} + '-' + ${user.username}" class="request-accept">
-                                                                <input type="submit" name="accept" value="Hyväksy" class="btn btn-sm btn-dark center-block" />
-                                                            </form>
-                                                        </div>
-                                                        <div class="col">
-                                                            <form th:id="'prd-' + ${username} + '-' + ${user.username}" class="request-decline">
-                                                                <input type="submit" name="decline" value="Hylkää" class="btn btn-sm btn-dark" />
-                                                            </form>
+                                                    </button>
+                                                    <div class="container-fluid">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <form th:id="'pra-' + ${username} + '-' + ${user.username}" class="request-accept">
+                                                                    <input type="submit" name="accept" value="Hyväksy" class="btn btn-sm btn-dark center-block" />
+                                                                </form>
+                                                            </div>
+                                                            <div class="col">
+                                                                <form th:id="'prd-' + ${username} + '-' + ${user.username}" class="request-decline">
+                                                                    <input type="submit" name="decline" value="Hylkää" class="btn btn-sm btn-dark" />
+                                                                </form>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -110,100 +110,102 @@
 
                 </div>
 
-                <div class="col-xl-6 col-lg-8 col-md-12 my-content">
-                    <div th:if="${friendStatus == -1}">Seuraa käyttäjää nähdäksesi hänen viestinsä ja kuvansa.</div>
-                    <div id="pending" th:if="${friendStatus == 0}">Näet käyttäjän viestit ja kuvat, kun hän on hyväksynyt seuraamispyyntösi.</div>
+                <div id="user-container" class="col-xl-6 col-lg-8 col-md-12 my-content">
+                    <div id="user-data">
+                        <!--<div th:if="${friendStatus == -1}">Seuraa käyttäjää nähdäksesi hänen viestinsä ja kuvansa.</div>-->
+                        <div id="pending" th:if="${friendStatus <= 0}">Seuraa käyttäjää nähdäksesi hänen viestinsä ja kuvansa.</div>
 
-                    <div th:if="${friendStatus >= 1}">
+                        <div th:if="${friendStatus >= 1}">
 
-                        <div th:if="${friendStatus == 2}" class="mb-4">
-                            <h4>Mitä mietit?</h4>
-                            <form th:id="${username} + '-sm'" class="messagesend">
-                                <textarea name="messageText" placeholder="Jaa ajatuksesi!" id="newMessage" class="form-control" rows="3"></textarea>
-                                <input type="submit" class="btn btn-sm btn-dark mt-2 ml-1" />            
-                            </form>
-                        </div>
+                            <div th:if="${friendStatus == 2}" class="mb-4">
+                                <h4>Mitä mietit?</h4>
+                                <form th:id="${username} + '-sm'" class="messagesend">
+                                    <textarea name="messageText" placeholder="Jaa ajatuksesi!" id="newMessage" class="form-control" rows="3"></textarea>
+                                    <input type="submit" class="btn btn-sm btn-dark mt-2 ml-1" />            
+                                </form>
+                            </div>
 
-                        <div>
-                            <div id="allmessages">
-                                <h2>Viestit</h2>
-                                <div th:each="message : ${messages}" class="media p-3">
-                                    <div th:replace="fragments/layout :: profilePictureSmall(${message.owner})"></div>
-                                    <div class="media-body">
-                                        <div class="message-section">
-                                            <h5 th:text="${message.owner.name}">LÄHETTÄJÄ</h5>
-                                            <p th:text="${message.message}" class="text">VIESTI</p>
-                                        </div>
-                                        <div th:replace="fragments/layout :: timeStamp(${message.timeSent})"></div>
-                                        <div>
-                                            <span th:id="'lm' + ${message.id}" th:text="'Tykkääjiä: ' + ${message.likes.size()}" class="text mb-2 mr-sm-2">TYKKÄÄJIÄ</span>
-                                            <form th:id="'lmf' + ${message.id}" th:if="${friendStatus == 1}" class="form-inline messagelike">    
-                                                <button th:id="'lmb' + ${message.id}" name="messageId" th:value="${username} + '-' + ${message.id}" type="submit" class="btn btn-dark btn-sm mb-2 mr-sm-2">
-                                                    <span th:id="'lms' + ${message.id}" th:text="${!currentUserLikedMessages.contains(message)} ? 'Tykkää' : 'En tykkääkään'">Tykkäätkö?</span>
-                                                </button>
-                                            </form>
-                                        </div>
-                                        <div>
-                                            <h6>Kommentit</h6>
-                                            <div th:id="'c-' + ${message.id}">
-                                                <p th:if="${message.comments.size() == 0}" class="small text-muted">Ei vielä kommentteja.</p>
-                                                <p th:if="${message.comments.size() > 10}" class="small text-muted">Näytetään 10 uusinta kommenttia yhteensä <span th:text="${message.comments.size()}">MÄÄRÄ</span> kommentista.</p>
-                                                <div th:each="comment,iStat : ${message.getLatest10()}">
-                                                    <!--<div th:if="${iStat.count > iStat.size - 10}" class="media">-->
-                                                    <div class="media">
-                                                        <div th:replace="fragments/layout :: profilePictureSmall(${comment.commenter})"></div>
-                                                        <div class="media-body">
-                                                            <div class="comment-section">
-                                                                <p class="text">
-                                                                    <a th:href="@{/{username}(username=${comment.commenter.username})}" th:text="${comment.commenter.name}" class="commenter-link">KOMMENTOIJA</a>
-                                                                    <span th:if="${iStat.count > iStat.size - 10}" th:text="${comment.comment}">KOMMENTTI</span>
-                                                                </p>
+                            <div>
+                                <div id="allmessages">
+                                    <h2>Viestit</h2>
+                                    <div th:each="message : ${messages}" class="media p-3">
+                                        <div th:replace="fragments/layout :: profilePictureSmall(${message.owner})"></div>
+                                        <div class="media-body">
+                                            <div class="message-section">
+                                                <h5 th:text="${message.owner.name}">LÄHETTÄJÄ</h5>
+                                                <p th:text="${message.message}" class="text">VIESTI</p>
+                                            </div>
+                                            <div th:replace="fragments/layout :: timeStamp(${message.timeSent})"></div>
+                                            <div>
+                                                <span th:id="'lm' + ${message.id}" th:text="'Tykkääjiä: ' + ${message.likes.size()}" class="text mb-2 mr-sm-2">TYKKÄÄJIÄ</span>
+                                                <form th:id="'lmf' + ${message.id}" th:if="${friendStatus == 1}" class="form-inline messagelike">    
+                                                    <button th:id="'lmb' + ${message.id}" name="messageId" th:value="${username} + '-' + ${message.id}" type="submit" class="btn btn-dark btn-sm mb-2 mr-sm-2">
+                                                        <span th:id="'lms' + ${message.id}" th:text="${!currentUserLikedMessages.contains(message)} ? 'Tykkää' : 'En tykkääkään'">Tykkäätkö?</span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                            <div>
+                                                <h6>Kommentit</h6>
+                                                <div th:id="'c-' + ${message.id}">
+                                                    <p th:if="${message.comments.size() == 0}" class="small text-muted">Ei vielä kommentteja.</p>
+                                                    <p th:if="${message.comments.size() > 10}" class="small text-muted">Näytetään 10 uusinta kommenttia yhteensä <span th:text="${message.comments.size()}">MÄÄRÄ</span> kommentista.</p>
+                                                    <div th:each="comment,iStat : ${message.getLatest10()}">
+                                                        <!--<div th:if="${iStat.count > iStat.size - 10}" class="media">-->
+                                                        <div class="media">
+                                                            <div th:replace="fragments/layout :: profilePictureSmall(${comment.commenter})"></div>
+                                                            <div class="media-body">
+                                                                <div class="comment-section">
+                                                                    <p class="text">
+                                                                        <a th:href="@{/{username}(username=${comment.commenter.username})}" th:text="${comment.commenter.name}" class="commenter-link">KOMMENTOIJA</a>
+                                                                        <span th:if="${iStat.count > iStat.size - 10}" th:text="${comment.comment}">KOMMENTTI</span>
+                                                                    </p>
+                                                                </div>
+                                                                <div th:replace="fragments/layout :: timeStamp(${comment.timeSent})"></div>
                                                             </div>
-                                                            <div th:replace="fragments/layout :: timeStamp(${comment.timeSent})"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                        <div class="flex-left">
+                                                            <div th:replace="fragments/layout :: profilePictureSmall(${currentUser})"></div>
+                                                        </div>
+                                                        <div class="flex-right">
+                                                            <form th:id="${username} + '-cm-' + ${message.id}" class="commentmessage">
+                                                                <textarea name="commentText" placeholder="Kirjoita kommentti..." id="newComment" class="form-control" rows="3"></textarea>
+                                                                <button name="messageId" th:value="${message.id}" type="submit" class="btn btn-sm btn-dark mt-2 ml-1">Lähetä</button>
+                                                            </form>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="flex-left">
-                                                        <div th:replace="fragments/layout :: profilePictureSmall(${currentUser})"></div>
-                                                    </div>
-                                                    <div class="flex-right">
-                                                        <form th:id="${username} + '-cm-' + ${message.id}" class="commentmessage">
-                                                            <textarea name="commentText" placeholder="Kirjoita kommentti..." id="newComment" class="form-control" rows="3"></textarea>
-                                                            <button name="messageId" th:value="${message.id}" type="submit" class="btn btn-sm btn-dark mt-2 ml-1">Lähetä</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div id="pictures" class="mt-4">
+                                <h2><a th:href="@{/{username}/kuvat(username=${username})}" class="big-a">Kuvat</a></h2>
+                                <div th:if="${pictures.empty}">
+                                    <p class="small text-muted">Ei vielä kuvia.</p>
+                                </div>
+                                <div th:if="${!pictures.empty}" class="container-fluid center">
+                                    <div class="row justify-content-center">
+                                        <div th:each="picture : ${pictures}" class="col">
+                                            <a th:href="@{/{username}/kuvat(username=${username})}">
+                                                <img th:src="@{/{username}/kuvat/{id}(username=${username}, id=${picture.id})}" class="gallery-preview" />
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <hr />
-
-                        <div id="pictures" class="mt-4">
-                            <h2><a th:href="@{/{username}/kuvat(username=${username})}" class="big-a">Kuvat</a></h2>
-                            <div th:if="${pictures.empty}">
-                                <p class="small text-muted">Ei vielä kuvia.</p>
-                            </div>
-                            <div th:if="${!pictures.empty}" class="container-fluid center">
-                                <div class="row justify-content-center">
-                                    <div th:each="picture : ${pictures}" class="col">
-                                        <a th:href="@{/{username}/kuvat(username=${username})}">
-                                            <img th:src="@{/{username}/kuvat/{id}(username=${username}, id=${picture.id})}" class="gallery-preview" />
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                 </div>
-
             </div>
 
 

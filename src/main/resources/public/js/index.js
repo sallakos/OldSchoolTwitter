@@ -1,7 +1,11 @@
 //jshint esversion:6
 
-var imageStart = $("#pictures").offset().top;
-console.log(imageStart),
+if ($('#pictures').length > 0) {
+  var imageStart = $("#pictures").offset().top;
+  if (imageStart < $(window).height()) {
+    $("#btn-pictures").addClass("d-none");
+  }
+}
 
 // Bootstrapin tooltip.
 $(function() {
@@ -145,6 +149,9 @@ $('.follow').submit(function(e) {
     success: function() {
       $('#fb_' + username + ' span').text(newText);
       $('#pending').text(pageText);
+      if (newStatus === -1) {
+        $('#user-container').load('/' + username + ' #user-data');
+      }
     }
   });
 });
