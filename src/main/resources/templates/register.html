@@ -10,15 +10,8 @@
 
         <div class="container-fluid my-content setwidth">
 
-            <div > <!--th:if="${!isRegistered}"-->
-                <!--                <h1>Rekisteröidy</h1>
-                                <form method="POST" th:action="@{/register}">
-                                    Käyttäjänimi: <input type="text" name="username" id="username" /><br/>
-                                    Nimi: <input type="text" name="name" id="name" /><br/>
-                                    Salasana: <input type="password" name="password" id="password" /><br/>
-                                    <input type="submit" class="btn btn-dark" />            
-                                </form>-->
-
+            <div th:if="${!isRegistered}">
+                
                 <form method="POST" th:action="@{/rekisteroidy}" th:object="${accountData}"> <!---->
 
                     <div class="form-group">
@@ -56,12 +49,12 @@
 
             </div>
 
-            <!--            <div th:if="${isRegistered}" class="m-3">
-                            <p>Olet jo rekisteröitynyt. Jos haluat luoda uuden käyttäjätilin, kirjaudu ensin ulos.</p>
-                            <form method="POST" th:action="@{/logout}">
-                                <input type="submit" name="logout" value="Kirjaudu ulos" class="btn btn-dark" />
-                            </form>
-                        </div>-->
+            <div th:if="${isRegistered}" class="m-3">
+                <p>Olet jo rekisteröitynyt. Jos haluat luoda uuden käyttäjätilin, kirjaudu ensin ulos.</p>
+                <form method="POST" th:action="@{/logout}">
+                    <input type="submit" name="logout" value="Kirjaudu ulos" class="btn btn-dark" />
+                </form>
+            </div>
 
         </div>
 
