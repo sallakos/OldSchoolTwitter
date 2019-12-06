@@ -52,6 +52,11 @@
             </a>
         </div>
 
+        <div th:fragment="profilePictureSmallOnHover(account)">
+            <img th:if="${account.profilePicture == null}" src="/img/default.jpg" class="small-profile-img" />
+            <img th:if="${account.profilePicture != null}" th:src="@{/{username}/kuvat/profiilikuva(username=${account.username})}"  class="small-profile-img" />
+        </div>
+
         <div th:fragment="timeStamp(date)">
             <p th:text="${#temporals.format(date, 'd.M.yyyy HH:mm')}" class="small text-muted ml-2">AIKA</p>
         </div>

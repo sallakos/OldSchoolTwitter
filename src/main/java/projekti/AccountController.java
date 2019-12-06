@@ -51,7 +51,7 @@ public class AccountController {
         model.addAttribute("currentUserLikedMessages", currentUser.getLikedMessages());
         model.addAttribute("currentUserLikedPictures", currentUser.getLikedPictures());
         model.addAttribute("followedUsernames", accountService.getFollowedUsernames(currentUser)); // SQL
-//        model.addAttribute("pendingRequests", accountService.findPendingRequests(account));
+        model.addAttribute("pendingRequests", accountService.findPendingRequests(account));
         model.addAttribute("numberOfPendingRequests", accountService.numberOfPendingRequests(currentUser)); // SQL
         model.addAttribute("friendStatus", accountService.friendStatus(account)); // SQL, jos vieras sivu, niin kaksi kyselyä.
         if (accountService.isCurrentUser(username)) {

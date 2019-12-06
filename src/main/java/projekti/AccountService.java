@@ -84,9 +84,9 @@ public class AccountService {
         return accountRepo.findUserFollowers(account.getId());
     }
     
-//    public List<Account> findPendingRequests(Account account) {
-//        return accountRepo.findPendingRequests(account.getId());
-//    }
+    public List<Account> findPendingRequests(Account account) {
+        return accountRepo.findPendingRequests(account.getId());
+    }
     
     public Account currentUser() {
         System.out.println("SQL by AccountService / currentUser():");

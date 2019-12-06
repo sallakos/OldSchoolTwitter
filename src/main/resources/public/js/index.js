@@ -1,5 +1,8 @@
 //jshint esversion:6
 
+var imageStart = $("#pictures").offset().top;
+console.log(imageStart),
+
 // Bootstrapin tooltip.
 $(function() {
   $('[data-toggle="tooltip"]').tooltip()
@@ -163,8 +166,9 @@ $('.request-accept').submit(function(e) {
     type: 'POST',
     data: $('#' + id).serialize(),
     success: function() {
-      $('#pr-' + whoToFollow).load('/' + whoToFollow + ' #pr-' + whoToFollow);
+      $('#pru-' + whoToFollow + '-' + whoFollows).remove();
       $('#' + whoToFollow + '-followers').load('/' + whoToFollow + ' #' + whoToFollow + '-followers');
+      $('#nr-' + whoToFollow).load('/' + whoToFollow + ' #nr-' + whoToFollow);
     }
   });
 });
@@ -180,7 +184,7 @@ $('.request-decline').submit(function(e) {
     type: 'POST',
     data: $('#' + id).serialize(),
     success: function() {
-      $('#pr-' + whoToFollow).load('/' + whoToFollow + ' #pr-' + whoToFollow);
+      $('#pru-' + whoToFollow + '-' + whoFollows).remove();
     }
   });
 });
