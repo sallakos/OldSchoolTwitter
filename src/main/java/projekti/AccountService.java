@@ -22,17 +22,17 @@ public class AccountService {
     @Autowired
     FollowRepository followRepo;
             
-    @Transactional
-    public void register(String username, String name, String password) {
-        Account account = new Account(username, name, securityConfiguration.passwordEncoder().encode(password));
-        accountRepo.save(account);
-    }
-    
-    @Transactional
-    public void register(AccountData accountData) {
-        Account account = new Account(accountData.getUsername(), accountData.getName(), securityConfiguration.passwordEncoder().encode(accountData.getPassword()));
-        accountRepo.save(account);
-    }
+//    @Transactional
+//    public void register(String username, String name, String password) {
+//        Account account = new Account(username, name, securityConfiguration.passwordEncoder().encode(password));
+//        accountRepo.save(account);
+//    }
+//    
+//    @Transactional
+//    public void register(AccountData accountData) {
+//        Account account = new Account(accountData.getUsername(), accountData.getName(), securityConfiguration.passwordEncoder().encode(accountData.getPassword()));
+//        accountRepo.save(account);
+//    }
     
     @Transactional
     public void follow(Account follower, Account followee, LocalDateTime startOfFollow) {
