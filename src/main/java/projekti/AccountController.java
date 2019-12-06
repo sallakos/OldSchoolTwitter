@@ -165,7 +165,7 @@ public class AccountController {
 
         // Jos käyttäjänimeä ei löydy, lisätään uusi käyttäjä ja ohjataan
         // käyttäjä omalle profiilisivulleen.
-        accountService.register(accountData);
+        // accountService.register(accountData);
         return "redirect:/user";
 
     }
