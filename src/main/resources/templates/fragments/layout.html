@@ -23,7 +23,6 @@
             <input type="text" th:id="${id}" placeholder="Nimi" class="usersearch col-lg-3 col-md-5 col-sm-8 ml-2" />
             <div class="row justify-content-center" id="userList">
                 <div th:each="user : ${users}" class="media col-12 userdata-section">
-                    <!--<div class="userdata-section">-->
                     <img th:if="${user.profilePicture == null}" src="/img/default.jpg" class="profile-img" />
                     <img th:if="${user.profilePicture != null}" th:src="@{/{username}/kuvat/profiilikuva(username=${user.username})}" class="profile-img" />
                     <div class="media-body pl-3">
@@ -37,7 +36,6 @@
                             </button>
                         </form>
                     </div>
-                    <!--</div>-->
                 </div>
             </div>
         </div>

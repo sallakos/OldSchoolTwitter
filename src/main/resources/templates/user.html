@@ -14,11 +14,13 @@
 
             <div class="row justify-content-center">
 
-                <div class="col-xl-2 col-lg-3 col-md-12 center">
+                <div class="col-xl-3 col-lg-4 col-md-12 center">
 
                     <div class="my-nav">
 
-                        <h1 th:text="${name}">OMA NIMI</h1>
+                        <div class="text-break">
+                            <h1 th:text="${name}">OMA NIMI</h1>
+                        </div>
                         <div th:replace="fragments/layout :: profilePicture(${profilePicture})"></div>
 
                         <div th:if="${friendStatus >= 1}">
@@ -38,7 +40,7 @@
                             <a th:href="@{/{username}/seurattavat(username=${username})}" class="small text-muted">Näytä kaikki</a>
                         </div>
 
-                        <div class="container-fluid mt-4">
+                        <div th:id="${username} + '-followers'" class="container-fluid mt-4">
                             <h6><span th:text="${whoFollowsUser}">KETKÄ</span> <span class="small text-muted">[<span th:text="${numberOfFollowers}">MÄÄRÄ</span>]</span></h6>
                             <div class="row justify-content-center">
                                 <div th:each="user : ${followers}" th:if="${!user.pending}">
@@ -50,24 +52,14 @@
                             <a th:href="@{/{username}/seuraajat(username=${username})}" class="small text-muted">Näytä kaikki</a>
                         </div>
 
-                        <div th:if="${friendStatus == 2}" class="container-fluid mt-5">
+                        <div th:id="'pr-' + ${username}" th:if="${friendStatus == 2}" class="container-fluid mt-5">
                             <h6>Uudet seuraamispyynnöt</h6>
                             <p th:if="${numberOfPendingRequests == 0}" class="small text-muted">Ei seuraamispyyntöjä.</p>
                             <div th:each="user : ${followers}">
-                                <div th:if="${user.pending}" class="row justify-content-center mt-4 mb-4">
-                                    <div class="row justify-content-center">
-                                        <div class="col-12">
-                                            <p th:text="${user.follower.username}"></p>
-                                            <a th:href="@{/{username}(username=${user.follower.username})}" class="btn btn-primary">
-                                                <div class="media">
-                                                    <div th:replace="fragments/layout :: profilePictureSmall(${user.follower})"></div>
-                                                    <div class="media-body">
-                                                        <p th:text="${user.follower.name}" class="text"></p>
-                                                        <p>@<span th:text="${user.follower.username}" class="text"></span></p>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <button class="btn btn-primary">
+                                <div th:if="${user.pending}" class="row justify-content-center mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <button th:id="'fr-' + ${username} + '-' + ${user.follower.username}" class="btn btn-light pending-request-button">
                                                 <div class="media">
                                                     <div th:replace="fragments/layout :: profilePictureSmall(${user.follower})"></div>
                                                     <div class="media-body">
@@ -76,23 +68,63 @@
                                                     </div>
                                                 </div>
                                             </button>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <form method="POST" th:action="@{/{username}/accept/{who}(username=${username}, who=${user.follower.username})}" class="form-inline">
-                                                <input type="submit" name="accept" value="Hyväksy" class="btn btn-sm btn-dark" />
-                                            </form>
-                                        </div>
-                                        <div class="col">
-                                            <form method="POST" th:action="@{/{username}/decline/{who}(username=${username}, who=${user.follower.username})}" class="form-inline">
-                                                <input type="submit" name="decline" value="Hylkää" class="btn btn-sm btn-dark" />
-                                            </form>
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <form th:id="'pra-' + ${username} + '-' + ${user.follower.username}" class="request-accept">
+                                                            <input type="submit" name="accept" value="Hyväksy" class="btn btn-sm btn-dark center-block" />
+                                                        </form>
+                                                    </div>
+                                                    <div class="col">
+                                                        <form th:id="'prd-' + ${username} + '-' + ${user.follower.username}" class="request-decline">
+                                                            <input type="submit" name="decline" value="Hylkää" class="btn btn-sm btn-dark" />
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
+                        
+<!--                        <div th:id="'pr-' + ${username}" th:if="${friendStatus == 2}" class="container-fluid mt-5">
+                            <h6>Uudet seuraamispyynnöt</h6>
+                            <p th:if="${numberOfPendingRequests == 0}" class="small text-muted">Ei seuraamispyyntöjä.</p>
+                            <div th:each="user : ${pendingRequests}">
+                                <div class="row justify-content-center mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <button th:id="'fr-' + ${username} + '-' + ${user.username}" class="btn btn-light pending-request-button">
+                                                <div class="media">
+                                                    <div th:replace="fragments/layout :: profilePictureSmall(${user})"></div>
+                                                    <div class="media-body">
+                                                        <p th:text="${user.name.length() < 20 ? user.name : user.name.substring(0,20) + '...' }" class="text"></p>
+                                                        <p>@<span th:text="${user.username}" class="text"></span></p>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <form th:id="'pra-' + ${username} + '-' + ${user.username}" class="request-accept">
+                                                            <input type="submit" name="accept" value="Hyväksy" class="btn btn-sm btn-dark center-block" />
+                                                        </form>
+                                                    </div>
+                                                    <div class="col">
+                                                        <form th:id="'prd-' + ${username} + '-' + ${user.username}" class="request-decline">
+                                                            <input type="submit" name="decline" value="Hylkää" class="btn btn-sm btn-dark" />
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>-->
 
                         <div th:if="${friendStatus < 2}" th:switch="${friendStatus}">
 
@@ -111,7 +143,7 @@
 
                 </div>
 
-                <div class="col-xl-6 col-lg-9 col-md-12 my-content">
+                <div class="col-xl-6 col-lg-8 col-md-12 my-content">
                     <div th:if="${friendStatus == -1}">Seuraa käyttäjää nähdäksesi hänen viestinsä ja kuvansa.</div>
                     <div id="pending" th:if="${friendStatus == 0}">Näet käyttäjän viestit ja kuvat, kun hän on hyväksynyt seuraamispyyntösi.</div>
 

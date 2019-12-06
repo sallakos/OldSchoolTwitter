@@ -156,3 +156,41 @@ a:hover {
 [hidden] {
   display: none !important;
 }
+
+.card {
+    border: none;
+    width: 60%;
+    max-width: 250px;
+}
+
+.card-body {
+    padding: 0;
+}
+
+.card .small-profile-img {
+    margin-left: 0;
+}
+
+@media( max-width: 1560px ) {
+    .card {
+        width: 80%;
+    }
+}
+
+@media( max-width: 1230px ) {
+    .card {
+        width: 100%;
+    }
+}
+
+@media( max-width: 1200px ) {
+    .card {
+        width: 80%;
+    }
+}
+
+@media( max-width: 990px ) {
+    .card {
+        width: 60%;
+    }
+}

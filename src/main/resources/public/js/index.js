@@ -1,3 +1,5 @@
+//jshint esversion:6
+
 // Bootstrapin tooltip.
 $(function() {
   $('[data-toggle="tooltip"]').tooltip()
@@ -9,13 +11,13 @@ $('.usersearch').keyup(function() {
   let filter = input.value.toUpperCase();
   const ul = document.getElementById("userList")
   const li = ul.getElementsByTagName('div')
-console.log(li)
+  console.log(li)
 
   for (let i = 0; i < li.length; i++) {
     let a = li[i].getElementsByTagName("a")[0];
-console.log(a)
+    console.log(a)
     let txtValue = a.textContent || a.innerText;
-console.log(txtValue)
+    console.log(txtValue)
     if (txtValue.toUpperCase().indexOf(filter) > -1) {
       li[i].style.display = "";
     } else {
@@ -46,7 +48,7 @@ $('.commentmessage').submit(function(e) {
   const id = this.id;
   const target = id.split("-");
   const user = target[0];
-  const idnro = target[2]
+  const idnro = target[2];
   $.ajax({
     url: '/' + user + '/messages/' + idnro + '/comment',
     type: 'POST',
@@ -88,8 +90,8 @@ $('.messagelike').submit(function(e) {
     type: 'POST',
     data: $('#' + id).serialize(),
     success: function() {
-      $('#lms' + idnro).load('/' + user + ' #lms' + idnro)
-      $('#lm' + idnro).load('/' + user + ' #lm' + idnro)
+      $('#lms' + idnro).load('/' + user + ' #lms' + idnro);
+      $('#lm' + idnro).load('/' + user + ' #lm' + idnro);
     }
   });
 });
@@ -106,8 +108,8 @@ $('.picturelike').submit(function(e) {
     type: 'POST',
     data: $('#' + id).serialize(),
     success: function() {
-      $('#lps' + idnro).load('/' + user + '/kuvat #lps' + idnro)
-      $('#lp' + idnro).load('/' + user + '/kuvat #lp' + idnro)
+      $('#lps' + idnro).load('/' + user + '/kuvat #lps' + idnro);
+      $('#lp' + idnro).load('/' + user + '/kuvat #lp' + idnro);
     }
   });
 });
@@ -144,25 +146,49 @@ $('.follow').submit(function(e) {
   });
 });
 
-// Kun klikataan navigoinnin painiketta, skrollataan sivu oikeaan paikkaan. Lisäksi vaihdetaan painikkeelle merkintä aktiivinen.
+$('.pending-request-button').click(function(e) {
+  const id = this.id;
+  const target = id.split("-")[2];
+  window.location.href = '/' + target;
+});
+
+$('.request-accept').submit(function(e) {
+  e.preventDefault();
+  const id = this.id;
+  const target = id.split("-");
+  const whoToFollow = target[1];
+  const whoFollows = target[2];
+  $.ajax({
+    url: '/' + whoToFollow + '/accept/' + whoFollows,
+    type: 'POST',
+    data: $('#' + id).serialize(),
+    success: function() {
+      $('#pr-' + whoToFollow).load('/' + whoToFollow + ' #pr-' + whoToFollow);
+      $('#' + whoToFollow + '-followers').load('/' + whoToFollow + ' #' + whoToFollow + '-followers');
+    }
+  });
+});
+
+$('.request-decline').submit(function(e) {
+  e.preventDefault();
+  const id = this.id;
+  const target = id.split("-");
+  const whoToFollow = target[1];
+  const whoFollows = target[2];
+  $.ajax({
+    url: '/' + whoToFollow + '/decline/' + whoFollows,
+    type: 'POST',
+    data: $('#' + id).serialize(),
+    success: function() {
+      $('#pr-' + whoToFollow).load('/' + whoToFollow + ' #pr-' + whoToFollow);
+    }
+  });
+});
+
+// Kun klikataan navigoinnin painiketta, skrollataan sivu oikeaan paikkaan.
 $(".nav-btn").click(function() {
-
-  // // Klikkaus tapahtui. Asetetaan targetiksi se, mitä klikattiin.
-  // clicked = true;
-  // targetSection = $(this).attr("id").substring(4);
-  //
-  // // Poistetaan kaikista painikkeista aktiivisuus ja lisätään se tietylle.
-  // $(".nav-btn").attr("disabled", false);
-  // $("#btn-" + targetSection).attr("disabled", true);
-
   // Skrollataan sivu oikeaan kohtaan. Haetaan tieto painikkeen id:stä.
   $("html, body").animate({
     scrollTop: $("#" + $(this).attr("id").substring(4)).offset().top
   }, 1000);
-
-  // Klikattaessa ei anneta muiden navigointipainikkeiden muuttua. Animaatio kestää 1000 ms, jonka ajan klikkaus on voimassa.
-  window.setTimeout(function() {
-    clicked = false;
-  }, 1000);
-
 });
