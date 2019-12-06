@@ -5,15 +5,22 @@
         <title>Title</title>
     </head>
     <body>
-        
+
         <div th:replace="fragments/layout :: header(currentUser=${currentUsername})"></div>
 
-        <h1>Tämä on etusivu.</h1>
-        <p>Täältä voi vaikka kirjautua sisään. Jee.</p>
-        
-        <p>Kirjautunut sisään: <span th:text="${username}">username</span></p>
-        
-        <p><a href="/users">Kirjaudu sisään</a></p>
+        <div class="container-fluid">
+            <div class="row mb-5 mt-5">
+                <div class="col-12">
+                    <a href="/login"><button type="submit" class="btn btn-dark">Kirjaudu sisään</button></a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <h4>Uusi käyttäjä?</h4>
+                    <a th:href="@{/rekisteroidy}"><button class="btn btn-dark">Rekisteröidy</button></a>
+                </div>
+            </div>
+        </div>
 
         <div th:replace="fragments/layout :: footer"></div>
 

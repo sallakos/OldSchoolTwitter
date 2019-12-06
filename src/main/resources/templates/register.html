@@ -10,22 +10,22 @@
 
         <div class="container-fluid my-content setwidth">
 
-            <div th:if="${!isRegistered}">
-                <h1>Rekisteröidy</h1>
-                <form method="POST" th:action="@{/register}">
-                    Käyttäjänimi: <input type="text" name="username" id="username" /><br/>
-                    Nimi: <input type="text" name="name" id="name" /><br/>
-                    Salasana: <input type="password" name="password" id="password" /><br/>
-                    <input type="submit" class="btn btn-dark" />            
-                </form>
+            <div > <!--th:if="${!isRegistered}"-->
+                <!--                <h1>Rekisteröidy</h1>
+                                <form method="POST" th:action="@{/register}">
+                                    Käyttäjänimi: <input type="text" name="username" id="username" /><br/>
+                                    Nimi: <input type="text" name="name" id="name" /><br/>
+                                    Salasana: <input type="password" name="password" id="password" /><br/>
+                                    <input type="submit" class="btn btn-dark" />            
+                                </form>-->
 
-                <form method="POST" th:action="@{/register}"> <!--th:object="${accountData}"-->
+                <form method="POST" th:action="@{/rekisteroidy}" th:object="${accountData}"> <!---->
 
                     <div class="form-group">
                         <div class="col-lg-5 col-md-8 col-sm-10">
                             <label for="name">Nimi</label>
-                            <input type="text" class="form-control" name="name" id="name" placeholder="Etunimi Sukunimi" /> <!--th:field="*{name}" -->
-                            <!--<section th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger">Virheviesti</section>-->
+                            <input type="text" class="form-control" th:field="*{name}" placeholder="Etunimi Sukunimi" />
+                            <section th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger">Virheviesti</section>
                         </div>
                     </div>
 
@@ -33,21 +33,21 @@
                         <div class="col-lg-5 col-md-8 col-sm-10">
                             <label for="username">Käyttäjätunnus</label>
                             <div class="input-group mb-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text">@</div>
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">@</div>
+                                </div>
+                                <input type="text" class="form-control" id="username" th:field="*{username}" placeholder="tunnus" />
                             </div>
-                            <input type="text" class="form-control" name="username" id="username" placeholder="tunnus" /> <!--th:field="*{username}" -->
-                            <!--<section th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-danger">Virheviesti</section>-->
-                            <!--<section th:if="${!uniqueUsername}" class="text-danger">This username has already been taken</section>-->
-                            </div>
+                            <section th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-danger">Virheviesti</section>
+                            <section th:if="${!uniqueUsername}" class="text-danger">Tämä käyttäjätunnus on jo käytössä!</section>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="col-lg-5 col-md-8 col-sm-10">
                             <label for="password">Salasana</label>
-                            <input type="password" class="form-control" name="password" id="password" /> <!--th:field="*{password}"-->
-                            <!--<section th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger">Virheviesti</section>-->
+                            <input type="password" class="form-control" th:field="*{password}" id="password" /> <!---->
+                            <section th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger">Virheviesti</section>
                         </div>
                     </div>
 
@@ -56,12 +56,12 @@
 
             </div>
 
-            <div th:if="${isRegistered}" class="m-3">
-                <p>Olet jo rekisteröitynyt. Jos haluat luoda uuden käyttäjätilin, kirjaudu ensin ulos.</p>
-                <form method="POST" th:action="@{/logout}">
-                    <input type="submit" name="logout" value="Kirjaudu ulos" class="btn btn-dark" />
-                </form>
-            </div>
+            <!--            <div th:if="${isRegistered}" class="m-3">
+                            <p>Olet jo rekisteröitynyt. Jos haluat luoda uuden käyttäjätilin, kirjaudu ensin ulos.</p>
+                            <form method="POST" th:action="@{/logout}">
+                                <input type="submit" name="logout" value="Kirjaudu ulos" class="btn btn-dark" />
+                            </form>
+                        </div>-->
 
         </div>
 

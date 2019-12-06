@@ -30,6 +30,12 @@ public class AccountService {
     }
     
     @Transactional
+    public void register(AccountData accountData) {
+        Account account = new Account(accountData.getUsername(), accountData.getName(), securityConfiguration.passwordEncoder().encode(accountData.getPassword()));
+        accountRepo.save(account);
+    }
+    
+    @Transactional
     public void follow(Account follower, Account followee, LocalDateTime startOfFollow) {
         Follow follow = new Follow(follower, followee, startOfFollow, true);
         followRepo.save(follow);

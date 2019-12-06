@@ -21,16 +21,21 @@ public class AccountController {
 
     @Autowired
     MessageService messageService;
-    
+
     @Autowired
     PictureService pictureService;
-    
-// ---------- GETIT ---------------------------------------------------------------------------------------------------
 
+    @ModelAttribute
+    private AccountData getAccountData() {
+        return new AccountData();
+    }
+
+// ---------- GETIT ---------------------------------------------------------------------------------------------------
     // Rekisteröitymissivu. Jos käyttäjä on jo kirjautunut, näytetään hänelle tämä tieto.
-    @GetMapping("/register")
+    @GetMapping("/rekisteroidy")
     public String register(Model model) {
         model.addAttribute("isRegistered", accountService.isRegistered());
+        model.addAttribute("uniqueUsername", true);
         return "register";
     }
     
@@ -66,7 +71,7 @@ public class AccountController {
         System.out.println("Thymeleafin tekemiä kyselyjä:");
         return "user";
     }
-    
+
     // Haetaan kaikki henkilöt.
     @GetMapping("/kayttajat")
     public String allUsers(Model model) {
@@ -81,7 +86,7 @@ public class AccountController {
         // Jostain syystä tulostus menee epäloogiseen järjestykseen, mutta yksi kysely per profiilikuva.
         return "users";
     }
-    
+
     // Haetaan käyttäjän seuraamat henkilöt.
     @GetMapping("/{username}/seurattavat")
     public String allUserFollowees(Model model, @PathVariable String username) {
@@ -101,7 +106,7 @@ public class AccountController {
         // Jostain syystä tulostus menee epäloogiseen järjestykseen, mutta yksi kysely per profiilikuva.
         return "users";
     }
-    
+
     // Haetaan henkilöt, jotka seuraavat käyttäjää.
     @GetMapping("/{username}/seuraajat")
     public String allUserFollowers(Model model, @PathVariable String username) {
@@ -130,35 +135,12 @@ public class AccountController {
     }
 
 // ---------- POSTIT --------------------------------------------------------------------------------------------------
-
     // Lähetetään rekisteröityminen. Tämän jälkeen käyttäjän tulee vielä kirjautua sisään.
-    @PostMapping("/register")
-//    public String newUser(@Valid @ModelAttribute AccountData accountData,
-//                          BindingResult bindingResult) {
-    public String newUser(@RequestParam String username,
-            @RequestParam String name,
-            @RequestParam String password) {
-        
-//        System.out.println("aaaaaaaaaaaajgk");
-//        
-//        if (bindingResult.hasErrors()) {
-//            System.out.println("dgjkjgkdjgk");
-//            return "register";
-//        }
-//        
-//        System.out.println(accountData.getUsername());
-//        
-//        if (!accountService.checkUniqueUsername(accountData.getUsername())){
-//            System.out.println("not unique" );
-////            model.addAttribute("isLoggedIn", false );
-////            model.addAttribute("uniqueUsername", accountService.checkUniqueUsername(accountData.getUsername()));
-//            return "register";
-//        }
-//        
-//        accountService.register(accountData.getUsername(), accountData.getName(), accountData.getPassword());
-//        
-//        return "redirect:/user";
-        
+    @PostMapping("/rekisteroidy")
+    public String register(@Valid @ModelAttribute AccountData accountData,
+            BindingResult bindingResult,
+            Model model) {
+
         // Jos joku käyttäjä on jo kirjautunut, ei voida rekisteröityä.
         // Ohjataan käyttäjä omalle profiilisivulleen.
         // Käyttäjän ei pitäisi edes nähdä tätä sivua, mutta estetään myös POST.
@@ -167,19 +149,27 @@ public class AccountController {
             return "redirect:/" + currentUsername;
         }
 
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("isRegistered", accountService.isRegistered());
+            model.addAttribute("uniqueUsername", accountService.checkUniqueUsername(accountData.getUsername()));
+            return "register";
+        }
+
         // Jos käyttäjänimi on jo käytössä, ei voida lisätä uutta käyttäjää.
         // Toistaiseksi palautetaan virhesivu, lopuksi tehdään jotain muuta.
-        if (accountService.findByUsername(username) != null) {
-            return "fail";
+        if (!accountService.checkUniqueUsername(accountData.getUsername())) {
+            model.addAttribute("isRegistered", accountService.isRegistered());
+            model.addAttribute("uniqueUsername", false);
+            return "register";
         }
 
         // Jos käyttäjänimeä ei löydy, lisätään uusi käyttäjä ja ohjataan
         // käyttäjä omalle profiilisivulleen.
-        accountService.register(username, name, password);
-        return "redirect:/" + username;
+        accountService.register(accountData);
+        return "redirect:/user";
 
     }
-    
+
     // Seurataan henkilöä.
     @PostMapping("/{username}/follow")
     public String followUser(@PathVariable String username) {
@@ -188,7 +178,7 @@ public class AccountController {
         accountService.follow(whoFollows, whoToFollow, LocalDateTime.now());
         return "redirect:/" + username;
     }
-    
+
     // Seurataan henkilöä ja pysytään omalla sivulla.
     @PostMapping("/{username}/followown")
     public String followUserStayOnOwnPage(@PathVariable String username) {
@@ -197,7 +187,7 @@ public class AccountController {
         accountService.follow(whoFollows, whoToFollow, LocalDateTime.now());
         return "redirect:/" + whoFollows.getUsername();
     }
-    
+
     // Seurataan henkilöä ja pysytään käyttäjäsivulla.
     @PostMapping("/{username}/followstay")
     public String followUserStayOnPage(@PathVariable String username) {
@@ -215,7 +205,7 @@ public class AccountController {
         accountService.unfollow(whoFollows, whoToFollow);
         return "redirect:/" + username;
     }
-    
+
     // Lopetetaan seuraaminen ja pysytään omalla sivulla.
     @PostMapping("/{username}/unfollowown")
     public String unfollowUserStayOnOwnPage(@PathVariable String username) {
@@ -224,7 +214,7 @@ public class AccountController {
         accountService.unfollow(whoFollows, whoToFollow);
         return "redirect:/" + whoFollows.getUsername();
     }
-    
+
     // Lopetetaan seuraaminen ja pysytään käyttäjäsivulla.
     @PostMapping("/{username}/unfollowstay")
     public String unfollowUserStayOnPage(@PathVariable String username) {
@@ -233,21 +223,21 @@ public class AccountController {
         accountService.unfollow(whoFollows, whoToFollow);
         return "redirect:/kayttajat";
     }
-    
+
     // Hyväksytään seuraamispyyntö.
     @PostMapping("/{username}/accept/{who}")
     public String acceptFollow(@PathVariable String username,
-                               @PathVariable String who) {
+            @PathVariable String who) {
         Account whoFollows = accountService.findByUsername(who);
         Account whoToFollow = accountService.findByUsername(username);
         accountService.acceptFollow(whoFollows, whoToFollow);
         return "redirect:/" + username;
     }
-    
+
     // Hylätään seuraamispyyntö.
     @PostMapping("/{username}/decline/{who}")
     public String declineFollow(@PathVariable String username,
-                                @PathVariable String who) {
+            @PathVariable String who) {
         Account whoFollows = accountService.findByUsername(who);
         Account whoToFollow = accountService.findByUsername(username);
         accountService.declineFollow(whoFollows, whoToFollow);

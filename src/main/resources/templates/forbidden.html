@@ -1,15 +1,19 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head>
+    <head th:replace="fragments/layout :: head(title='Pääsy kielletty')">
         <meta charset="UTF-8" />
         <title>Twitter 0.0</title>
     </head>
     <body>
 
-        <h1>Pääsy kielletty</h1>
-        <p>Sinulla ei ole oikeutta nähdä tätä sivua.</p>
-        <a th:href="@{/{username}(username=${currentUsername})}">Palaa omalle sivullesi.</a>
+        <div th:replace="fragments/layout :: header(currentUser=${currentUsername})"></div>
 
+        <div class="container-fluid my-content">
+            <h1>Pääsy kielletty</h1>
+            <p>Sinulla ei ole oikeutta nähdä tätä sivua.</p>
+        </div>
+
+        <div th:replace="fragments/layout :: footer"></div>
 
     </body>
 </html>

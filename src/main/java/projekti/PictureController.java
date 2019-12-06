@@ -66,8 +66,7 @@ public class PictureController {
         if (isAllowed) {
             return pictureService.getPicture(id);
         }
-        byte[] forbiddenPicture = Files.readAllBytes(Paths.get("C:\\Users\\salla\\Documents\\NetBeansProjects\\mooc-wepa-s19-projekti\\wepa_Projekti\\src\\main\\resources\\public\\img\\forbidden.jpg"));
-        return forbiddenPicture;
+        return null;
     }
 
     // Lisätään profiilikuva. Sallitaan POST vain, jos käyttäjä on kirjautunut sisään.
