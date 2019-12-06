@@ -28,20 +28,20 @@ public class DefaultController {
 //        return "redirect:/";
 //    }
     
-    @PostConstruct
-    public void init() {
-        
-        Account user1 = new Account("user1", "User 1", securityConfiguration.passwordEncoder().encode("salasana"));
-        Account user2 = new Account("user2", "User 2", securityConfiguration.passwordEncoder().encode("salasana"));
-
-        if (accountRepo.findByUsername(user1.getUsername()) == null) {
-            accountRepo.save(user1);
-        }
-        
-        if (accountRepo.findByUsername(user2.getUsername()) == null) {
-            accountRepo.save(user2);
-        }
-        
-    }
+//    @PostConstruct
+//    public void init() {
+//        
+//        Account user1 = new Account("user1", "User 1", securityConfiguration.passwordEncoder().encode("salasana"));
+//        Account user2 = new Account("user2", "User 2", securityConfiguration.passwordEncoder().encode("salasana"));
+//
+//        if (accountRepo.findByUsername(user1.getUsername()) == null) {
+//            accountRepo.save(user1);
+//        }
+//        
+//        if (accountRepo.findByUsername(user2.getUsername()) == null) {
+//            accountRepo.save(user2);
+//        }
+//        
+//    }
     
 }
