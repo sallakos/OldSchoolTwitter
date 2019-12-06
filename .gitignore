@@ -13,3 +13,9 @@ buildNumber.properties
 
 ### Other ###
 .tmcproject.yml
+
+nb-configuration.xml
+nbactions.xml
+
+.classpath
+.factorypath
