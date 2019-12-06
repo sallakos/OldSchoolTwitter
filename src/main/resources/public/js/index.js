@@ -18,13 +18,10 @@ $('.usersearch').keyup(function() {
   let filter = input.value.toUpperCase();
   const ul = document.getElementById("userList")
   const li = ul.getElementsByTagName('div')
-  console.log(li)
 
   for (let i = 0; i < li.length; i++) {
     let a = li[i].getElementsByTagName("a")[0];
-    console.log(a)
     let txtValue = a.textContent || a.innerText;
-    console.log(txtValue)
     if (txtValue.toUpperCase().indexOf(filter) > -1) {
       li[i].style.display = "";
     } else {
@@ -151,6 +148,7 @@ $('.follow').submit(function(e) {
       $('#pending').text(pageText);
       if (newStatus === -1) {
         $('#user-container').load('/' + username + ' #user-data');
+        $("#btn-pictures").addClass("d-none");
       }
     }
   });
@@ -192,6 +190,21 @@ $('.request-decline').submit(function(e) {
     data: $('#' + id).serialize(),
     success: function() {
       $('#pru-' + whoToFollow + '-' + whoFollows).remove();
+    }
+  });
+});
+
+$('.delete-picture').click(function(e) {
+  const id = this.id;
+  const target = id.split("-");
+  const user = target[1];
+  const pictureId = target[2];
+  $.ajax({
+    url: '/' + user + '/kuvat/' + pictureId,
+    type: 'DELETE',
+    data: $('#' + id).serialize(),
+    success: function() {
+      console.log("Kuva poistettu.")
     }
   });
 });

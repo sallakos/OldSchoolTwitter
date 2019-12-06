@@ -10,11 +10,11 @@
 
         <hr />
 
-        <div class="container-fluid setwidth">
+        <div class="container-fluid">
 
             <div class="row justify-content-center">
 
-                <div class="col-xl-3 col-lg-4 col-md-12 center">
+                <div class="col-xl-3 col-lg-12 center mb-3 my-pad">
 
                     <div class="my-nav">
 
@@ -110,9 +110,8 @@
 
                 </div>
 
-                <div id="user-container" class="col-xl-6 col-lg-8 col-md-12 my-content">
+                <div id="user-container" class="col-xl-8 col-lg-12 my-content">
                     <div id="user-data">
-                        <!--<div th:if="${friendStatus == -1}">Seuraa käyttäjää nähdäksesi hänen viestinsä ja kuvansa.</div>-->
                         <div id="pending" th:if="${friendStatus <= 0}">Seuraa käyttäjää nähdäksesi hänen viestinsä ja kuvansa.</div>
 
                         <div th:if="${friendStatus >= 1}">

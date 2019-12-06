@@ -54,11 +54,16 @@ public class PictureService {
         if (file.getContentType().substring(0, 5).equals("image")) {
             Account account = accountRepo.findByUsername(username);
             Picture picture = new Picture(file.getBytes(), description, account);
-            account.getPictures().add(picture);
-            // account.setProfilePicture(account.getPictures().get(account.getPictures().size() - 1));
-            pictureRepo.save(picture);
-            // accountRepo.save(account);
+            List<Picture> userPictures = account.getPictures();
+            if (userPictures.size() < 10) {
+                account.getPictures().add(picture);
+                pictureRepo.save(picture);
+            }
         }
+    }
+    
+    public void deletePicture(Long id) {
+        pictureRepo.deleteById(id);
     }
 
     public byte[] getPicture(Long id) throws IOException {

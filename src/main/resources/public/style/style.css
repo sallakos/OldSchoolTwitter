@@ -1,5 +1,6 @@
 body {
     background-color: #e6ffe6;
+    padding: 0 10%;
 }
 
 h6 {
@@ -16,14 +17,19 @@ a:hover {
     text-decoration: none;
 }
 
+.align-text-right {
+    text-align: right;
+}
+
 .setwidth {
     width: 95%;
 }
 
 .my-nav {
     background-color: white;
-    padding: 10px;
+    padding: 10px 20px;
     border-radius: 10px;
+    margin-right: 20px;
 }
 
 .my-content {
@@ -136,7 +142,7 @@ a:hover {
     background: white;
     padding: 30px;
     border-radius: 10px;
-    border: solid 1px black;
+    border: solid 1px #b8deb8;
 }
 
 .commenter-link {
@@ -165,6 +171,11 @@ a:hover {
 
 .btn-link {
     color: black;
+}
+
+.btn-link:hover {
+    color: grey;
+    text-decoration: none;
 }
 
 [hidden] {
@@ -198,6 +209,14 @@ a:hover {
 }
 
 @media( max-width: 1200px ) {
+    .my-nav {
+        margin: 0;
+    }
+    
+    .my-pad {
+        padding: 0;
+    }
+    
     .card {
         width: 80%;
     }

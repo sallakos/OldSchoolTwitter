@@ -8,7 +8,7 @@
 
         <div th:replace="fragments/layout :: header(currentUser=${currentUsername})"></div>
 
-        <div class="container-fluid setwidth my-content">
+        <div class="container-fluid my-content">
 
             <div>
                 <h1 th:text="${name}">OMA NIMI</h1>
@@ -29,6 +29,9 @@
                         <img th:src="@{/{username}/kuvat/{id}(username=${username}, id=${picture.id})}" class="gallery-img" />
                         <form th:if="${friendStatus == 2 && picture.id != profilePictureId}" method="POST" th:action="@{/{username}/profilepicture(username=${username})}">
                             <button name="profilePictureId" th:value="${picture.id}" type="submit" class="btn btn-sm btn-dark mt-3">Aseta profiilikuvaksi</button>
+                        </form>
+                        <form th:if="${friendStatus == 2 && picture.id != profilePictureId}">
+                            <button th:id="'dl-' + ${username} + '-' + ${picture.id}" type="submit" class="btn btn-sm btn-dark mt-3 delete-picture">Poista kuva</button>
                         </form>
                     </div>
                     <div class="col-lg-9 col-md-8">
@@ -87,13 +90,17 @@
             <div th:if="${friendStatus == 2}" class="m-3">
 
                 <hr /> 
+                
+                <p th:if="${currentUser.pictures.size() >= 3}">Sinulla on jo maksimimäärä kuvia. Et voi lisätä enempää kuvia.</p>
 
+                <div th:if="${currentUser.pictures.size() < 3}">
                 <h4>Lisää kuva</h4>
                 <form method="POST" th:action="@{/{username}/kuvat(username=${username})}" enctype="multipart/form-data" class="form-group">
                     <p><input type="file" name="file" id="file" accept="image/*" class="form-control-file" /></p>
                     <textarea name="description" placeholder="Kerro kuvasta jotain..." id="description" class="form-control" rows="3"></textarea>
                     <input type="submit" value="Lisää" class="btn btn-sm btn-dark mt-2 ml-1" />
                 </form>
+                </div>
             </div>
 
         </div>

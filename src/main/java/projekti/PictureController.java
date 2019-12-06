@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -81,15 +82,21 @@ public class PictureController {
 
     // Lisätään kuva. Sallitaan POST vain, jos käyttäjä on kirjautunut sisään.
     @PostMapping("/{username}/kuvat")
-    public String addPicture(@Valid @RequestParam("file") MultipartFile file,
+    public String addPicture(@RequestParam("file") MultipartFile file,
                              @RequestParam String description,
-                             @PathVariable String username,
-                             BindingResult bindingResult) throws IOException {
-        if (bindingResult.hasErrors()) {
-            return "{username}/kuvat";
-        }
-        if (accountService.isCurrentUser(username)) {
+                             @PathVariable String username) throws IOException {
+                if (accountService.isCurrentUser(username)) {
             pictureService.savePicture(username, file, description);
+        }
+        return "redirect:/{username}/kuvat";
+    }
+    
+    // Poistetaan kuva. Sallitaan POST vain, jos käyttäjä on kirjautunut sisään.
+    @DeleteMapping("/{username}/kuvat/{deleteId}")
+    public String deletePicture(@PathVariable String username,
+                                @PathVariable Long deleteId) {
+        if (accountService.isCurrentUser(username)) {
+            pictureService.deletePicture(deleteId);
         }
         return "redirect:/{username}/kuvat";
     }
