@@ -22,8 +22,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @AllArgsConstructor
 public class Picture extends AbstractPersistable<Long> {
     
-    @Lob
-    @NotEmpty
+    // @Lob
     private byte[] picture; // Kuva.
     
     private String description; // Teksti.
