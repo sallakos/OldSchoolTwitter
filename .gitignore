@@ -21,3 +21,5 @@ nbactions.xml
 .factorypath
 
 database*
+
+.settings
