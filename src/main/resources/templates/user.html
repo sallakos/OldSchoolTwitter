@@ -7,6 +7,8 @@
     <body>
 
         <div th:replace="fragments/layout :: header(currentUser=${currentUsername})"></div>
+        
+        <button class="go-up">&uarr;</button>
 
         <hr />
 
@@ -73,12 +75,12 @@
                                                     <div class="container-fluid">
                                                         <div class="row">
                                                             <div class="col">
-                                                                <form th:id="'pra-' + ${username} + '-' + ${user.username}" class="request-accept">
+                                                                <form th:id="'pra-' + ${username} + '-' + ${user.username}" class="req request-accept">
                                                                     <input type="submit" name="accept" value="Hyväksy" class="btn btn-sm btn-dark center-block" />
                                                                 </form>
                                                             </div>
                                                             <div class="col">
-                                                                <form th:id="'prd-' + ${username} + '-' + ${user.username}" class="request-decline">
+                                                                <form th:id="'prd-' + ${username} + '-' + ${user.username}" class="req equest-decline">
                                                                     <input type="submit" name="decline" value="Hylkää" class="btn btn-sm btn-dark" />
                                                                 </form>
                                                             </div>
@@ -99,9 +101,9 @@
 
                             <form th:id="'f_' + ${username}" class="follow">
                                 <button th:id="'fb_' + ${username}" name="followUser" type="submit" class="btn btn-sm btn-dark">
-                                    <span th:id="'fs_' + ${username}" th:case="-1">Seuraa</span>
-                                    <span th:id="'fs_' + ${username}" th:case="0">Peru pyyntö</span>
-                                    <span th:id="'fs_' + ${username}" th:case="1">Lopeta seuraaminen</span>
+                                    <span th:id="'fs_' + ${username}" th:case="-1" class="follow-btn">Seuraa</span>
+                                    <span th:id="'fs_' + ${username}" th:case="0" class="follow-btn">Peru pyyntö</span>
+                                    <span th:id="'fs_' + ${username}" th:case="1" class="follow-btn">Lopeta seuraaminen</span>
                                 </button>
                             </form>
                         </div>

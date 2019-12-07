@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +27,7 @@ public class PictureController {
 
     @Autowired
     PictureService pictureService;
-
+    
     // Haetaan henkilön kuvagalleria.
     @GetMapping("/{username}/kuvat")
     public String showUserGallery(Model model, @PathVariable String username) {
@@ -84,7 +85,8 @@ public class PictureController {
     public String addPicture(@RequestParam("file") MultipartFile file,
                              @RequestParam String description,
                              @PathVariable String username) throws IOException {
-                if (accountService.isCurrentUser(username)) {
+        
+        if (accountService.isCurrentUser(username)) {
             pictureService.savePicture(username, file, description);
         }
         return "redirect:/{username}/kuvat";

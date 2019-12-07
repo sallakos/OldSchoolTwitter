@@ -7,6 +7,28 @@ if ($('#pictures').length > 0) {
   }
 }
 
+$(window).scroll(function() {
+  if ($('.go-up').length > 0) {
+    if ($(window).scrollTop() > $(window).height()) {
+      $('.go-up').show();
+    } else {
+      $('.go-up').hide();
+    }
+  }
+});
+
+// Skrollataan sivun ylös.
+$(".go-up").click(function() {
+  // Skrollataan sivu oikeaan kohtaan. Haetaan tieto painikkeen id:stä.
+  $("html, body").animate({
+    scrollTop: 0
+  }, 1000);
+});
+
+if ($(".follow-btn").text().localeCompare("Peru pyyntö")) {
+  $("#pending").text('Näet käyttäjän viestit ja kuvat, kun hän on hyväksynyt seuraamispyyntösi.');
+}
+
 // Bootstrapin tooltip.
 $(function() {
   $('[data-toggle="tooltip"]').tooltip()
@@ -204,7 +226,7 @@ $('.delete-picture').click(function(e) {
     type: 'DELETE',
     data: $('#' + id).serialize(),
     success: function() {
-      console.log("Kuva poistettu.")
+      console.log("Kuva poistettu.");
     }
   });
 });
@@ -215,4 +237,26 @@ $(".nav-btn").click(function() {
   $("html, body").animate({
     scrollTop: $("#" + $(this).attr("id").substring(4)).offset().top
   }, 1000);
+});
+
+$('.picture-add-from-file').on('change', function(e) {
+
+  let fileSize;
+
+  if (e.currentTarget.files[0] != undefined) {
+    fileSize = e.currentTarget.files[0].size;
+  } else {
+    fileSize = 0;
+  }
+
+  if (fileSize >= 1048576) {
+    $('.size-ins').addClass('d-none');
+    $('.size-alert').removeClass('d-none');
+    $('.ps-btn').attr("disabled", true);
+  } else {
+    $('.size-ins').removeClass('d-none');
+    $('.size-alert').addClass('d-none');
+    $('.ps-btn').attr("disabled", false);
+  }
+
 });

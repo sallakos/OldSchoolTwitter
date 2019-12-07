@@ -12,6 +12,10 @@
 
             <div th:if="${!isRegistered}">
                 
+                <p><a href="/">Palaa etusivulle</a></p>
+                
+                <h2>Rekisteröidy</h2>
+                
                 <form method="POST" th:action="@{/rekisteroidy}" th:object="${accountData}"> <!---->
 
                     <div class="form-group">
@@ -39,7 +43,7 @@
                     <div class="form-group">
                         <div class="col-lg-5 col-md-8 col-sm-10">
                             <label for="password">Salasana</label>
-                            <input type="password" class="form-control" th:field="*{password}" id="password" /> <!---->
+                            <input type="password" class="form-control" th:field="*{password}" id="password" />
                             <section th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger">Virheviesti</section>
                         </div>
                     </div>
