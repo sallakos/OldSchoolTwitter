@@ -26,6 +26,7 @@ $(".go-up").click(function() {
 });
 
 if ($(".follow-btn").text().localeCompare("Peru pyyntö")) {
+  console.log("follow-btn toimii")
   $("#pending").text('Näet käyttäjän viestit ja kuvat, kun hän on hyväksynyt seuraamispyyntösi.');
 }
 
