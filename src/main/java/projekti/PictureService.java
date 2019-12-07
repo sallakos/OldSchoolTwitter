@@ -28,7 +28,6 @@ public class PictureService {
         Account account = accountRepo.findByUsername(username);
         Picture picture = pictureRepo.getOne(id);
         account.setProfilePicture(picture);
-        // account.setProfilePictureId(id);
         accountRepo.save(account);
     }
 
