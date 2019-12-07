@@ -25,7 +25,7 @@ $(".go-up").click(function() {
   }, 1000);
 });
 
-console.log($(".follow-btn").text());
+console.log($(".follow-btn").text().localeCompare("Peru pyyntö"));
 
 if ($(".follow-btn").text().localeCompare("Peru pyyntö")) {
   $("#pending").text('Näet käyttäjän viestit ja kuvat, kun hän on hyväksynyt seuraamispyyntösi.');
