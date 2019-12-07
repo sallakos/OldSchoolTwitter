@@ -11,37 +11,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class DefaultController {
     
     @Autowired
-    AccountRepository accountRepo;
+    AccountService accountService;
     
     @Autowired
     SecurityConfiguration securityConfiguration;
 
-//    @GetMapping("/")
-//    public String home(Model model) {
-//        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-//        model.addAttribute("username", username);
-//        return "index";
-//    }
-    
-//    @GetMapping("/login")
-//    public String redirect(@RequestParam logout) {
-//        return "redirect:/";
-//    }
-    
-//    @PostConstruct
-//    public void init() {
-//        
-//        Account user1 = new Account("user1", "User 1", securityConfiguration.passwordEncoder().encode("salasana"));
-//        Account user2 = new Account("user2", "User 2", securityConfiguration.passwordEncoder().encode("salasana"));
-//
-//        if (accountRepo.findByUsername(user1.getUsername()) == null) {
-//            accountRepo.save(user1);
-//        }
-//        
-//        if (accountRepo.findByUsername(user2.getUsername()) == null) {
-//            accountRepo.save(user2);
-//        }
-//        
-//    }
+    @PostConstruct
+    public void init() {
+        
+        AccountData user1 = new AccountData("aku", "Aku Ankka", "aku");
+        AccountData user2 = new AccountData("iinez", "Iines Ankka", "iinez");
+
+        if (accountService.findByUsername(user1.getUsername()) == null) {
+            accountService.register(user1);
+        }
+        
+        if (accountService.findByUsername(user2.getUsername()) == null) {
+            accountService.register(user2);
+        }
+        
+    }
     
 }
