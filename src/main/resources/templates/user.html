@@ -112,7 +112,10 @@
 
                 <div id="user-container" class="col-xl-8 col-lg-12 my-content">
                     <div id="user-data">
-                        <div id="pending" th:if="${friendStatus <= 0}">Seuraa käyttäjää nähdäksesi hänen viestinsä ja kuvansa.</div>
+                        <div id="pending" th:if="${friendStatus <= 0}">
+                            <span th:if="${friendStatus == -1}">Seuraa käyttäjää nähdäksesi hänen viestinsä ja kuvansa.</span>
+                            <span th:if="${friendStatus == 0}">Näet käyttäjän viestit ja kuvat, kun hän on hyväksynyt seuraamispyyntösi.</span>
+                        </div>
 
                         <div th:if="${friendStatus >= 1}">
 
