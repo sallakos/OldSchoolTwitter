@@ -3,6 +3,13 @@ body {
     padding: 0 10%;
 }
 
+.heading {
+    font-family: 'Lakki Reddy', cursive;
+    font-size: 100px;
+    margin-top: 30px;
+    margin-bottom: 0px;
+}
+
 h6 {
     margin-top: 10px;
     margin-bottom: 10px;

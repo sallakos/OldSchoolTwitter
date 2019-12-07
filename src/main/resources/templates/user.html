@@ -9,9 +9,7 @@
         <div th:replace="fragments/layout :: header(currentUser=${currentUsername})"></div>
         
         <button class="go-up">&uarr;</button>
-
-        <hr />
-
+        
         <div class="container-fluid"> 
 
             <div class="row justify-content-center">
@@ -196,7 +194,7 @@
                                     <div class="row justify-content-center">
                                         <div th:each="picture : ${pictures}" class="col">
                                             <a th:href="@{/{username}/kuvat(username=${username})}">
-                                                <img th:src="@{/{username}/kuvat/{id}(username=${username}, id=${picture.id})}" class="gallery-preview" />
+                                                <img th:src="@{/{username}/kuvat/{id}(username=${username}, id=${picture})}" class="gallery-preview" />
                                             </a>
                                         </div>
                                     </div>
@@ -210,12 +208,6 @@
             </div>
 
 
-        </div>
-
-        <hr />
-
-        <div>
-            <p>Kirjautunut sisään käyttäjänä: <span th:text="${currentUsername}">KÄYTTÄJÄ</span></p>
         </div>
 
         <div th:replace="fragments/layout :: footer"></div>

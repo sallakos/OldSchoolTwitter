@@ -49,4 +49,9 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
                    "ORDER BY Account.name", nativeQuery = true)
     List<Account> findUserFollowers(@Param("id") Long id);
     
+    
+    @Query(value = "SELECT id FROM PICTURE " +
+                   "WHERE owner_id = :id", nativeQuery = true)
+    List<Long> findUserPictures(@Param("id") Long id);
+    
 }

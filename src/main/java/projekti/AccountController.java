@@ -31,12 +31,28 @@ public class AccountController {
     }
 
 // ---------- GETIT ---------------------------------------------------------------------------------------------------
+    // Ohjataan kirjautumissivulle.
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/login";
+    }
+
     // Rekisteröitymissivu. Jos käyttäjä on jo kirjautunut, näytetään hänelle tämä tieto.
     @GetMapping("/rekisteroidy")
     public String register(Model model) {
+        
+        if (accountService.isRegistered()) {
+            return "redirect:/" + accountService.currentUser().getUsername();
+        }
+        
         model.addAttribute("isRegistered", accountService.isRegistered());
         model.addAttribute("uniqueUsername", true);
         return "register";
+    }
+    
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
     
     // Haetaan henkilön tiedot.
@@ -49,7 +65,7 @@ public class AccountController {
         model.addAttribute("followees", accountService.get6Followees(account));
         model.addAttribute("numberOfFollowers", accountService.getUserFollowers(account).size());
         model.addAttribute("numberOfFollowees", accountService.getUserFollowees(account).size());
-        model.addAttribute("pictures", account.getPictures());
+        model.addAttribute("pictures", accountService.findUserPictures(account));
         model.addAttribute("profilePicture", account.getProfilePicture());
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("currentUsername", currentUser.getUsername());

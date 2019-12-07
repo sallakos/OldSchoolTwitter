@@ -19,3 +19,5 @@ nbactions.xml
 
 .classpath
 .factorypath
+
+database*

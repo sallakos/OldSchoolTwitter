@@ -16,12 +16,12 @@ public class DefaultController {
     @Autowired
     SecurityConfiguration securityConfiguration;
 
-    @GetMapping("/")
-    public String home(Model model) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        model.addAttribute("username", username);
-        return "index";
-    }
+//    @GetMapping("/")
+//    public String home(Model model) {
+//        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+//        model.addAttribute("username", username);
+//        return "index";
+//    }
     
 //    @GetMapping("/login")
 //    public String redirect(@RequestParam logout) {

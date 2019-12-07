@@ -79,6 +79,11 @@ public class AccountService {
         return usernames;
     }
     
+    public List<Long> findUserPictures(Account account) {
+        System.out.println("SQL by AccountService / findUserPictures():");
+        return accountRepo.findUserPictures(account.getId());
+    }
+    
     public List<Account> getUserFollowees(Account account) {
         System.out.println("SQL by AccountService / getUserFollowees():");
         return accountRepo.findUserFollowees(account.getId());
@@ -90,6 +95,7 @@ public class AccountService {
     }
     
     public List<Account> findPendingRequests(Account account) {
+        System.out.println("SQL by AccountService / findPendingRequests():");
         return accountRepo.findPendingRequests(account.getId());
     }
     
@@ -138,13 +144,16 @@ public class AccountService {
     }
     
     public List<Follow> get6Followees(Account account) {
+        System.out.println("SQL by AccountService / get6Followees():");
         return account.getFollowees().subList(0, Math.min(account.getFollowees().size(), 6));
     }
     public List<Follow> get6Followers(Account account) {
+        System.out.println("SQL by AccountService / get6Followers():");
         return account.getFollowers().subList(0, Math.min(account.getFollowers().size(), 6));
     }
     
     public boolean checkUniqueUsername(String username) {
+        System.out.println("SQL by AccountService / checkUniqueUsername():");
         return accountRepo.findByUsername(username) == null;
     }
   
