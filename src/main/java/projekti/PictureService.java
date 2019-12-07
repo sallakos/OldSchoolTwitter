@@ -22,26 +22,8 @@ public class PictureService {
     
     @Autowired
     CommentRepository commentRepo;
-
-//    public byte[] getProfilePicture(String username) throws IOException {
-//        Account account = accountRepo.findByUsername(username);
-//        if (account.getProfilePicture() != null) {
-//            return account.getProfilePicture().getPicture();
-//        }
-//        byte[] defaultPicture = Files.readAllBytes(Paths.get("C:\\Users\\salla\\Documents\\NetBeansProjects\\mooc-wepa-s19-projekti\\wepa_Projekti\\src\\main\\resources\\public\\img\\default.jpg"));
-//        return defaultPicture;
-//    }
-
-//    public void saveProfilePicture(String username, MultipartFile file) throws IOException {
-//        if (file.getContentType().equals("image/jpeg")) {
-//            Account account = accountRepo.findByUsername(username);
-//            Picture picture = new Picture(file.getBytes(), "", account);
-//            account.getPictures().add(picture);
-//            account.setProfilePicture(account.getPictures().get(account.getPictures().size() - 1));
-//            pictureRepo.save(picture);
-//            accountRepo.save(account);
-//        }
-//    }
+    
+    @Transactional
     public void saveProfilePicture(String username, Long id) throws IOException {
         Account account = accountRepo.findByUsername(username);
         Picture picture = pictureRepo.getOne(id);
@@ -50,6 +32,7 @@ public class PictureService {
         accountRepo.save(account);
     }
 
+    @Transactional
     public void savePicture(String username, MultipartFile file, String description) throws IOException {
         if (file.getContentType().substring(0, 5).equals("image")) {
             Account account = accountRepo.findByUsername(username);
@@ -62,6 +45,7 @@ public class PictureService {
         }
     }
     
+    @Transactional
     public void deletePicture(Long id) {
         pictureRepo.deleteById(id);
     }
