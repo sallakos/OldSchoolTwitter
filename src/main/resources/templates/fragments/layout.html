@@ -60,9 +60,11 @@
         </div>
 
         <div th:fragment="profilePictureSmall(account)">
-            <img th:if="${account.profilePicture == null}" src="/img/default.jpg" class="small-profile-img" />
-            <a th:href="@{/{username}(username=${account.username})}">
-                <img th:if="${account.profilePicture != null}" th:src="@{/{username}/kuvat/profiilikuva(username=${account.username})}"  class="small-profile-img" />
+            <a th:if="${account.profilePicture == null}" th:href="@{/{username}(username=${account.username})}">
+                <img src="/img/default.jpg" class="small-profile-img" />
+            </a>
+            <a th:if="${account.profilePicture != null}" th:href="@{/{username}(username=${account.username})}">
+                <img th:src="@{/{username}/kuvat/profiilikuva(username=${account.username})}"  class="small-profile-img" />
             </a>
         </div>
 
