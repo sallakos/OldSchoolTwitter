@@ -1,7 +1,9 @@
 package projekti;
 
 import java.util.List;
+import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -22,7 +24,8 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @AllArgsConstructor
 public class Picture extends AbstractPersistable<Long> {
     
-    // @Lob
+    // @Lob // Ei toimi Postgres.
+    @Basic(fetch = FetchType.LAZY)
     private byte[] picture; // Kuva.
     
     private String description; // Teksti.

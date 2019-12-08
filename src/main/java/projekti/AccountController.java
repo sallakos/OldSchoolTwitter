@@ -61,30 +61,30 @@ public class AccountController {
         Account account = accountService.findByUsername(username); // SQL
         Account currentUser = accountService.currentUser(); // SQL
         model.addAttribute("name", account.getName());
-        model.addAttribute("followers", accountService.get6Followers(account));
-        model.addAttribute("followees", accountService.get6Followees(account));
-        model.addAttribute("numberOfFollowers", accountService.getUserFollowers(account).size());
-        model.addAttribute("numberOfFollowees", accountService.getUserFollowees(account).size());
-        model.addAttribute("pictures", accountService.findUserPictures(account));
+        model.addAttribute("followers", accountService.get6Followers(account)); // SQL
+        model.addAttribute("followees", accountService.get6Followees(account)); // SQL
+        model.addAttribute("numberOfFollowers", accountService.getUserFollowers(account).size()); // SQL
+        model.addAttribute("numberOfFollowees", accountService.getUserFollowees(account).size()); // SQL
+        model.addAttribute("pictures", accountService.findUserPictures(account)); // SQL
         model.addAttribute("profilePicture", account.getProfilePicture());
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("currentUsername", currentUser.getUsername());
         model.addAttribute("currentUserLikedMessages", currentUser.getLikedMessages());
         model.addAttribute("currentUserLikedPictures", currentUser.getLikedPictures());
-        model.addAttribute("followedUsernames", accountService.getFollowedUsernames(currentUser)); // SQL
-        model.addAttribute("pendingRequests", accountService.findPendingRequests(account));
-        model.addAttribute("numberOfPendingRequests", accountService.numberOfPendingRequests(currentUser)); // SQL
+        model.addAttribute("pendingRequests", accountService.findPendingRequests(currentUser)); // SQL
+         model.addAttribute("numberOfPendingRequests", accountService.numberOfPendingRequests(currentUser)); // SQL
         model.addAttribute("friendStatus", accountService.friendStatus(account)); // SQL, jos vieras sivu, niin kaksi kyselyä.
         if (accountService.isCurrentUser(username)) {
             model.addAttribute("userFollowsWho", "Sinä seuraat");
             model.addAttribute("whoFollowsUser", "Sinun seuraajasi");
             model.addAttribute("messages", messageService.getAllMessages(account)); // SQL
+            System.out.println(messageService.getAllMessages(account).size());
         } else {
             model.addAttribute("userFollowsWho", account.getName() + " seuraa");
             model.addAttribute("whoFollowsUser", "Käyttäjän " + account.getName() + " seuraajat");
             model.addAttribute("messages", messageService.getUserMessages(account)); // SQL
         }
-        System.out.println("Thymeleafin tekemiä kyselyjä:");
+        System.out.println("THYMELEAFIN TEKEMIÄ KYSELYJÄ:");
         return "user";
     }
 

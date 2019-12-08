@@ -31,7 +31,7 @@
                         <div class="container-fluid mt-4">
                             <h6><span th:text="${userFollowsWho}">KEITÄ</span> <span class="small text-muted">[<span th:text="${numberOfFollowees}">MÄÄRÄ</span>]</span></h6>
                             <div class="row justify-content-center">
-                                <div th:each="user : ${followees}" th:if="${!user.pending}">
+                                <div th:each="user : ${followees}" class="col-4">
                                     <a th:href="@{/{username}(username=${user.followee.username})}" data-toggle="tooltip" data-placement="bottom" data-html="true" th:title="${user.followee.name} + '<br> alkaen ' + ${#temporals.format(user.startOfFollow, 'd.M.yyyy')}">
                                         <div th:replace="fragments/layout :: profilePictureSmallOnHover(${user.followee})"></div>
                                     </a>
@@ -43,7 +43,7 @@
                         <div th:id="${username} + '-followers'" class="container-fluid mt-4">
                             <h6><span th:text="${whoFollowsUser}">KETKÄ</span> <span class="small text-muted">[<span th:text="${numberOfFollowers}">MÄÄRÄ</span>]</span></h6>
                             <div class="row justify-content-center">
-                                <div th:each="user : ${followers}" th:if="${!user.pending}">
+                                <div th:each="user : ${followers}" class="col-4">
                                     <a th:href="@{/{username}(username=${user.follower.username})}" data-toggle="tooltip" data-placement="bottom" data-html="true" th:title="${user.follower.name} + '<br> alkaen ' + ${#temporals.format(user.startOfFollow, 'd.M.yyyy')}">
                                         <div th:replace="fragments/layout :: profilePictureSmallOnHover(${user.follower})"></div>
                                     </a>

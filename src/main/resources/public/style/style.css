@@ -272,4 +272,7 @@ a:hover {
     .card {
         width: 60%;
     }
+    .heading {
+        font-size: 70px;
+    }
 }

@@ -14,11 +14,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    @EntityGraph(value = "Account.allUserData")
+    // @EntityGraph(value = "Account.allUserData")
     Account findByUsername(String username);
     
     // Haetaan kaikki käyttäjät ja heidän kuvansa (vaikka niitä ei periaatteessa tarvita...)
-    @EntityGraph(value = "Account.allUserData")
+    // @EntityGraph(value = "Account.allUserData")
     @Override
     List<Account> findAll(Sort sort);
     

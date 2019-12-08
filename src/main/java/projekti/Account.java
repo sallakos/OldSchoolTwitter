@@ -2,7 +2,9 @@ package projekti;
 
 import java.util.HashMap;
 import java.util.List;
+import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
@@ -31,11 +33,9 @@ public class Account extends AbstractPersistable<Long> {
     private String name;
     private String username;
     private String password;
-
-    // private Long profilePictureId;
-    // private Integer profilePictureIndex;
     
     @OneToOne
+    @Basic(fetch = FetchType.LAZY)
     private Picture profilePicture;
     
     // Käyttäjällä voi olla monta seuraajaa ja käyttäjä voi seurata montaa.    
