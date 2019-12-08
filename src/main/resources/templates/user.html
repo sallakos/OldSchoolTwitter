@@ -63,7 +63,7 @@
                                                 <div class="card-body">
                                                     <button th:id="'fr-' + ${username} + '-' + ${user.username}" class="btn btn-light pending-request-button">
                                                         <div class="media">
-                                                            <div th:replace="fragments/layout :: profilePictureSmall(${user})"></div>
+                                                            <div th:replace="fragments/layout :: profilePictureSmallOnHover(${user})"></div>
                                                             <div class="media-body">
                                                                 <p th:text="${user.name.length() < 20 ? user.name : user.name.substring(0,20) + '...' }" class="text"></p>
                                                                 <p>@<span th:text="${user.username}" class="text"></span></p>

@@ -78,7 +78,6 @@ public class AccountController {
             model.addAttribute("userFollowsWho", "Sinä seuraat");
             model.addAttribute("whoFollowsUser", "Sinun seuraajasi");
             model.addAttribute("messages", messageService.getAllMessages(account)); // SQL
-            System.out.println(messageService.getAllMessages(account).size());
         } else {
             model.addAttribute("userFollowsWho", account.getName() + " seuraa");
             model.addAttribute("whoFollowsUser", "Käyttäjän " + account.getName() + " seuraajat");

@@ -22,6 +22,10 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Override
     List<Account> findAll(Sort sort);
     
+//    @Query(value = "SELECT profile_picture_id FROM ACCOUNT " +
+//                   "WHERE Account.username LIKE :username", nativeQuery = true)
+//    Long findProfilePictureIdByUsername(@Param("username") String username);
+    
     @Query(value = "SELECT followee_id FROM ACCOUNT " +
                    "JOIN Follow ON follower_id = Account.id " + 
                    "WHERE Account.id = :id AND pending = true", nativeQuery = true)
