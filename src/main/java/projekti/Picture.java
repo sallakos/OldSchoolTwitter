@@ -24,7 +24,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @AllArgsConstructor
 public class Picture extends AbstractPersistable<Long> {
     
-    // @Lob // Ei toimi Postgres.
+    @Lob // Ei toimi Postgres.
     @Basic(fetch = FetchType.LAZY)
     private byte[] picture; // Kuva.
     
