@@ -27,7 +27,7 @@
                 <div th:each="picture : ${pictures}" class="row mt-5 mb-5 gallery-item">
                     <div class="col-lg-3 col-md-4 center">
                         <img th:src="@{/{username}/kuvat/{id}(username=${username}, id=${picture.id})}" class="gallery-img" />
-                        <form th:if="${friendStatus == 2 && picture.id != profilePictureId}" method="POST" th:action="@{/{username}/profilepicture(username=${username})}">
+                        <form th:if="${friendStatus == 2 && picture.id != profilePictureId}" method="POST" th:action="@{/{username}/kuvat/profiilikuva(username=${username})}">
                             <button name="profilePictureId" th:value="${picture.id}" type="submit" class="btn btn-sm btn-dark mt-3">Aseta profiilikuvaksi</button>
                         </form>
                         <form th:if="${friendStatus == 2 && picture.id != profilePictureId}">

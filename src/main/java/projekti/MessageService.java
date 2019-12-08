@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,14 +69,5 @@ public class MessageService {
         Long userId = account.getId();
         return messageRepo.getUserMessages(userId);
     }
-    
-    public List<List<Comment>> getMessageComments(List<Message> messageList) {
-        List<List<Comment>> allComments = new ArrayList<>();
-        for (Message message : messageList) {
-            List<Comment> comments = commentRepo.findByMessageId(message.getId());
-            allComments.add(comments);
-        }
-        return allComments;
-    }
-    
+        
 }

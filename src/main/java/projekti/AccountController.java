@@ -1,7 +1,10 @@
 package projekti;
 
+/**
+ * 
+ * @author Salla Koskinen
+ */
 import java.time.LocalDateTime;
-import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AccountController {
@@ -61,19 +63,18 @@ public class AccountController {
         Account account = accountService.findByUsername(username); // SQL
         Account currentUser = accountService.currentUser(); // SQL
         model.addAttribute("name", account.getName());
+        model.addAttribute("profilePicture", account.getProfilePicture());
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("currentUsername", currentUser.getUsername());
+        model.addAttribute("friendStatus", accountService.friendStatus(account)); // SQL, jos vieras sivu, niin kaksi kyselyä.
         model.addAttribute("followers", accountService.get6Followers(account)); // SQL
         model.addAttribute("followees", accountService.get6Followees(account)); // SQL
         model.addAttribute("numberOfFollowers", accountService.getUserFollowers(account).size()); // SQL
         model.addAttribute("numberOfFollowees", accountService.getUserFollowees(account).size()); // SQL
-        model.addAttribute("pictures", accountService.findUserPictures(account)); // SQL
-        model.addAttribute("profilePicture", account.getProfilePicture());
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("currentUsername", currentUser.getUsername());
-        model.addAttribute("currentUserLikedMessages", currentUser.getLikedMessages());
-        model.addAttribute("currentUserLikedPictures", currentUser.getLikedPictures());
         model.addAttribute("pendingRequests", accountService.findPendingRequests(currentUser)); // SQL
          model.addAttribute("numberOfPendingRequests", accountService.numberOfPendingRequests(currentUser)); // SQL
-        model.addAttribute("friendStatus", accountService.friendStatus(account)); // SQL, jos vieras sivu, niin kaksi kyselyä.
+        model.addAttribute("currentUserLikedMessages", currentUser.getLikedMessages());
+        model.addAttribute("currentUserLikedPictures", currentUser.getLikedPictures());
         if (accountService.isCurrentUser(username)) {
             model.addAttribute("userFollowsWho", "Sinä seuraat");
             model.addAttribute("whoFollowsUser", "Sinun seuraajasi");
@@ -83,7 +84,8 @@ public class AccountController {
             model.addAttribute("whoFollowsUser", "Käyttäjän " + account.getName() + " seuraajat");
             model.addAttribute("messages", messageService.getUserMessages(account)); // SQL
         }
-        System.out.println("THYMELEAFIN TEKEMIÄ KYSELYJÄ:");
+        model.addAttribute("pictures", accountService.findUserPictureIds(account)); // SQL
+        System.out.println("THYMELEAFIN TEKEMIÄ KYSELYJÄ: \n     (hakee jokaisen viestin kommentit ja tykkäykset erikseen)");
         return "user";
     }
 

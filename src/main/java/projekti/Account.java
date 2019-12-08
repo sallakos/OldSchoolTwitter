@@ -1,6 +1,5 @@
 package projekti;
 
-import java.util.HashMap;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
@@ -10,7 +9,6 @@ import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,6 +45,7 @@ public class Account extends AbstractPersistable<Long> {
 
     // Käyttäjällä voi olla monta kuvaa, mutta kuva kuuluu yhdelle käyttäjälle.
     @OneToMany(mappedBy = "owner")
+    @Basic(fetch = FetchType.LAZY)
     private List<Picture> pictures;
     
     // Käyttäjällä voi olla monta viestiä, mutta viesti on yhden käyttäjän.
@@ -55,6 +54,7 @@ public class Account extends AbstractPersistable<Long> {
 
     // Käyttäjä voi tykätä monesta kuvasta ja kuvasta voi tykätä moni käyttäjä.
     @ManyToMany(mappedBy = "likes")
+    @Basic(fetch = FetchType.LAZY)
     private List<Picture> likedPictures;
 
     // Käyttäjä voi tykätä monesta viestistä ja viestistä voi tykätä moni käyttäjä.

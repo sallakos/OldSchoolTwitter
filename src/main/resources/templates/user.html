@@ -134,7 +134,7 @@
                                         <div th:replace="fragments/layout :: profilePictureSmall(${message.owner})"></div>
                                         <div class="media-body">
                                             <div class="message-section">
-                                                <h5 th:text="${message.owner.name}">LÄHETTÄJÄ</h5>
+                                                <h5><a th:href="@{/{message.owner.username}}" th:text="${message.owner.name}">LÄHETTÄJÄ</h5></a>
                                                 <p th:text="${message.message}" class="text">VIESTI</p>
                                             </div>
                                             <div th:replace="fragments/layout :: timeStamp(${message.timeSent})"></div>
@@ -152,7 +152,6 @@
                                                     <p th:if="${message.comments.size() == 0}" class="small text-muted">Ei vielä kommentteja.</p>
                                                     <p th:if="${message.comments.size() > 10}" class="small text-muted">Näytetään 10 uusinta kommenttia yhteensä <span th:text="${message.comments.size()}">MÄÄRÄ</span> kommentista.</p>
                                                     <div th:each="comment,iStat : ${message.getLatest10()}">
-                                                        <!--<div th:if="${iStat.count > iStat.size - 10}" class="media">-->
                                                         <div class="media">
                                                             <div th:replace="fragments/layout :: profilePictureSmall(${comment.commenter})"></div>
                                                             <div class="media-body">
@@ -185,7 +184,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <hr />
 
                             <div id="pictures" class="mt-4">

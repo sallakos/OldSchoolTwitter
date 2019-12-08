@@ -4,7 +4,6 @@ package projekti;
  * 
  * @author Salla Koskinen
  */
-import java.util.HashMap;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -14,23 +13,14 @@ import org.springframework.data.repository.query.Param;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    // @EntityGraph(value = "Account.allUserData")
+    @EntityGraph(value = "Account.allUserData")
     Account findByUsername(String username);
     
     // Haetaan kaikki käyttäjät ja heidän kuvansa (vaikka niitä ei periaatteessa tarvita...)
-    // @EntityGraph(value = "Account.allUserData")
+    @EntityGraph(value = "Account.allUserData")
     @Override
     List<Account> findAll(Sort sort);
-    
-//    @Query(value = "SELECT profile_picture_id FROM ACCOUNT " +
-//                   "WHERE Account.username LIKE :username", nativeQuery = true)
-//    Long findProfilePictureIdByUsername(@Param("username") String username);
-    
-    @Query(value = "SELECT followee_id FROM ACCOUNT " +
-                   "JOIN Follow ON follower_id = Account.id " + 
-                   "WHERE Account.id = :id AND pending = true", nativeQuery = true)
-    List<Long> findPendingRequestsId(@Param("id") Long id);
-    
+        
     @Query(value = "SELECT Account.id, name, password, username, profile_picture_id FROM Follow " +
                    "JOIN Account ON follower_id = Account.id " +
                    "WHERE followee_id = :id AND pending = true", nativeQuery = true)
@@ -51,8 +41,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
                    "JOIN Follow ON Follow.follower_id = Account.id " +
                    "WHERE Follow.followee_id = :id AND Follow.pending = false " + 
                    "ORDER BY Account.name", nativeQuery = true)
-    List<Account> findUserFollowers(@Param("id") Long id);
-    
+    List<Account> findUserFollowers(@Param("id") Long id);    
     
     @Query(value = "SELECT id FROM PICTURE " +
                    "WHERE owner_id = :id", nativeQuery = true)

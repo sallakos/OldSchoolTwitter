@@ -1,10 +1,6 @@
 package projekti;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +46,7 @@ public class PictureService {
     }
 
     public byte[] getPicture(Long id) throws IOException {
+        System.out.println("- SQL / kuva " + id + ":");
         Picture picture = pictureRepo.getOne(id);
         return picture.getPicture();
     }

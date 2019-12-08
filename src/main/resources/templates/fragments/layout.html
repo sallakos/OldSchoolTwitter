@@ -29,8 +29,8 @@
 
         <div th:fragment="listUsers(users, followedUsernames, title, id)" class="container-fluid my-content setwidth">
             <h1 th:text="${title}">Käyttäjät</h1>
-            <label for="userSearch">Etsi käyttäjiä:</label>
-            <input type="text" th:id="${id}" placeholder="Nimi" class="usersearch search-width" />
+            <input type="text" th:id="${id}" placeholder="Etsi käyttäjiä" class="usersearch search-width form-control col-6" />
+            <small class="form-text text-muted">Voit etsiä käyttäjiä nimellä, tai käyttäjänimellä kirjoittamalla alkuun @.</small>
             <div class="container-fluid">
                 <div class="row justify-content-center" id="userList">
                     <div th:each="user : ${users}" class="col-12 mb-3">

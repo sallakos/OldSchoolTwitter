@@ -44,6 +44,8 @@ public class Message extends AbstractPersistable<Long> {
         this.timeSent = LocalDateTime.now();
     }
     
+    // Haetaan max. kymmenen uusinta kommenttia. Täällä, koska Thymeleaf saa vain viestit,
+    // eikä hae kommentteja itse määritetyllä tietokantakyselyllä.
     public List<Comment> getLatest10() {
         List<Comment> all = this.comments;
         return all.subList(Math.max(all.size() - 10,0), all.size());

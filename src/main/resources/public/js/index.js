@@ -43,13 +43,25 @@ $('.usersearch').keyup(function() {
   const ul = document.getElementById("userList")
   const li = ul.getElementsByTagName('div')
 
-  for (let i = 0; i < li.length; i++) {
-    let a = li[i].getElementsByTagName("a")[0];
-    let txtValue = a.textContent || a.innerText;
-    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      li[i].style.display = "";
-    } else {
-      li[i].style.display = "none";
+  if (filter.startsWith('@')) {
+    for (let i = 0; i < li.length; i++) {
+      let a = li[i].getElementsByTagName("p")[0];
+      let txtValue = a.textContent || a.innerText;
+      if (txtValue.replace('@','').toUpperCase().indexOf(filter.replace('@','')) > -1) {
+        li[i].style.display = "";
+      } else {
+        li[i].style.display = "none";
+      }
+    }
+  } else {
+    for (let i = 0; i < li.length; i++) {
+      let a = li[i].getElementsByTagName("a")[0];
+      let txtValue = a.textContent || a.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        li[i].style.display = "";
+      } else {
+        li[i].style.display = "none";
+      }
     }
   }
 });

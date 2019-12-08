@@ -1,18 +1,12 @@
 package projekti;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +21,8 @@ public class PictureController {
 
     @Autowired
     PictureService pictureService;
+
+// ---------- GETIT ---------------------------------------------------------------------------------------------------
     
     // Haetaan henkilön kuvagalleria.
     @GetMapping("/{username}/kuvat")
@@ -34,15 +30,16 @@ public class PictureController {
         Account account = accountService.findByUsername(username); // SQL
         Account currentUser = accountService.currentUser(); // SQL
         model.addAttribute("currentUsername", currentUser.getUsername());
-        boolean isAllowed = accountService.friendStatus(account) >= 1;
-        if (isAllowed) {
+        int friendStatus = accountService.friendStatus(account); // SQL, jos vieras sivu, niin kaksi kyselyä.
+        if (friendStatus >= 1) {
             model.addAttribute("name", account.getName());
             model.addAttribute("pictures", account.getPictures());
             model.addAttribute("profilePictureId", account.getProfilePicture() != null ? account.getProfilePicture().getId() : (Long) 0L);
             model.addAttribute("currentUser", currentUser);
             model.addAttribute("currentUserLikedMessages", currentUser.getLikedMessages());
             model.addAttribute("currentUserLikedPictures", currentUser.getLikedPictures());
-            model.addAttribute("friendStatus", accountService.friendStatus(account)); // SQL, jos vieras sivu, niin kaksi kyselyä.
+            model.addAttribute("friendStatus", friendStatus);
+            System.out.println("THYMELEAFIN TEKEMIÄ KYSELYJÄ:");
             return "galleria";
         }
         return "forbidden";
@@ -52,9 +49,10 @@ public class PictureController {
     @GetMapping(path = "/{username}/kuvat/profiilikuva", produces = "image/*")
     @ResponseBody
     public byte[] getProfilePicture(@PathVariable String username) throws IOException {
-        System.out.println("SQL by käyttäjän " + username + " profiilikuva: ");
+        System.out.println("SQL / KÄYTTÄJÄN " + username + " PROFIILIKUVA: ");
         Account account = accountService.findByUsername(username); // SQL
-        return pictureService.getPicture(account.getProfilePicture().getId());
+        byte[] tutki = pictureService.getPicture(account.getProfilePicture().getId());
+        return tutki;
     }
 
     // Haetaan käyttäjän yksittäinen kuva. Vain seuraajat voivat nähdä kuvat.
@@ -62,6 +60,8 @@ public class PictureController {
     @ResponseBody
     public byte[] getPicture(@PathVariable String username,
                              @PathVariable Long id) throws IOException {
+        System.out.println("SQL / KÄYTTÄJÄN " + username + " KUVA: --------------------------------------------------------- \n" + 
+                            "   (vaatii kolme kyselyä: kenen sivulla ollaan, saako käyttäjä nähdä kuvan sekä itse kuvan lataus)");
         Account account = accountService.findByUsername(username); // SQL
         boolean isAllowed = accountService.friendStatus(account) >= 1;
         if (isAllowed) {
@@ -70,29 +70,30 @@ public class PictureController {
         return null;
     }
 
-    // Lisätään profiilikuva. Sallitaan POST vain, jos käyttäjä on kirjautunut sisään.
-    @PostMapping("/{username}/profilepicture")
+// ---------- POSTIT JA DELETE ---------------------------------------------------------------------------------------------    
+    
+    // Lisätään profiilikuva. Sallitaan POST vain, jos käyttäjä on omalla sivullaan.
+    @PostMapping("/{username}/kuvat/profiilikuva")
     public String addProfilePicture(@RequestParam Long profilePictureId,
-            @PathVariable String username) throws IOException {
+                                    @PathVariable String username) throws IOException {
         if (accountService.isCurrentUser(username)) {
             pictureService.saveProfilePicture(username, profilePictureId);
         }
         return "redirect:/{username}";
     }
 
-    // Lisätään kuva. Sallitaan POST vain, jos käyttäjä on kirjautunut sisään.
+    // Lisätään kuva. Sallitaan POST vain, jos käyttäjä on omalla sivullaan.
     @PostMapping("/{username}/kuvat")
     public String addPicture(@RequestParam("file") MultipartFile file,
                              @RequestParam String description,
                              @PathVariable String username) throws IOException {
-        
         if (accountService.isCurrentUser(username)) {
             pictureService.savePicture(username, file, description);
         }
         return "redirect:/{username}/kuvat";
     }
     
-    // Poistetaan kuva. Sallitaan POST vain, jos käyttäjä on kirjautunut sisään.
+    // Poistetaan kuva. Sallitaan POST vain, jos käyttäjä on omalla sivullaan.
     @DeleteMapping("/{username}/kuvat/{deleteId}")
     public String deletePicture(@PathVariable String username,
                                 @PathVariable Long deleteId) {
