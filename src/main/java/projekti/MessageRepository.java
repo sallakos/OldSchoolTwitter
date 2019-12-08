@@ -14,8 +14,8 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     // Haetaan 25 uusinta käyttäjän ja käyttäjän seuraamien käyttäjien viestiä.
     @Query(value = "SELECT DISTINCT Message.id, message, time_sent, owner_id FROM MESSAGE " +
                    "JOIN Account ON Account.id = owner_id " +
-                   "JOIN Follow ON followee_id = Account.id " +
-                   "WHERE (follower_id = :id OR owner_id = :id) AND Follow.pending = false " +
+                   "LEFT JOIN Follow ON followee_id = Account.id " +
+                   "WHERE owner_id = :id OR (follower_id = :id AND Follow.pending = false) " +
                    "ORDER BY time_sent DESC LIMIT 25", nativeQuery = true)
     List<Message> getAllMessages(@Param("id") Long id);
     
