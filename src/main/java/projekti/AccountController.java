@@ -85,7 +85,10 @@ public class AccountController {
             model.addAttribute("messages", messageService.getUserMessages(account)); // SQL
         }
         model.addAttribute("pictures", accountService.findUserPictureIds(account)); // SQL
-        System.out.println("THYMELEAFIN TEKEMIÄ KYSELYJÄ: \n     (hakee jokaisen viestin kommentit ja tykkäykset erikseen)");
+        System.out.println("THYMELEAFIN TEKEMIÄ KYSELYJÄ:");
+        // Thymeleaf hakee jokaisen viestin kommentit ja tykkäykset erikseen. Tämän lisäksi haetaan aina käyttäjän profiilikuva tarvittaessa
+        // sekä kyseisen käyttäjän kuvat. Omalla sivulla jokainen kuva (ei profiilikuva) aiheuttaa kaksi kyselyä, koska tarkistetaan, onko
+        // käyttäjällä oikeus nähdä kuva.
         return "user";
     }
 

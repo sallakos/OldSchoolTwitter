@@ -59,13 +59,13 @@ public class MessageService {
     }
     
     public List<Message> getAllMessages(Account account) {
-        System.out.print("- SQL / MessageService / getAllMessages(): ");
+//        System.out.print("- SQL / MessageService / getAllMessages(): ");
         Long userId = account.getId();
         return messageRepo.getAllMessages(userId);
     }
     
     public List<Message> getUserMessages(Account account) {
-        System.out.print("- SQL / MessageService / getUserMessages(): ");
+//        System.out.print("- SQL / MessageService / getUserMessages(): ");
         Long userId = account.getId();
         return messageRepo.getUserMessages(userId);
     }

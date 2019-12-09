@@ -134,7 +134,7 @@
                                         <div th:replace="fragments/layout :: profilePictureSmall(${message.owner})"></div>
                                         <div class="media-body">
                                             <div class="message-section">
-                                                <h5><a th:href="@{/{message.owner.username}}" th:text="${message.owner.name}">LÄHETTÄJÄ</h5></a>
+                                                <h5><a th:href="@{/{username}(username=${message.owner.username})}" th:text="${message.owner.name}">LÄHETTÄJÄ</h5></a>
                                                 <p th:text="${message.message}" class="text">VIESTI</p>
                                             </div>
                                             <div th:replace="fragments/layout :: timeStamp(${message.timeSent})"></div>
