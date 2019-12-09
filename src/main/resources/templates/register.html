@@ -21,7 +21,7 @@
                     <div class="form-group">
                         <div class="col-lg-5 col-md-8 col-sm-10">
                             <label for="name">Nimi</label>
-                            <input type="text" class="form-control" th:field="*{name}" placeholder="Etunimi Sukunimi" required />
+                            <input id="name" type="text" class="form-control" th:field="*{name}" placeholder="Etunimi Sukunimi" required />
                             <section th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger">Virheviesti</section>
                         </div>
                     </div>
