@@ -45,7 +45,6 @@ public class Account extends AbstractPersistable<Long> {
 
     // Käyttäjällä voi olla monta kuvaa, mutta kuva kuuluu yhdelle käyttäjälle.
     @OneToMany(mappedBy = "owner")
-    @Basic(fetch = FetchType.LAZY)
     private List<Picture> pictures;
     
     // Käyttäjällä voi olla monta viestiä, mutta viesti on yhden käyttäjän.

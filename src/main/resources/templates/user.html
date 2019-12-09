@@ -130,7 +130,7 @@
                             <div>
                                 <div id="allmessages">
                                     <h2>Viestit</h2>
-                                    <div th:each="message : ${messages}" class="media p-3">
+                                    <div th:each="message : ${messages}" class="media p-l-3 pt-3 pb-3">
                                         <div th:replace="fragments/layout :: profilePictureSmall(${message.owner})"></div>
                                         <div class="media-body">
                                             <div class="message-section">

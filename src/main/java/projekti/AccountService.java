@@ -30,6 +30,7 @@ public class AccountService {
     
     // Rekisteröityminen.
     @Transactional
+//    @CacheEvict(value = "users", allEntries = true)
     public void register(String username, String name, String password) {
         Account account = new Account(username, name, securityConfiguration.passwordEncoder().encode(password));
         accountRepo.save(account);
@@ -37,6 +38,7 @@ public class AccountService {
     
     // Rekisteröityminen.
     @Transactional
+//    @CacheEvict(value = "users", allEntries = true)
     public void register(AccountData accountData) {
         Account account = new Account(accountData.getUsername(), accountData.getName(), securityConfiguration.passwordEncoder().encode(accountData.getPassword()));
         accountRepo.save(account);
@@ -44,6 +46,7 @@ public class AccountService {
     
     // Seuraaminen.
     @Transactional
+//    @CacheEvict(value = "users", allEntries = true)
     public void follow(Account follower, Account followee, LocalDateTime startOfFollow) {
         Follow follow = new Follow(follower, followee, startOfFollow, true);
         followRepo.save(follow);
@@ -51,6 +54,7 @@ public class AccountService {
     
     // Seuraamisen lopettaminen.
     @Transactional
+//    @CacheEvict(value = "users", allEntries = true)
     public void unfollow(Account follower, Account followee) {
         Long id = followRepo.findByFollowerAndFollowee(follower, followee).getId();
         followRepo.deleteById(id);
@@ -58,6 +62,7 @@ public class AccountService {
     
     // Seuraamisen hyväksyminen.
     @Transactional
+//    @CacheEvict(value = "users", allEntries = true)
     public void acceptFollow(Account follower, Account followee) {
         Follow follow = followRepo.findByFollowerAndFollowee(follower, followee);
         follow.setPending(false);
@@ -66,6 +71,7 @@ public class AccountService {
     
     // Seuraamisen hylkääminen.
     @Transactional
+//    @CacheEvict(value = "users", allEntries = true)
     public void declineFollow(Account follower, Account followee) {
         Long id = followRepo.findByFollowerAndFollowee(follower, followee).getId();
         followRepo.deleteById(id);
@@ -75,21 +81,20 @@ public class AccountService {
     
     // Etsi käyttäjää käyttäjänimellä.
     public Account findByUsername(String username) {
-        System.out.println("- SQL / AccountService / findByUsername(): \n" + 
-                           "      (hakee myös profiilikuvan, jos se on määritelty)");
+        System.out.print("- SQL / AccountService / findByUsername(): ");
         return accountRepo.findByUsername(username);
     }
     
     // Kaikki käyttäjät.
     public List<Account> findAll() {
-        System.out.println("- SQL / AccountService / findAll():");
+        System.out.print("- SQL / AccountService / findAll(): ");
         Sort sort = Sort.by("name");
         return accountRepo.findAll(sort);
     }
     
     // Käyttäjää seuraavat käyttäjät ja seuraamisen tila.
     public HashMap<String, Boolean> getFollowedUsernames(Account account) {
-        System.out.println("- SQL / AccountService / getFollowedUsernames():");
+        System.out.print("- SQL / AccountService / getFollowedUsernames(): ");
         HashMap<String, Boolean> usernames = new HashMap<>();
         for (Follow follow : account.getFollowees()) {
             usernames.put(follow.getFollowee().getUsername(), follow.isPending());
@@ -99,38 +104,37 @@ public class AccountService {
     
     // Käyttäjän kuvien idt:
     public List<Long> findUserPictureIds(Account account) {
-        System.out.println("- SQL / AccountService / findUserPictures():");
+        System.out.print("- SQL / AccountService / findUserPictures(): ");
         return accountRepo.findUserPictures(account.getId());
     }
     
     // Käyttäjän seurattavat.
     public List<Account> getUserFollowees(Account account) {
-        System.out.println("- SQL / AccountService / getUserFollowees():");
+        System.out.print("- SQL / AccountService / getUserFollowees(): ");
         return accountRepo.findUserFollowees(account.getId());
     }
     
     // Käyttäjän seuraajat.
     public List<Account> getUserFollowers(Account account) {
-        System.out.println("- SQL / AccountService / getUserFollowers():");
+        System.out.print("- SQL / AccountService / getUserFollowers(): ");
         return accountRepo.findUserFollowers(account.getId());
     }
     
     // Seurauspyynnöt.
     public List<Account> findPendingRequests(Account account) {
-        System.out.println("- SQL / AccountService / findPendingRequests():");
+        System.out.print("- SQL / AccountService / findPendingRequests(): ");
         return accountRepo.findPendingRequests(account.getId());
     }
     
     // Nykyinen käyttäjä.
     public Account currentUser() {
-        System.out.println("- SQL / AccountService / currentUser():");
+        System.out.print("- SQL / AccountService / currentUser(): ");
         String userLoggedIn = SecurityContextHolder.getContext().getAuthentication().getName();
         return accountRepo.findByUsername(userLoggedIn);
     }
     
     // Onko käyttäjä omalla sivullaan.
     public boolean isCurrentUser(String username) {
-        System.out.println("- SQL / AccountService / isCurrentUser():");
         String userLoggedIn = SecurityContextHolder.getContext().getAuthentication().getName();
         return userLoggedIn.equals(username);
     }
@@ -150,7 +154,7 @@ public class AccountService {
         if (account.equals(currentUser)) {
             return 2;
         } else {
-            System.out.println("- SQL / AccountService / friendStatus() Follow for-loop: ");
+            System.out.print("- SQL / AccountService / friendStatus() Follow for-loop: ");
             for (Follow follow : currentUser.getFollowees()) {
                 if (follow.getFollowee().equals(account)) {
                     if (!follow.isPending()) { return 1; }
@@ -162,13 +166,13 @@ public class AccountService {
     }
     
     public int numberOfPendingRequests(Account account) {
-        System.out.println("- SQL / AccountService / numberOfPendingRequests(): ");
+        System.out.print("- SQL / AccountService / numberOfPendingRequests(): ");
         return accountRepo.numberOfPendingRequests(account.getId());
     }
     
     public List<Follow> get6Followees(Account account) {
         List<Follow> follows = new ArrayList<>();
-        System.out.println("- SQL / AccountService / get6Followees():");
+        System.out.print("- SQL / AccountService / get6Followees(): ");
         for (Follow follow : account.getFollowees()) {
             if (!follow.isPending()) {
                 follows.add(follow);
@@ -182,7 +186,7 @@ public class AccountService {
     
     public List<Follow> get6Followers(Account account) {
         List<Follow> follows = new ArrayList<>();
-        System.out.println("- SQL / AccountService / get6Followers():");
+        System.out.print("- SQL / AccountService / get6Followers(): ");
         for (Follow follow : account.getFollowers()) {
             if (!follow.isPending()) {
                 follows.add(follow);
@@ -195,7 +199,7 @@ public class AccountService {
     }
     
     public boolean checkUniqueUsername(String username) {
-        System.out.println("- SQL / AccountService / checkUniqueUsername():");
+        System.out.print("- SQL / AccountService / checkUniqueUsername(): ");
         return accountRepo.findByUsername(username) == null;
     }
     

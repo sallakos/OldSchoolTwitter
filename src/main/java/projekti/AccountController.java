@@ -71,13 +71,13 @@ public class AccountController {
         model.addAttribute("followees", accountService.get6Followees(account)); // SQL
         model.addAttribute("numberOfFollowers", accountService.getUserFollowers(account).size()); // SQL
         model.addAttribute("numberOfFollowees", accountService.getUserFollowees(account).size()); // SQL
-        model.addAttribute("pendingRequests", accountService.findPendingRequests(currentUser)); // SQL
-         model.addAttribute("numberOfPendingRequests", accountService.numberOfPendingRequests(currentUser)); // SQL
         model.addAttribute("currentUserLikedMessages", currentUser.getLikedMessages());
         model.addAttribute("currentUserLikedPictures", currentUser.getLikedPictures());
         if (accountService.isCurrentUser(username)) {
             model.addAttribute("userFollowsWho", "Sinä seuraat");
             model.addAttribute("whoFollowsUser", "Sinun seuraajasi");
+            model.addAttribute("pendingRequests", accountService.findPendingRequests(currentUser)); // SQL
+            model.addAttribute("numberOfPendingRequests", accountService.numberOfPendingRequests(currentUser)); // SQL
             model.addAttribute("messages", messageService.getAllMessages(account)); // SQL
         } else {
             model.addAttribute("userFollowsWho", account.getName() + " seuraa");
@@ -101,6 +101,7 @@ public class AccountController {
         model.addAttribute("id", "search");
         // Näiden lisäksi SQL hakee aina kunkin käyttäjän profiilikuvan erikseen.
         // Jostain syystä tulostus menee epäloogiseen järjestykseen, mutta yksi kysely per profiilikuva.
+        System.out.println("THYMELEAFIN TEKEMIÄ KYSELYJÄ:");
         return "users";
     }
 

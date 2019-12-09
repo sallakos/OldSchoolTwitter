@@ -49,7 +49,7 @@ public class PictureController {
     @GetMapping(path = "/{username}/kuvat/profiilikuva", produces = "image/*")
     @ResponseBody
     public byte[] getProfilePicture(@PathVariable String username) throws IOException {
-        System.out.println("SQL / KÄYTTÄJÄN " + username + " PROFIILIKUVA: ");
+//        System.out.println("SQL / KÄYTTÄJÄN " + username + " PROFIILIKUVA: ");
         Account account = accountService.findByUsername(username); // SQL
         byte[] tutki = pictureService.getPicture(account.getProfilePicture().getId());
         return tutki;
@@ -60,8 +60,8 @@ public class PictureController {
     @ResponseBody
     public byte[] getPicture(@PathVariable String username,
                              @PathVariable Long id) throws IOException {
-        System.out.println("SQL / KÄYTTÄJÄN " + username + " KUVA: --------------------------------------------------------- \n" + 
-                            "   (vaatii kolme kyselyä: kenen sivulla ollaan, saako käyttäjä nähdä kuvan sekä itse kuvan lataus)");
+//        System.out.println("SQL / KÄYTTÄJÄN " + username + " KUVA: --------------------------------------------------------- \n" + 
+//                            "   (vaatii kolme kyselyä: kenen sivulla ollaan, saako käyttäjä nähdä kuvan sekä itse kuvan lataus)");
         Account account = accountService.findByUsername(username); // SQL
         boolean isAllowed = accountService.friendStatus(account) >= 1;
         if (isAllowed) {

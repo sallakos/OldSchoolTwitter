@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,8 +46,9 @@ public class PictureService {
         pictureRepo.deleteById(id);
     }
 
+    @Cacheable("pictures")
     public byte[] getPicture(Long id) throws IOException {
-        System.out.println("- SQL / kuva " + id + ":");
+//        System.out.print("- SQL / kuva " + id + ":");
         Picture picture = pictureRepo.getOne(id);
         return picture.getPicture();
     }
