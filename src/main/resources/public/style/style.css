@@ -28,6 +28,10 @@ a:hover {
     text-align: right;
 }
 
+.follow-users {
+    margin: auto;
+}
+
 .setwidth {
     width: 95%;
 }
@@ -121,6 +125,10 @@ a:hover {
     margin: 0 10px;
 }
 
+.small-profile-img.hover {
+    margin: 0px;
+}
+
 .search-width {
     width: 80%;
     max-width: 1000px;
@@ -185,19 +193,24 @@ a:hover {
 }
 
 .btn-like {
-  font-weight: 400;
-  color: #335d33;
-  text-decoration: none;
+    font-weight: 400;
+    color: #335d33;
+    text-decoration: none;
 }
 
 .btn-like:hover {
-  color: #68ab68;
-  text-decoration: none;
+    color: #68ab68;
+    text-decoration: none;
 }
 
 .btn-like:focus, .btn-like.focus {
-  text-decoration: none;
-  box-shadow: none;
+    text-decoration: none;
+    box-shadow: none;
+}
+
+.btn-like:disabled, .btn-like.disabled {
+    color: #335d33;
+    pointer-events: none;
 }
 
 .btn-xs, .btn-group-xs > .btn {
@@ -282,13 +295,36 @@ a:hover {
         border-radius: 50%;
     }
 
+    .follow-users {
+        max-width: 200px;
+    }
+
 }
 
 @media( max-width: 990px ) {
+    body {
+        padding: 0 5%;
+    }
     .card {
         width: 60%;
     }
     .heading {
         font-size: 70px;
     }
+    .my-content {
+        padding: 10px;
+    }
+    .small-profile-img {
+        width: 40px;
+        height: 40px;
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    .flex-left {
+        width: 50px;
+    }
+    .gallery-item {
+        padding: 10px;
+    }
+
 }

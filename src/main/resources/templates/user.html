@@ -24,14 +24,14 @@
                         <div th:replace="fragments/layout :: profilePicture(${profilePicture})"></div>
 
                         <div th:if="${friendStatus >= 1}">
-                            <button type="button" id="btn-allmessages" class="nav-btn btn btn-sm btn-dark d-lg-none">Viestit</button>
+                            <button type="button" id="btn-allmessages" class="nav-btn btn btn-sm btn-dark d-xl-none">Viestit</button>
                             <button type="button" id="btn-pictures" class="nav-btn btn btn-sm btn-dark">Kuvat</button>
                         </div>
 
                         <div class="container-fluid mt-4">
                             <h6><span th:text="${userFollowsWho}">KEITÄ</span> <span class="small text-muted">[<span th:text="${numberOfFollowees}">MÄÄRÄ</span>]</span></h6>
                             <div class="row justify-content-center">
-                                <div th:each="user : ${followees}" class="col-4">
+                                <div th:each="user : ${followees}" class="col-4 p-0">
                                     <a th:href="@{/{username}(username=${user.followee.username})}" data-toggle="tooltip" data-placement="bottom" data-html="true" th:title="${user.followee.name} + '<br> alkaen ' + ${#temporals.format(user.startOfFollow, 'd.M.yyyy')}">
                                         <div th:replace="fragments/layout :: profilePictureSmallOnHover(${user.followee})"></div>
                                     </a>
@@ -42,8 +42,8 @@
 
                         <div th:id="${username} + '-followers'" class="container-fluid mt-4">
                             <h6><span th:text="${whoFollowsUser}">KETKÄ</span> <span class="small text-muted">[<span th:text="${numberOfFollowers}">MÄÄRÄ</span>]</span></h6>
-                            <div class="row justify-content-center">
-                                <div th:each="user : ${followers}" class="col-4">
+                            <div class="row justify-content-center follow-users">
+                                <div th:each="user : ${followers}" class="col-4 p-0">
                                     <a th:href="@{/{username}(username=${user.follower.username})}" data-toggle="tooltip" data-placement="bottom" data-html="true" th:title="${user.follower.name} + '<br> alkaen ' + ${#temporals.format(user.startOfFollow, 'd.M.yyyy')}">
                                         <div th:replace="fragments/layout :: profilePictureSmallOnHover(${user.follower})"></div>
                                     </a>
@@ -137,13 +137,17 @@
                                                 <h5><a th:href="@{/{username}(username=${message.owner.username})}" th:text="${message.owner.name}">LÄHETTÄJÄ</h5></a>
                                                 <p th:text="${message.message}" class="text">VIESTI</p>
                                             </div>
-                                            <div th:replace="fragments/layout :: timeStamp(${message.timeSent})"></div>
+                                            <div th:replace="fragments/layout :: messageTimeStamp(${message.timeSent})"></div>
                                             <div>
-                                                <form th:id="'lmf' + ${message.id}" th:if="${message.owner != currentUser}" class="form-inline messagelike">
-                                                    <button th:id="'lmb' + ${message.id}" name="messageId" th:value="${message.owner.username} + '-' + ${message.id}" type="submit" data-toggle="tooltip" data-placement="bottom" class="btn btn-like" th:title="${!currentUserLikedMessages.contains(message) ? 'Tykkää' : 'En tykkääkään'}">
+                                                <form th:id="'lmf' + ${message.id}" class="form-inline messagelike">
+                                                    <button th:if="${message.owner != currentUser}" th:id="'lmb' + ${message.id}" name="messageId" th:value="${message.owner.username} + '-' + ${message.id}" type="submit" data-toggle="tooltip" data-placement="bottom" class="btn btn-like" th:title="${!currentUserLikedMessages.contains(message) ? 'Tykkää' : 'En tykkääkään'}">
                                                         <i th:if="${!currentUserLikedMessages.contains(message)}" class="far fa-thumbs-up"></i>
                                                         <i th:if="${currentUserLikedMessages.contains(message)}" class="fas fa-thumbs-up"></i>
                                                     </button>
+                                                    <button th:if="${message.owner == currentUser}" th:id="'lmb' + ${message.id}" class="btn btn-like" disabled>
+                                                        <i class="far fa-thumbs-up"></i>
+                                                    </button>
+
                                                     <span th:id="'lm' + ${message.id}" th:text="${message.likes.size()}" class="btn-like">TYKKÄÄJIÄ</span>
                                                 </form>
                                             </div>
@@ -199,7 +203,7 @@
                                 <div th:if="${!pictures.empty}" class="container-fluid center">
                                     <div class="row justify-content-center">
                                         <div th:each="picture : ${pictures}" class="col">
-                                            <a th:href="@{/{username}/kuvat(username=${username})}">
+                                            <a th:href="@{${'/' + username + '/kuvat#' + picture}}">
                                                 <img th:src="@{/{username}/kuvat/{id}(username=${username}, id=${picture})}" class="gallery-preview" />
                                             </a>
                                         </div>

@@ -39,6 +39,11 @@ public class PictureController {
             model.addAttribute("currentUserLikedMessages", currentUser.getLikedMessages());
             model.addAttribute("currentUserLikedPictures", currentUser.getLikedPictures());
             model.addAttribute("friendStatus", friendStatus);
+            if (friendStatus == 1) {
+                model.addAttribute("galleryTitle", "Käyttäjän " + account.getName() + " kuvat");
+            } else {
+                model.addAttribute("galleryTitle", "Sinun kuvasi");
+            } 
             System.out.println("THYMELEAFIN TEKEMIÄ KYSELYJÄ:");
             return "galleria";
         }

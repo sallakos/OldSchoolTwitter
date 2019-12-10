@@ -102,8 +102,7 @@ public class AccountController {
         model.addAttribute("followees", currentUser.getFollowees());
         model.addAttribute("title", "Käyttäjät");
         model.addAttribute("id", "search");
-        // Näiden lisäksi SQL hakee aina kunkin käyttäjän profiilikuvan erikseen.
-        // Jostain syystä tulostus menee epäloogiseen järjestykseen, mutta yksi kysely per profiilikuva.
+        // Näiden lisäksi Thymeleaf hakee aina kunkin käyttäjän profiilikuvan erikseen.
         System.out.println("THYMELEAFIN TEKEMIÄ KYSELYJÄ:");
         return "users";
     }

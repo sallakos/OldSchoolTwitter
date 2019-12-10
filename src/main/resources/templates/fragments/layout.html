@@ -31,7 +31,7 @@
         <div th:fragment="listUsers(users, followedUsernames, title, id)" class="container-fluid my-content setwidth">
             <h1 th:text="${title}">Käyttäjät</h1>
             <input type="text" th:id="${id}" placeholder="Etsi käyttäjiä" class="usersearch search-width form-control col-6" />
-            <small class="form-text text-muted">Voit etsiä käyttäjiä nimellä, tai käyttäjänimellä kirjoittamalla alkuun @.</small>
+            <small class="form-text text-muted mb-4 ml-1">Voit etsiä käyttäjiä nimellä, tai käyttäjänimellä kirjoittamalla alkuun @.</small>
             <div class="container-fluid">
                 <div class="row justify-content-center" id="userList">
                     <div th:each="user : ${users}" class="col-12 mb-3">
@@ -70,14 +70,18 @@
         </div>
 
         <div th:fragment="profilePictureSmallOnHover(account)">
-            <img th:if="${account.profilePicture == null}" src="/img/default.jpg" class="small-profile-img" />
-            <img th:if="${account.profilePicture != null}" th:src="@{/{username}/kuvat/profiilikuva(username=${account.username})}"  class="small-profile-img" />
+            <img th:if="${account.profilePicture == null}" src="/img/default.jpg" class="small-profile-img hover" />
+            <img th:if="${account.profilePicture != null}" th:src="@{/{username}/kuvat/profiilikuva(username=${account.username})}"  class="small-profile-img hover" />
         </div>
 
         <div th:fragment="timeStamp(date)">
-            <p th:text="${#temporals.format(date, 'd.M.yyyy HH:mm')}" class="small text-muted ml-2 mb-1">AIKA</p>
+            <p th:text="${#temporals.format(date, 'd.M.yyyy HH:mm')}" class="small text-muted ml-2">AIKA</p>
         </div>
 
+        <div th:fragment="messageTimeStamp(date)">
+            <p th:text="${#temporals.format(date, 'd.M.yyyy HH:mm')}" class="small text-muted ml-2 mb-1">AIKA</p>
+        </div>
+        
         <footer th:fragment="footer">
 
             <hr />

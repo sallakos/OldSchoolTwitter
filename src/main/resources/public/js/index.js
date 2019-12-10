@@ -2,10 +2,22 @@
 
 if ($('#pictures').length > 0) {
   var imageStart = $("#pictures").offset().top;
-  if (imageStart < $(window).height()) {
+  if (imageStart < $(window).height() && window.innerWidth >= 1200) {
     $("#btn-pictures").addClass("d-none");
   }
 }
+
+$(window).resize(function() {
+  if ($('#pictures').length > 0) {
+    var imageStart = $("#pictures").offset().top;
+    if (imageStart < $(window).height() && window.innerWidth >= 1200) {
+      $("#btn-pictures").addClass("d-none");
+    }
+    if (window.innerWidth < 1200) {
+      $("#btn-pictures").removeClass("d-none");
+    }
+  }
+})
 
 $(window).scroll(function() {
   if ($('.go-up').length > 0) {
@@ -25,12 +37,6 @@ $(".go-up").click(function() {
   }, 1000);
 });
 
-// console.log($(".follow-btn").text().localeCompare("Peru pyyntö"));
-//
-// if ($(".follow-btn").text().localeCompare("Peru pyyntö")) {
-//   $("#pending").text('Näet käyttäjän viestit ja kuvat, kun hän on hyväksynyt seuraamispyyntösi.');
-// }
-
 // Bootstrapin tooltip.
 $(function() {
   $('[data-toggle="tooltip"]').tooltip()
@@ -47,7 +53,7 @@ $('.usersearch').keyup(function() {
     for (let i = 0; i < li.length; i++) {
       let a = li[i].getElementsByTagName("p")[0];
       let txtValue = a.textContent || a.innerText;
-      if (txtValue.replace('@', '').toUpperCase().indexOf(filter.replace('@', '')) > -1) {
+      if (txtValue.replace('@ ', '').replace('@', '').toUpperCase().indexOf(filter.replace('@ ', '').replace('@', '')) > -1) {
         li[i].style.display = "";
       } else {
         li[i].style.display = "none";
