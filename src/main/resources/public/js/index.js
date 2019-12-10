@@ -48,7 +48,7 @@ $(function() {
 $('.usersearch').keyup(function() {
   let input = document.querySelector('[id^="search"]');
   let filter = input.value.toUpperCase();
-  const ul = document.getElementById(userList);
+  const ul = document.getElementById('userList');
   const li = ul.getElementsByTagName('div');
 
   if (filter.startsWith('@')) {
