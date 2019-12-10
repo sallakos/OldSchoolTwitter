@@ -140,6 +140,7 @@ $('.messagelike').submit(function(e) {
     data: $('#' + id).serialize(),
     success: function() {
       $('#lmb' + idnro).load('/' + user + ' #lmb' + idnro + ' i');
+      $('#lm' + idnro).load('/' + user + ' #lm' + idnro);
       if (!title.localeCompare('Tykkää')) {
         $('#lmb' + idnro).attr('data-original-title', 'En tykkääkään').tooltip('fixTitle')
           .tooltip('show');
@@ -147,7 +148,6 @@ $('.messagelike').submit(function(e) {
         $('#lmb' + idnro).attr('data-original-title', 'Tykkää').tooltip('fixTitle')
           .tooltip('show');
       }
-      $('#lm' + idnro).load('/' + user + ' #lm' + idnro);
     }
   });
 });
@@ -166,6 +166,7 @@ $('.picturelike').submit(function(e) {
     data: $('#' + id).serialize(),
     success: function() {
       $('#lpb' + idnro).load('/' + user + '/kuvat #lpb' + idnro + ' i');
+      $('#lp' + idnro).load('/' + user + '/kuvat #lp' + idnro);
       if (!title.localeCompare('Tykkää')) {
         $('#lpb' + idnro).attr('data-original-title', 'En tykkääkään').tooltip('fixTitle')
           .tooltip('show');
@@ -173,7 +174,6 @@ $('.picturelike').submit(function(e) {
         $('#lpb' + idnro).attr('data-original-title', 'Tykkää').tooltip('fixTitle')
           .tooltip('show');
       }
-      $('#lp' + idnro).load('/' + user + '/kuvat #lp' + idnro);
     }
   });
 });
