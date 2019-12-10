@@ -6,7 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
         <link rel="stylesheet" href="/style/style.css"/>
-        <link href="https://fonts.googleapis.com/css?family=Lakki+Reddy&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Lakki+Reddy&display=swap" rel="stylesheet" />
+        <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
         <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
     </head>
     <body>
@@ -81,7 +83,7 @@
         <div th:fragment="messageTimeStamp(date)">
             <p th:text="${#temporals.format(date, 'd.M.yyyy HH:mm')}" class="small text-muted ml-2 mb-1">AIKA</p>
         </div>
-        
+
         <footer th:fragment="footer">
 
             <hr />

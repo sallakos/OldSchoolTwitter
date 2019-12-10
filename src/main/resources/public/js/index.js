@@ -1,24 +1,26 @@
 //jshint esversion:6
 
+// Kuva-painikkeen näyttäminen.
 if ($('#pictures').length > 0) {
-  var imageStart = $("#pictures").offset().top;
+  var imageStart = $('#pictures').offset().top;
   if (imageStart < $(window).height() && window.innerWidth >= 1200) {
-    $("#btn-pictures").addClass("d-none");
+    $('#btn-pictures').addClass('d-none');
   }
 }
 
 $(window).resize(function() {
   if ($('#pictures').length > 0) {
-    var imageStart = $("#pictures").offset().top;
+    var imageStart = $('#pictures').offset().top;
     if (imageStart < $(window).height() && window.innerWidth >= 1200) {
-      $("#btn-pictures").addClass("d-none");
+      $('#btn-pictures').addClass('d-none');
     }
     if (window.innerWidth < 1200) {
-      $("#btn-pictures").removeClass("d-none");
+      $('#btn-pictures').removeClass('d-none');
     }
   }
-})
+});
 
+// Up-painikkeen näyttäminen.
 $(window).scroll(function() {
   if ($('.go-up').length > 0) {
     if ($(window).scrollTop() > $(window).height()) {
@@ -30,43 +32,43 @@ $(window).scroll(function() {
 });
 
 // Skrollataan sivun ylös.
-$(".go-up").click(function() {
+$('.go-up').click(function() {
   // Skrollataan sivu oikeaan kohtaan. Haetaan tieto painikkeen id:stä.
-  $("html, body").animate({
+  $('html, body').animate({
     scrollTop: 0
   }, 1000);
 });
 
 // Bootstrapin tooltip.
 $(function() {
-  $('[data-toggle="tooltip"]').tooltip()
+  $('[data-toggle="tooltip"]').tooltip( { trigger: 'hover' });
 });
 
 // Käyttäjien hakeminen.
 $('.usersearch').keyup(function() {
-  let input = document.querySelector('[id^="search"]')
+  let input = document.querySelector('[id^="search"]');
   let filter = input.value.toUpperCase();
-  const ul = document.getElementById("userList")
-  const li = ul.getElementsByTagName('div')
+  const ul = document.getElementById(userList);
+  const li = ul.getElementsByTagName('div');
 
   if (filter.startsWith('@')) {
     for (let i = 0; i < li.length; i++) {
-      let a = li[i].getElementsByTagName("p")[0];
+      let a = li[i].getElementsByTagName(p)[0];
       let txtValue = a.textContent || a.innerText;
       if (txtValue.replace('@ ', '').replace('@', '').toUpperCase().indexOf(filter.replace('@ ', '').replace('@', '')) > -1) {
-        li[i].style.display = "";
+        li[i].style.display = '';
       } else {
-        li[i].style.display = "none";
+        li[i].style.display = 'none';
       }
     }
   } else {
     for (let i = 0; i < li.length; i++) {
-      let a = li[i].getElementsByTagName("a")[0];
+      let a = li[i].getElementsByTagName('a')[0];
       let txtValue = a.textContent || a.innerText;
       if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        li[i].style.display = "";
+        li[i].style.display = '';
       } else {
-        li[i].style.display = "none";
+        li[i].style.display = 'none';
       }
     }
   }
@@ -92,7 +94,7 @@ $('.messagesend').submit(function(e) {
 $('.commentmessage').submit(function(e) {
   e.preventDefault();
   const id = this.id;
-  const target = id.split("-");
+  const target = id.split('-');
   const user = target[0];
   const idnro = target[2];
   $.ajax({
@@ -110,7 +112,7 @@ $('.commentmessage').submit(function(e) {
 $('.commentpicture').submit(function(e) {
   e.preventDefault();
   const id = this.id;
-  const target = id.split("-");
+  const target = id.split('-');
   const user = target[0];
   const idnro = target[2];
   $.ajax({
@@ -129,7 +131,7 @@ $('.messagelike').submit(function(e) {
   e.preventDefault();
   const id = this.id;
   const idnro = id.replace('lmf', '');
-  const target = $('#lmb' + idnro).val().split("-");
+  const target = $('#lmb' + idnro).val().split('-');
   const user = target[0];
   $.ajax({
     url: '/' + user + '/messages/' + idnro + '/like',
@@ -137,7 +139,7 @@ $('.messagelike').submit(function(e) {
     data: $('#' + id).serialize(),
     success: function() {
       $('#lms' + idnro).load('/' + user + ' #lms' + idnro);
-      $('#lmb' + idnro).load('/' + user + ' #lmb' + idnro + " i");
+      $('#lmb' + idnro).load('/' + user + ' #lmb' + idnro + ' i');
       $('#lm' + idnro).load('/' + user + ' #lm' + idnro);
     }
   });
@@ -148,7 +150,7 @@ $('.picturelike').submit(function(e) {
   e.preventDefault();
   const id = this.id;
   const idnro = id.replace('lpf', '');
-  const target = $('#lpb' + idnro).val().split("-");
+  const target = $('#lpb' + idnro).val().split('-');
   const user = target[0];
   $.ajax({
     url: '/' + user + '/kuvat/' + idnro + '/like',
@@ -156,7 +158,7 @@ $('.picturelike').submit(function(e) {
     data: $('#' + id).serialize(),
     success: function() {
       $('#lps' + idnro).load('/' + user + '/kuvat #lps' + idnro);
-      $('#lpb' + idnro).load('/' + user + '/kuvat #lpb' + idnro + " i");
+      $('#lpb' + idnro).load('/' + user + '/kuvat #lpb' + idnro + ' i');
       $('#lpb' + idnro).button('toggle');
       $('#lp' + idnro).load('/' + user + '/kuvat #lp' + idnro);
     }
@@ -193,7 +195,7 @@ $('.follow').submit(function(e) {
       $('#pending').text(pageText);
       if (newStatus === -1) {
         $('#user-container').load('/' + username + ' #user-data');
-        $("#btn-pictures").addClass("d-none");
+        $('#btn-pictures').addClass('d-none');
       }
     }
   });
@@ -201,14 +203,14 @@ $('.follow').submit(function(e) {
 
 $('.pending-request-button').click(function(e) {
   const id = this.id;
-  const target = id.split("-")[2];
+  const target = id.split('-')[2];
   window.location.href = '/' + target;
 });
 
 $('.request-accept').submit(function(e) {
   e.preventDefault();
   const id = this.id;
-  const target = id.split("-");
+  const target = id.split('-');
   const whoToFollow = target[1];
   const whoFollows = target[2];
   $.ajax({
@@ -226,7 +228,7 @@ $('.request-accept').submit(function(e) {
 $('.request-decline').submit(function(e) {
   e.preventDefault();
   const id = this.id;
-  const target = id.split("-");
+  const target = id.split('-');
   const whoToFollow = target[1];
   const whoFollows = target[2];
   $.ajax({
@@ -241,7 +243,7 @@ $('.request-decline').submit(function(e) {
 
 $('.delete-picture').click(function(e) {
   const id = this.id;
-  const target = id.split("-");
+  const target = id.split('-');
   const user = target[1];
   const pictureId = target[2];
   $.ajax({
@@ -249,16 +251,16 @@ $('.delete-picture').click(function(e) {
     type: 'DELETE',
     data: $('#' + id).serialize(),
     success: function() {
-      console.log("Kuva poistettu.");
+      console.log('Kuva poistettu.');
     }
   });
 });
 
 // Kun klikataan navigoinnin painiketta, skrollataan sivu oikeaan paikkaan.
-$(".nav-btn").click(function() {
+$('.nav-btn').click(function() {
   // Skrollataan sivu oikeaan kohtaan. Haetaan tieto painikkeen id:stä.
-  $("html, body").animate({
-    scrollTop: $("#" + $(this).attr("id").substring(4)).offset().top
+  $('html, body').animate({
+    scrollTop: $('#' + $(this).attr('id').substring(4)).offset().top
   }, 1000);
 });
 
@@ -275,11 +277,11 @@ $('.picture-add-from-file').on('change', function(e) {
   if (fileSize >= 1048576) {
     $('.size-ins').addClass('d-none');
     $('.size-alert').removeClass('d-none');
-    $('.ps-btn').attr("disabled", true);
+    $('.ps-btn').attr('disabled', true);
   } else {
     $('.size-ins').removeClass('d-none');
     $('.size-alert').addClass('d-none');
-    $('.ps-btn').attr("disabled", false);
+    $('.ps-btn').attr('disabled', false);
   }
 
 });
