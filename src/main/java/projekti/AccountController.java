@@ -200,24 +200,6 @@ public class AccountController {
         return "redirect:/" + username;
     }
 
-    // Seurataan henkilöä ja pysytään omalla sivulla.
-    @PostMapping("/{username}/followown")
-    public String followUserStayOnOwnPage(@PathVariable String username) {
-        Account whoFollows = accountService.currentUser();
-        Account whoToFollow = accountService.findByUsername(username);
-        accountService.follow(whoFollows, whoToFollow, LocalDateTime.now());
-        return "redirect:/" + whoFollows.getUsername();
-    }
-
-    // Seurataan henkilöä ja pysytään käyttäjäsivulla.
-    @PostMapping("/{username}/followstay")
-    public String followUserStayOnPage(@PathVariable String username) {
-        Account whoFollows = accountService.currentUser();
-        Account whoToFollow = accountService.findByUsername(username);
-        accountService.follow(whoFollows, whoToFollow, LocalDateTime.now());
-        return "redirect:/kayttajat";
-    }
-
     // Lopetetaan seuraaminen.
     @PostMapping("/{username}/unfollow")
     public String unfollowUser(@PathVariable String username) {
@@ -226,25 +208,7 @@ public class AccountController {
         accountService.unfollow(whoFollows, whoToFollow);
         return "redirect:/" + username;
     }
-
-    // Lopetetaan seuraaminen ja pysytään omalla sivulla.
-    @PostMapping("/{username}/unfollowown")
-    public String unfollowUserStayOnOwnPage(@PathVariable String username) {
-        Account whoFollows = accountService.currentUser();
-        Account whoToFollow = accountService.findByUsername(username);
-        accountService.unfollow(whoFollows, whoToFollow);
-        return "redirect:/" + whoFollows.getUsername();
-    }
-
-    // Lopetetaan seuraaminen ja pysytään käyttäjäsivulla.
-    @PostMapping("/{username}/unfollowstay")
-    public String unfollowUserStayOnPage(@PathVariable String username) {
-        Account whoFollows = accountService.currentUser();
-        Account whoToFollow = accountService.findByUsername(username);
-        accountService.unfollow(whoFollows, whoToFollow);
-        return "redirect:/kayttajat";
-    }
-
+    
     // Hyväksytään seuraamispyyntö.
     @PostMapping("/{username}/accept/{who}")
     public String acceptFollow(@PathVariable String username,

@@ -184,6 +184,22 @@ a:hover {
     background-color: #b8deb8;
 }
 
+.btn-like {
+  font-weight: 400;
+  color: #335d33;
+  text-decoration: none;
+}
+
+.btn-like:hover {
+  color: #68ab68;
+  text-decoration: none;
+}
+
+.btn-like:focus, .btn-like.focus {
+  text-decoration: none;
+  box-shadow: none;
+}
+
 .btn-xs, .btn-group-xs > .btn {
     max-width: 70px;
     padding: 0.15rem 0.3rem;

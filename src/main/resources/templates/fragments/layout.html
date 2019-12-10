@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
         <link rel="stylesheet" href="/style/style.css"/>
         <link href="https://fonts.googleapis.com/css?family=Lakki+Reddy&display=swap" rel="stylesheet">
+        <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
     </head>
     <body>
         <header th:fragment="header(currentUser)">
@@ -74,7 +75,7 @@
         </div>
 
         <div th:fragment="timeStamp(date)">
-            <p th:text="${#temporals.format(date, 'd.M.yyyy HH:mm')}" class="small text-muted ml-2">AIKA</p>
+            <p th:text="${#temporals.format(date, 'd.M.yyyy HH:mm')}" class="small text-muted ml-2 mb-1">AIKA</p>
         </div>
 
         <footer th:fragment="footer">

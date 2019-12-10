@@ -30,7 +30,6 @@ public class AccountService {
     
     // Rekisteröityminen.
     @Transactional
-//    @CacheEvict(value = "users", allEntries = true)
     public void register(String username, String name, String password) {
         Account account = new Account(username, name, securityConfiguration.passwordEncoder().encode(password));
         accountRepo.save(account);
@@ -38,7 +37,6 @@ public class AccountService {
     
     // Rekisteröityminen.
     @Transactional
-//    @CacheEvict(value = "users", allEntries = true)
     public void register(AccountData accountData) {
         Account account = new Account(accountData.getUsername(), accountData.getName(), securityConfiguration.passwordEncoder().encode(accountData.getPassword()));
         accountRepo.save(account);
@@ -46,35 +44,39 @@ public class AccountService {
     
     // Seuraaminen.
     @Transactional
-//    @CacheEvict(value = "users", allEntries = true)
     public void follow(Account follower, Account followee, LocalDateTime startOfFollow) {
-        Follow follow = new Follow(follower, followee, startOfFollow, true);
-        followRepo.save(follow);
+        if (currentUser() != followee) {
+            Follow follow = new Follow(follower, followee, startOfFollow, true);
+            followRepo.save(follow);
+        }
     }
     
     // Seuraamisen lopettaminen.
     @Transactional
-//    @CacheEvict(value = "users", allEntries = true)
     public void unfollow(Account follower, Account followee) {
-        Long id = followRepo.findByFollowerAndFollowee(follower, followee).getId();
-        followRepo.deleteById(id);
+        if (currentUser() != followee) {
+            Long id = followRepo.findByFollowerAndFollowee(follower, followee).getId();
+            followRepo.deleteById(id);
+        }
     }
     
     // Seuraamisen hyväksyminen.
     @Transactional
-//    @CacheEvict(value = "users", allEntries = true)
     public void acceptFollow(Account follower, Account followee) {
         Follow follow = followRepo.findByFollowerAndFollowee(follower, followee);
-        follow.setPending(false);
-        follow.setStartOfFollow(LocalDateTime.now());
+        if (isCurrentUser(followee.getUsername())) {
+            follow.setPending(false);
+            follow.setStartOfFollow(LocalDateTime.now());
+        }
     }
     
     // Seuraamisen hylkääminen.
     @Transactional
-//    @CacheEvict(value = "users", allEntries = true)
     public void declineFollow(Account follower, Account followee) {
         Long id = followRepo.findByFollowerAndFollowee(follower, followee).getId();
-        followRepo.deleteById(id);
+        if (isCurrentUser(followee.getUsername())) {
+            followRepo.deleteById(id);
+        }
     }
     
     // -------------------- HAKUJA TIETOKANNASTA --------------------------------------------------------

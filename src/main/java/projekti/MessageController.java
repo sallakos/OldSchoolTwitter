@@ -21,7 +21,7 @@ public class MessageController {
     // jos kirjautuneena olevan käyttäjän username on sama kuin sivu,
     // jolle viesti yritetään lähettää.
     @PostMapping("/{username}/messages")
-    public String postMessage(Model model, @RequestParam String messageText,
+    public String postMessage(@RequestParam String messageText,
                               @PathVariable String username) {
         if (accountService.currentUser().getUsername().equals(username)) {
             messageService.sendMessage(username, messageText);

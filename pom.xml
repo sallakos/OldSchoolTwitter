@@ -84,7 +84,14 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>htmlunit-driver</artifactId>
-        </dependency>  
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <version>4.2.2.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+
         
         <!-- TMC -->
         <dependency>

@@ -47,7 +47,7 @@ $('.usersearch').keyup(function() {
     for (let i = 0; i < li.length; i++) {
       let a = li[i].getElementsByTagName("p")[0];
       let txtValue = a.textContent || a.innerText;
-      if (txtValue.replace('@','').toUpperCase().indexOf(filter.replace('@','')) > -1) {
+      if (txtValue.replace('@', '').toUpperCase().indexOf(filter.replace('@', '')) > -1) {
         li[i].style.display = "";
       } else {
         li[i].style.display = "none";
@@ -131,6 +131,7 @@ $('.messagelike').submit(function(e) {
     data: $('#' + id).serialize(),
     success: function() {
       $('#lms' + idnro).load('/' + user + ' #lms' + idnro);
+      $('#lmb' + idnro).load('/' + user + ' #lmb' + idnro + " i");
       $('#lm' + idnro).load('/' + user + ' #lm' + idnro);
     }
   });
@@ -149,6 +150,8 @@ $('.picturelike').submit(function(e) {
     data: $('#' + id).serialize(),
     success: function() {
       $('#lps' + idnro).load('/' + user + '/kuvat #lps' + idnro);
+      $('#lpb' + idnro).load('/' + user + '/kuvat #lpb' + idnro + " i");
+      $('#lpb' + idnro).button('toggle');
       $('#lp' + idnro).load('/' + user + '/kuvat #lp' + idnro);
     }
   });
