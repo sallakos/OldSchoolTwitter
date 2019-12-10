@@ -133,13 +133,20 @@ $('.messagelike').submit(function(e) {
   const idnro = id.replace('lmf', '');
   const target = $('#lmb' + idnro).val().split('-');
   const user = target[0];
+  const title = $('#lmb' + idnro).attr('data-original-title');
   $.ajax({
     url: '/' + user + '/messages/' + idnro + '/like',
     type: 'POST',
     data: $('#' + id).serialize(),
     success: function() {
-      $('#lms' + idnro).load('/' + user + ' #lms' + idnro);
       $('#lmb' + idnro).load('/' + user + ' #lmb' + idnro + ' i');
+      if (!title.localeCompare('Tykkää')) {
+        $('#lmb' + idnro).attr('data-original-title', 'En tykkääkään').tooltip('fixTitle')
+          .tooltip('show');
+      } else {
+        $('#lmb' + idnro).attr('data-original-title', 'Tykkää').tooltip('fixTitle')
+          .tooltip('show');
+      }
       $('#lm' + idnro).load('/' + user + ' #lm' + idnro);
     }
   });
@@ -152,14 +159,20 @@ $('.picturelike').submit(function(e) {
   const idnro = id.replace('lpf', '');
   const target = $('#lpb' + idnro).val().split('-');
   const user = target[0];
+  const title = $('#lpb' + idnro).attr('data-original-title');
   $.ajax({
     url: '/' + user + '/kuvat/' + idnro + '/like',
     type: 'POST',
     data: $('#' + id).serialize(),
     success: function() {
-      $('#lps' + idnro).load('/' + user + '/kuvat #lps' + idnro);
       $('#lpb' + idnro).load('/' + user + '/kuvat #lpb' + idnro + ' i');
-      $('#lpb' + idnro).button('toggle');
+      if (!title.localeCompare('Tykkää')) {
+        $('#lpb' + idnro).attr('data-original-title', 'En tykkääkään').tooltip('fixTitle')
+          .tooltip('show');
+      } else {
+        $('#lpb' + idnro).attr('data-original-title', 'Tykkää').tooltip('fixTitle')
+          .tooltip('show');
+      }
       $('#lp' + idnro).load('/' + user + '/kuvat #lp' + idnro);
     }
   });
