@@ -1,5 +1,9 @@
 //jshint esversion:6
 
+function isTouchDevice() {
+  return "ontouchstart" in window || window.DocumentTouch && document instanceof DocumentTouch;
+}
+
 // Kuva-painikkeen näyttäminen.
 if ($('#pictures').length > 0) {
   var imageStart = $('#pictures').offset().top;
@@ -41,7 +45,11 @@ $('.go-up').click(function() {
 
 // Bootstrapin tooltip.
 $(function() {
-  $('[data-toggle="tooltip"]').tooltip( { trigger: 'hover' });
+  if (!isTouchDevice()) {
+    $('[data-toggle="tooltip"]').tooltip({
+      trigger: 'hover'
+    });
+  }
 });
 
 // Käyttäjien hakeminen.
@@ -53,7 +61,7 @@ $('.usersearch').keyup(function() {
 
   if (filter.startsWith('@')) {
     for (let i = 0; i < li.length; i++) {
-      let a = li[i].getElementsByTagName(p)[0];
+      let a = li[i].getElementsByTagName('p')[0];
       let txtValue = a.textContent || a.innerText;
       if (txtValue.replace('@ ', '').replace('@', '').toUpperCase().indexOf(filter.replace('@ ', '').replace('@', '')) > -1) {
         li[i].style.display = '';
@@ -141,12 +149,12 @@ $('.messagelike').submit(function(e) {
     success: function() {
       $('#lmb' + idnro).load('/' + user + ' #lmb' + idnro + ' i');
       $('#lm' + idnro).load('/' + user + ' #lm' + idnro);
-      if (!title.localeCompare('Tykkää')) {
-        $('#lmb' + idnro).attr('data-original-title', 'En tykkääkään').tooltip('fixTitle')
-          .tooltip('show');
-      } else {
-        $('#lmb' + idnro).attr('data-original-title', 'Tykkää').tooltip('fixTitle')
-          .tooltip('show');
+      if (!isTouchDevice()) {
+        if (!title.localeCompare('Tykkää')) {
+          $('#lmb' + idnro).attr('data-original-title', 'En tykkääkään').tooltip('show');
+        } else {
+          $('#lmb' + idnro).attr('data-original-title', 'Tykkää').tooltip('show');
+        }
       }
     }
   });
@@ -167,12 +175,12 @@ $('.picturelike').submit(function(e) {
     success: function() {
       $('#lpb' + idnro).load('/' + user + '/kuvat #lpb' + idnro + ' i');
       $('#lp' + idnro).load('/' + user + '/kuvat #lp' + idnro);
-      if (!title.localeCompare('Tykkää')) {
-        $('#lpb' + idnro).attr('data-original-title', 'En tykkääkään').tooltip('fixTitle')
-          .tooltip('show');
-      } else {
-        $('#lpb' + idnro).attr('data-original-title', 'Tykkää').tooltip('fixTitle')
-          .tooltip('show');
+      if (!isTouchDevice()) {
+        if (!title.localeCompare('Tykkää')) {
+          $('#lpb' + idnro).attr('data-original-title', 'En tykkääkään').tooltip('show');
+        } else {
+          $('#lpb' + idnro).attr('data-original-title', 'Tykkää').tooltip('show');
+        }
       }
     }
   });

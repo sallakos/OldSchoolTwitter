@@ -1,7 +1,9 @@
 package projekti;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import static org.fluentlenium.core.filter.FilterConstructor.containingText;
+import static org.fluentlenium.core.filter.FilterConstructor.withId;
+import static org.fluentlenium.core.filter.FilterConstructor.withText;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
@@ -15,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -101,7 +102,7 @@ public class ProjektiTest extends org.fluentlenium.adapter.junit.FluentTest {
     @Test
     public void E_cantRegisterWhileLoggedIn() throws Exception {
         assertTrue(accountRepo.findByUsername("uusi") == null);
-        mockMvc.perform(post("/register").param("name", "Uusi Käyttäjä").param("username", "uusi").param("password", "salasana").with(user("rolle")));
+        mockMvc.perform(post("/rekisteroidy").param("name", "Uusi Käyttäjä").param("username", "uusi").param("password", "salasana").with(user("rolle")));
         assertTrue("Rekisteröityminen ei onnistu, jos on kirjautunut sisään.", accountRepo.findByUsername("uusi") == null);
     }
     
@@ -212,6 +213,39 @@ public class ProjektiTest extends org.fluentlenium.adapter.junit.FluentTest {
         
     }
     
+    @Test
+    public void L_userSearchWorks() throws Exception {
+        
+        Account rolle = accountRepo.findByUsername("rolle");
+        Account juukelispuukelis = accountRepo.findByUsername("juukelispuukelis");
+        Account kukkis = accountRepo.findByUsername("kukkis");
+        
+        assertTrue(followRepo.findByFollowerAndFollowee(kukkis, rolle) != null);
+        assertTrue(followRepo.findByFollowerAndFollowee(juukelispuukelis, rolle) != null);
+        
+        login("rolle");
+        goTo("http://localhost:" + port + "/kayttajat");
+        
+        assertTrue(el(("a"), containingText("Kukka Aurinko")).present());
+        assertTrue(el(("a"), containingText("Voi Juku")).present());
+                
+        find(withId().startsWith("search")).fill().with("oi");
+        
+        assertFalse("Henkilö ei näy sivulla, jos hänen nimessään ei ole haun tekstipätkää.", el(("a"), containingText("Kukka Aurinko")).present());
+        assertTrue("Henkilö näkyy sivulla, jos hänen nimessään on haun tekstipätkä.", el(("a"), containingText("Voi Juku")).present());
+        
+        goTo("http://localhost:" + port + "/kayttajat");
+        
+        assertTrue(el(("a"), containingText("Kukka Aurinko")).present());
+        assertTrue(el(("a"), containingText("Voi Juku")).present());
+        
+        find(withId().startsWith("search")).fill().with("@kk");
+        
+        assertFalse("Henkilö ei näy sivulla, jos hänen käyttäjänimessään ei ole haun tekstipätkää.", el(("a"), containingText("Voi Juku")).present());
+        assertTrue("Henkilö näkyy sivulla, jos hänen käyttäjänimessään on haun tekstipätkä.", el(("a"), containingText("Kukka Aurinko")).present());
+        
+    }
+    
     public void login(String username) {
         goTo("http://localhost:" + port + "/logout");
         goTo("http://localhost:" + port + "/login");
@@ -229,9 +263,7 @@ public class ProjektiTest extends org.fluentlenium.adapter.junit.FluentTest {
         Account account1 = accountRepo.findByUsername(user1);
         Account account2 = accountRepo.findByUsername(user2);
         Follow follow1 = new Follow(account1, account2, LocalDateTime.now(), false);
-        Follow follow2 = new Follow(account2, account1, LocalDateTime.now(), false);
         followRepo.save(follow1);
-        followRepo.save(follow2);
     }
     
     public void addPendingFollow(String user1, String user2) {
