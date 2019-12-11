@@ -163,7 +163,7 @@
                                                                 <div class="comment-section">
                                                                     <p class="text">
                                                                         <a th:href="@{/{username}(username=${comment.commenter.username})}" th:text="${comment.commenter.name}" class="commenter-link">KOMMENTOIJA</a>
-                                                                        <span th:if="${iStat.count > iStat.size - 10}" th:text="${comment.comment}">KOMMENTTI</span>
+                                                                        <span th:text="${comment.comment}">KOMMENTTI</span>
                                                                     </p>
                                                                 </div>
                                                                 <div th:replace="fragments/layout :: timeStamp(${comment.timeSent})"></div>

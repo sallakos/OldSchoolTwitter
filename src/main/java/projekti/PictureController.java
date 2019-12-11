@@ -33,10 +33,9 @@ public class PictureController {
         int friendStatus = accountService.friendStatus(account); // SQL, jos vieras sivu, niin kaksi kyselyä.
         if (friendStatus >= 1) {
             model.addAttribute("name", account.getName());
-            model.addAttribute("pictures", account.getPictures());
+            model.addAttribute("pictures", pictureService.getPictures(account)); // SQL
             model.addAttribute("profilePictureId", account.getProfilePicture() != null ? account.getProfilePicture().getId() : (Long) 0L);
             model.addAttribute("currentUser", currentUser);
-            model.addAttribute("currentUserLikedMessages", currentUser.getLikedMessages());
             model.addAttribute("currentUserLikedPictures", currentUser.getLikedPictures());
             model.addAttribute("friendStatus", friendStatus);
             if (friendStatus == 1) {
@@ -56,8 +55,7 @@ public class PictureController {
     public byte[] getProfilePicture(@PathVariable String username) throws IOException {
 //        System.out.println("SQL / KÄYTTÄJÄN " + username + " PROFIILIKUVA: ");
         Account account = accountService.findByUsername(username); // SQL
-        byte[] tutki = pictureService.getPicture(account.getProfilePicture().getId());
-        return tutki;
+        return pictureService.getPicture(account.getProfilePicture().getId());
     }
 
     // Haetaan käyttäjän yksittäinen kuva. Vain seuraajat voivat nähdä kuvat.

@@ -56,14 +56,14 @@
                                 <div th:id="'c-' + ${picture.id}">
                                     <p th:if="${picture.comments.size() == 0}" class="small text-muted">Ei vielä kommentteja.</p>
                                     <p th:if="${picture.comments.size() > 10}" class="small text-muted">Näytetään 10 uusinta kommenttia yhteensä <span th:text="${picture.comments.size()}">MÄÄRÄ</span> kommentista.</p>
-                                    <div th:each="comment,iStat : ${picture.comments}">
-                                        <div th:if="${iStat.count > iStat.size - 10}" class="media">
+                                    <div th:each="comment,iStat : ${picture.getLatest10()}">
+                                        <div class="media">
                                             <div th:replace="fragments/layout :: profilePictureSmall(${comment.commenter})"></div>
                                             <div class="media-body">
                                                 <div class="comment-section">
                                                     <p class="text">
                                                         <a th:href="@{/{username}(username=${comment.commenter.username})}" th:text="${comment.commenter.name}" class="commenter-link">KOMMENTOIJA</a>
-                                                        <span th:if="${iStat.count > iStat.size - 10}" th:text="${comment.comment}">KOMMENTTI</span>
+                                                        <span th:text="${comment.comment}">KOMMENTTI</span>
                                                     </p>
                                                 </div>
                                                 <div th:replace="fragments/layout :: timeStamp(${comment.timeSent})"></div>

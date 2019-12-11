@@ -5,6 +5,8 @@ package projekti;
  * @author Salla Koskinen
  */
 import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,7 +22,11 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> getAllMessages(@Param("id") Long id);
     
     // Haetaan 25 uusinta käyttäjän viestiä.
-    @Query(value = "SELECT * FROM Message WHERE owner_id = :id ORDER BY time_sent DESC LIMIT 25", nativeQuery = true)
-    List<Message> getUserMessages(@Param("id") Long id);
-        
+//    @Query(value = "SELECT * FROM Message WHERE owner_id = :id ORDER BY time_sent DESC LIMIT 25", nativeQuery = true)
+//    List<Message> getUserMessages(@Param("id") Long id);
+    
+    // Haetaan viestit ja niiden kommentit käyttäjän mukaan.
+    @EntityGraph(attributePaths = {"comments"})
+    List<Message> findByOwner(Account owner, Pageable pageable);
+    
 }

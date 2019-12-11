@@ -34,7 +34,7 @@ public class DefaultController {
             accountService.register(user4);
         }
         if (accountService.findByUsername(user5.getUsername()) == null) {
-            accountService.register(user5);
+            accountService.register(user5); 
         }
         if (accountService.findByUsername(user6.getUsername()) == null) {
             accountService.register(user6);

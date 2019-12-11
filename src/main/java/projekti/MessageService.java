@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -66,8 +69,9 @@ public class MessageService {
     
     public List<Message> getUserMessages(Account account) {
 //        System.out.print("- SQL / MessageService / getUserMessages(): ");
-        Long userId = account.getId();
-        return messageRepo.getUserMessages(userId);
+//        Long userId = account.getId();
+        Pageable pageable = PageRequest.of(0, 25, Sort.by("timeSent").descending());
+        return messageRepo.findByOwner(account, pageable);
     }
         
 }

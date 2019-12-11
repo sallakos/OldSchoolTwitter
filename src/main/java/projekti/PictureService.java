@@ -45,6 +45,10 @@ public class PictureService {
     public void deletePicture(Long id) {
         pictureRepo.deleteById(id);
     }
+    
+    public List<Picture> getPictures(Account account) {
+        return pictureRepo.findByOwner(account);
+    }
 
     @Cacheable("pictures")
     public byte[] getPicture(Long id) throws IOException {

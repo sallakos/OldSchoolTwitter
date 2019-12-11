@@ -26,6 +26,9 @@ public class AccountController {
 
     @Autowired
     PictureService pictureService;
+    
+    @Autowired
+    MessageRepository messageRepo;
 
     @ModelAttribute
     private AccountData getAccountData() {
