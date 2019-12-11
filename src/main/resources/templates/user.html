@@ -141,11 +141,11 @@
                                             <div>
                                                 <form th:id="'lmf' + ${message.id}" class="form-inline messagelike">
                                                     <button th:if="${message.owner != currentUser}" th:id="'lmb' + ${message.id}" name="messageId" th:value="${message.owner.username} + '-' + ${message.id}" type="submit" data-toggle="tooltip" data-placement="bottom" class="btn btn-like" th:title="${!currentUserLikedMessages.contains(message) ? 'Tykkää' : 'En tykkääkään'}">
-                                                        <i th:if="${!currentUserLikedMessages.contains(message)}" class="far fa-thumbs-up"></i>
-                                                        <i th:if="${currentUserLikedMessages.contains(message)}" class="fas fa-thumbs-up"></i>
+                                                        <i th:if="${!currentUserLikedMessages.contains(message)}" class="far fa-heart"></i>
+                                                        <i th:if="${currentUserLikedMessages.contains(message)}" class="fas fa-heart"></i>
                                                     </button>
                                                     <button th:if="${message.owner == currentUser}" th:id="'lmb' + ${message.id}" class="btn btn-like" disabled>
-                                                        <i class="far fa-thumbs-up"></i>
+                                                        <i class="far fa-heart"></i>
                                                     </button>
 
                                                     <span th:id="'lm' + ${message.id}" th:text="${message.likes.size()}" class="btn-like">TYKKÄÄJIÄ</span>

@@ -41,11 +41,11 @@
                             </div>
                             <form th:id="'lpf' + ${picture.id}" class="form-inline picturelike">
                                 <button th:if="${friendStatus == 1}" th:id="'lpb' + ${picture.id}" name="pictureId" th:value="${username} + '-' + ${picture.id}" type="submit" data-toggle="tooltip" data-placement="bottom" class="btn btn-like" th:title="${!currentUserLikedPictures.contains(picture) ? 'Tykkää' : 'En tykkääkään'}">
-                                    <i th:if="${!currentUserLikedPictures.contains(picture)}" class="far fa-thumbs-up"></i>
-                                    <i th:if="${currentUserLikedPictures.contains(picture)}" class="fas fa-thumbs-up"></i>
+                                    <i th:if="${!currentUserLikedPictures.contains(picture)}" class="far fa-heart"></i>
+                                    <i th:if="${currentUserLikedPictures.contains(picture)}" class="fas fa-heart"></i>
                                 </button>
                                 <button th:if="${friendStatus == 2}" th:id="'lpb' + ${picture.id}" class="btn btn-like" disabled>
-                                    <i class="far fa-thumbs-up"></i>
+                                    <i class="far fa-heart"></i>
                                 </button>
                                 <span th:id="'lp' + ${picture.id}" th:text="${picture.likes.size()}" class="btn-like">TYKKÄÄJIÄ</span>
                             </form>
