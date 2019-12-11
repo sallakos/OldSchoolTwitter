@@ -22,11 +22,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> getAllMessages(@Param("id") Long id);
     
     // Haetaan 25 uusinta käyttäjän viestiä.
-//    @Query(value = "SELECT * FROM Message WHERE owner_id = :id ORDER BY time_sent DESC LIMIT 25", nativeQuery = true)
-//    List<Message> getUserMessages(@Param("id") Long id);
-    
-    // Haetaan viestit ja niiden kommentit käyttäjän mukaan.
-    @EntityGraph(attributePaths = {"comments"})
-    List<Message> findByOwner(Account owner, Pageable pageable);
+    @Query(value = "SELECT * FROM Message WHERE owner_id = :id ORDER BY time_sent DESC LIMIT 25", nativeQuery = true)
+    List<Message> getUserMessages(@Param("id") Long id);
     
 }

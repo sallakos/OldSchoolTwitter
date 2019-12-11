@@ -69,9 +69,8 @@ public class MessageService {
     
     public List<Message> getUserMessages(Account account) {
 //        System.out.print("- SQL / MessageService / getUserMessages(): ");
-//        Long userId = account.getId();
-        Pageable pageable = PageRequest.of(0, 25, Sort.by("timeSent").descending());
-        return messageRepo.findByOwner(account, pageable);
+        Long userId = account.getId();
+        return messageRepo.getUserMessages(userId);
     }
         
 }
