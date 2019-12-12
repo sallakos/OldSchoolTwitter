@@ -98,6 +98,7 @@ public class AccountController {
     // Haetaan kaikki henkilöt.
     @GetMapping("/kayttajat")
     public String allUsers(Model model) {
+        model.addAttribute("whatToShow", 0);
         Account currentUser = accountService.currentUser(); // SQL
         model.addAttribute("users", accountService.findAll()); // SQL
         model.addAttribute("currentUser", currentUser.getUsername());
@@ -113,12 +114,12 @@ public class AccountController {
     // Haetaan käyttäjän seuraamat henkilöt.
     @GetMapping("/{username}/seurattavat")
     public String allUserFollowees(Model model, @PathVariable String username) {
+        model.addAttribute("whatToShow", 1);
         Account currentUser = accountService.currentUser(); // SQL
         Account account = accountService.findByUsername(username); // SQL
-        model.addAttribute("users", accountService.getUserFollowees(account)); // SQL hakee jostain syystä myös kuvat
         model.addAttribute("currentUser", currentUser.getUsername());
         model.addAttribute("followedUsernames", accountService.getFollowedUsernames(currentUser)); // SQL
-        model.addAttribute("followees", currentUser.getFollowees());
+        model.addAttribute("follows", accountService.getAllFollowees(account)); // SQL
         model.addAttribute("id", "search" + account.getId());
         if (accountService.isCurrentUser(username)) {
             model.addAttribute("title", "Käyttäjät, joita seuraat:");
@@ -126,19 +127,19 @@ public class AccountController {
             model.addAttribute("title", "Käyttäjät, joita " + account.getName() + " seuraa:");
         }
         // Näiden lisäksi SQL hakee aina kunkin käyttäjän profiilikuvan erikseen.
-        // Jostain syystä tulostus menee epäloogiseen järjestykseen, mutta yksi kysely per profiilikuva.
+        System.out.println("THYMELEAFIN TEKEMIÄ KYSELYJÄ:");
         return "users";
     }
 
     // Haetaan henkilöt, jotka seuraavat käyttäjää.
     @GetMapping("/{username}/seuraajat")
     public String allUserFollowers(Model model, @PathVariable String username) {
+        model.addAttribute("whatToShow", 2);
         Account currentUser = accountService.currentUser(); // SQL
         Account account = accountService.findByUsername(username); // SQL
-        model.addAttribute("users", accountService.getUserFollowers(account)); // SQL hakee jostain syystä myös kuvat
         model.addAttribute("currentUser", currentUser.getUsername());
         model.addAttribute("followedUsernames", accountService.getFollowedUsernames(currentUser)); // SQL
-        model.addAttribute("followees", currentUser.getFollowees());
+        model.addAttribute("follows", accountService.getAllFollowers(account)); // SQL
         model.addAttribute("id", "search" + account.getId());
         if (accountService.isCurrentUser(username)) {
             model.addAttribute("title", "Sinun seuraajasi:");
@@ -146,7 +147,7 @@ public class AccountController {
             model.addAttribute("title", "Käyttäjän " + account.getName() + " seuraajat:");
         }
         // Näiden lisäksi SQL hakee aina kunkin käyttäjän profiilikuvan erikseen.
-        // Jostain syystä tulostus menee epäloogiseen järjestykseen, mutta yksi kysely per profiilikuva.
+        System.out.println("THYMELEAFIN TEKEMIÄ KYSELYJÄ:");
         return "users";
     }
 

@@ -6,6 +6,8 @@ package projekti;
  */
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -197,6 +199,32 @@ public class AccountService {
                 return follows;
             }
         }
+        return follows;
+    }
+    
+    public List<Follow> getAllFollowees(Account account) {
+        List<Follow> follows = new ArrayList<>();
+        for (Follow follow : account.getFollowees()) {
+            if (!follow.isPending()) {
+                follows.add(follow);
+            }
+        }
+        Collections.sort(follows, (f1, f2) -> {
+           return f1.getFollowee().getName().compareTo(f2.getFollowee().getName());
+        });
+        return follows;
+    }
+    
+    public List<Follow> getAllFollowers(Account account) {
+        List<Follow> follows = new ArrayList<>();
+        for (Follow follow : account.getFollowers()) {
+            if (!follow.isPending()) {
+                follows.add(follow);
+            }
+        }
+        Collections.sort(follows, (f1, f2) -> {
+           return f1.getFollower().getName().compareTo(f2.getFollower().getName());
+        });
         return follows;
     }
     

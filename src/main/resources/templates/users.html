@@ -7,10 +7,20 @@
     <body>
 
         <div th:replace="fragments/layout :: header(currentUser=${currentUser})"></div>
-        
+
         <button class="go-up">&uarr;</button>
-        
-        <div th:replace="fragments/layout :: listUsers(users=${users}, followedUsernames=${followedUsernames}, title=${title}, id=${id}+'0')"></div>
+
+        <div th:switch="${whatToShow}">
+            <div th:case="0">
+                <div th:replace="fragments/layout :: listUsers(users=${users}, follows=${follows}, followedUsernames=${followedUsernames}, title=${title}, id=${id})"></div>
+            </div>
+            <div th:case="1">
+                <div th:replace="fragments/layout :: listFollowees(follows=${follows}, followedUsernames=${followedUsernames}, title=${title}, id=${id})"></div>
+            </div>
+            <div th:case="2">
+                <div th:replace="fragments/layout :: listFollowers(follows=${follows}, followedUsernames=${followedUsernames}, title=${title}, id=${id})"></div>
+            </div>
+        </div>
 
         <div th:replace="fragments/layout :: footer"></div>
 
