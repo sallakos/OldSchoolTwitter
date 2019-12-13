@@ -84,7 +84,7 @@
                 </div>
             </div>
         </div>
-
+        
         <div th:fragment="likeSection(target, type, currentUser, currentUserLikedX)">
             <form th:id="'l' + ${type.substring(0,1)} + 'f' + ${target.id}" class="form-inline" th:classappend="${type == 'message'} ? 'messagelike' : 'picturelike'">
                 <button th:if="${target.owner != currentUser}" th:id="'l' + ${type.substring(0,1)} + 'b' + ${target.id}" th:name="${type} + 'Id'" th:value="${target.owner.username} + '-' + ${target.id}" type="submit" data-toggle="tooltip" data-placement="bottom" class="btn btn-like" th:title="${!currentUserLikedX.contains(target) ? 'Tykkää' : 'En tykkääkään'}">
@@ -119,8 +119,8 @@
                 </div>
             </div>
         </div>
-        
-        
+
+
         <div th:fragment="sendComment(username, currentUser, target, type)" class="container-fluid">
             <div class="row">
                 <div class="flex-left">

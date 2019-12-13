@@ -1,6 +1,7 @@
 package projekti;
 
 /**
+ * Kommentteihin liittyvät tietokantakyselyt.
  * 
  * @author Salla Koskinen
  */

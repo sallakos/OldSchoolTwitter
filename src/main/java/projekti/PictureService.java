@@ -8,6 +8,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * 
+ * @author Salla Koskinen
+ */
 @Service
 public class PictureService {
 

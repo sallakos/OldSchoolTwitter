@@ -1,6 +1,7 @@
 package projekti;
 
 /**
+ * Kuviin liittyvät tietokantakyselyt.
  * 
  * @author Salla Koskinen
  */

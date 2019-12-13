@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Kuviin liittyvät get- ja post-pyynnöt.
+ * 
+ * @author Salla Koskinen
+ */
 @Controller
 public class PictureController {
 
@@ -44,6 +49,9 @@ public class PictureController {
                 model.addAttribute("galleryTitle", "Sinun kuvasi");
             } 
             System.out.println("THYMELEAFIN TEKEMIÄ KYSELYJÄ:");
+            // Thymeleaf hakee tietokannasta tiedon, onko nykyinen käyttäjä tykännyt kuvasta vai ei. Lisäksi haetaan jokaisen kuvan tykkäykset erikseen.
+            // Jokainen kuva aiheuttaa kaksi tietokantakyselyä, koska varmistetaan, onko käyttäjällä oikeus nähdä kuva.
+            // Lisäksi jokainen sivulla mahdollisesti esiintyvä profiilikuva haetaan erikseen.
             return "galleria";
         }
         return "forbidden";

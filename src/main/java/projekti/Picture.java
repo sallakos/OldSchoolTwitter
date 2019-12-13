@@ -8,7 +8,6 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +15,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 
 /**
  * Mallintaa sovelluksen kuvaa.
+ * 
  * @author Salla Koskinen
  */
 @Entity

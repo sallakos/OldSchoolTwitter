@@ -20,8 +20,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
  * @author Salla Koskinen
  */
 @NamedEntityGraph(name = "Account.allUserData",
-                  attributeNodes = {@NamedAttributeNode("pictures"),
-                                    @NamedAttributeNode("profilePicture")})
+                  attributeNodes = {@NamedAttributeNode("pictures")})
 @Entity
 @Data
 @NoArgsConstructor

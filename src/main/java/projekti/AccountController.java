@@ -1,6 +1,7 @@
 package projekti;
 
 /**
+ * Käyttäjään liittyvät get- ja post-pyynnöt.
  * 
  * @author Salla Koskinen
  */

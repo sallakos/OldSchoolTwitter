@@ -30,9 +30,9 @@
 
                         <div class="container-fluid mt-4">
                             <h6><span th:text="${userFollowsWho}">KEITÄ</span> <span class="small text-muted">[<span th:text="${numberOfFollowees}">MÄÄRÄ</span>]</span></h6>
-                            <div class="row justify-content-center">
+                            <div class="row justify-content-center follow-users">
                                 <div th:each="user : ${followees}" class="col-4 p-0">
-                                    <a th:href="@{/{username}(username=${user.followee.username})}" data-toggle="tooltip" data-placement="bottom" data-html="true" th:title="${user.followee.name} + '<br> alkaen ' + ${#temporals.format(user.startOfFollow, 'd.M.yyyy')}">
+                                    <a th:href="@{/{username}(username=${user.followee.username})}" data-toggle="tooltip" data-placement="bottom" data-html="true" th:title="${user.followee.name}">
                                         <div th:replace="fragments/layout :: profilePicture(${user.followee}, true)"></div>
                                     </a>
                                 </div>
@@ -44,7 +44,7 @@
                             <h6><span th:text="${whoFollowsUser}">KETKÄ</span> <span class="small text-muted">[<span th:text="${numberOfFollowers}">MÄÄRÄ</span>]</span></h6>
                             <div class="row justify-content-center follow-users">
                                 <div th:each="user : ${followers}" class="col-4 p-0">
-                                    <a th:href="@{/{username}(username=${user.follower.username})}" data-toggle="tooltip" data-placement="bottom" data-html="true" th:title="${user.follower.name} + '<br> alkaen ' + ${#temporals.format(user.startOfFollow, 'd.M.yyyy')}">
+                                    <a th:href="@{/{username}(username=${user.follower.username})}" data-toggle="tooltip" data-placement="bottom" data-html="true" th:title="${user.follower.name}">
                                         <div th:replace="fragments/layout :: profilePicture(${user.follower}, true)"></div>
                                     </a>
                                 </div>
@@ -52,42 +52,38 @@
                             <a th:href="@{/{username}/seuraajat(username=${username})}" class="small text-muted">Näytä kaikki</a>
                         </div>
 
-                        <div>
-                            <div th:id="'pr-' + ${username}" th:if="${friendStatus == 2}" class="container-fluid mt-5">
-                                <div>
-                                    <h6>Uudet seuraamispyynnöt</h6>
-                                    <div th:id="'nr-' + ${username}"><p th:if="${numberOfPendingRequests == 0}" class="small text-muted">Ei seuraamispyyntöjä.</p></div>
-                                    <div th:each="user : ${pendingRequests}">
-                                        <div th:id="'pru-' + ${username} + '-' + ${user.username}" class="row justify-content-center mb-3">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <button th:id="'fr-' + ${username} + '-' + ${user.username}" class="btn btn-light pending-request-button">
-                                                        <div class="media">
-                                                            <div th:replace="fragments/layout :: profilePicture(${user}, true)"></div>
-                                                            <div class="media-body">
-                                                                <p th:text="${user.name.length() < 20 ? user.name : user.name.substring(0,20) + '...' }" class="text"></p>
-                                                                <p>@<span th:text="${user.username}" class="text"></span></p>
-                                                            </div>
-                                                        </div>
-                                                    </button>
-                                                    <div class="container-fluid">
-                                                        <div class="row">
-                                                            <div class="col">
-                                                                <form th:id="'pra-' + ${username} + '-' + ${user.username}" class="req request-accept">
-                                                                    <input type="submit" name="accept" value="Hyväksy" class="btn btn-sm btn-dark center-block" />
-                                                                </form>
-                                                            </div>
-                                                            <div class="col">
-                                                                <form th:id="'prd-' + ${username} + '-' + ${user.username}" class="req equest-decline">
-                                                                    <input type="submit" name="decline" value="Hylkää" class="btn btn-sm btn-dark" />
-                                                                </form>
-                                                            </div>
-                                                        </div>
+
+                        <div th:id="'pr-' + ${username}" th:if="${friendStatus == 2}" class="container-fluid mt-5">
+                            <h6>Uudet seuraamispyynnöt</h6>
+                            <div th:id="'nr-' + ${username}"><p th:if="${numberOfPendingRequests == 0}" class="small text-muted">Ei seuraamispyyntöjä.</p></div>
+                            <div th:each="user : ${pendingRequests}">
+                                <div th:id="'pru-' + ${username} + '-' + ${user.username}" class="row justify-content-center mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <button th:id="'fr-' + ${username} + '-' + ${user.username}" class="btn btn-light pending-request-button">
+                                                <div class="media">
+                                                    <div th:replace="fragments/layout :: profilePicture(${user}, true)"></div>
+                                                    <div class="media-body">
+                                                        <p th:text="${user.name.length() < 20 ? user.name : user.name.substring(0,20) + '...' }" class="text"></p>
+                                                        <p>@<span th:text="${user.username}" class="text"></span></p>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <form th:id="'pra-' + ${username} + '-' + ${user.username}" class="req request-accept">
+                                                            <input type="submit" name="accept" value="Hyväksy" class="btn btn-sm btn-dark center-block" />
+                                                        </form>
+                                                    </div>
+                                                    <div class="col">
+                                                        <form th:id="'prd-' + ${username} + '-' + ${user.username}" class="req equest-decline">
+                                                            <input type="submit" name="decline" value="Hylkää" class="btn btn-sm btn-dark" />
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
