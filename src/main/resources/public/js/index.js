@@ -57,7 +57,8 @@ $('.usersearch').keyup(function() {
   let input = document.querySelector('[id^="search"]');
   let filter = input.value.toUpperCase();
   const ul = document.getElementById('userList');
-  const li = ul.getElementsByTagName('div');
+  const li = ul.getElementsByClassName('userData');
+  console.log(li)
 
   if (filter.startsWith('@')) {
     for (let i = 0; i < li.length; i++) {
@@ -71,7 +72,7 @@ $('.usersearch').keyup(function() {
     }
   } else {
     for (let i = 0; i < li.length; i++) {
-      let a = li[i].getElementsByTagName('a')[0];
+      let a = li[i].getElementsByTagName('h5')[0];
       let txtValue = a.textContent || a.innerText;
       if (txtValue.toUpperCase().indexOf(filter) > -1) {
         li[i].style.display = '';
@@ -92,29 +93,35 @@ $('.messagesend').submit(function(e) {
     type: 'POST',
     data: $('#' + id).serialize(),
     success: function() {
-      $('#allmessages').load('/' + user + ' #allmessages');
+      $('#allmessages').load('/' + user + ' #allmessagesc', function() {
+        updateCommentMessage();
+        updateLikeMessage();
+      });
       $('#' + user + '-sm textarea').val('');
     }
   });
 });
 
 // Lähetetään kommentti, ei päivitetä sivua.
-$('.commentmessage').submit(function(e) {
-  e.preventDefault();
-  const id = this.id;
-  const target = id.split('-');
-  const user = target[0];
-  const idnro = target[2];
-  $.ajax({
-    url: '/' + user + '/messages/' + idnro + '/comment',
-    type: 'POST',
-    data: $('#' + id).serialize(),
-    success: function() {
-      $('#c-' + idnro).load('/' + user + ' #c-' + idnro);
-      $('#' + id + ' textarea').val('');
-    }
+updateCommentMessage = function() {
+  $('.commentmessage').submit(function(e) {
+    e.preventDefault();
+    const id = this.id;
+    const target = id.split('-');
+    const user = target[0];
+    const idnro = target[2];
+    $.ajax({
+      url: '/' + user + '/messages/' + idnro + '/comment',
+      type: 'POST',
+      data: $('#' + id).serialize(),
+      success: function() {
+        $('#c-' + idnro).load('/' + user + ' #c-' + idnro);
+        $('#' + id + ' textarea').val('');
+      }
+    });
   });
-});
+};
+updateCommentMessage(); // Kutsutaan funktiota.
 
 // Lähetetään kommentti, ei päivitetä sivua.
 $('.commentpicture').submit(function(e) {
@@ -135,30 +142,33 @@ $('.commentpicture').submit(function(e) {
 });
 
 // Tykätään viestistä, ei päivitetä sivua.
-$('.messagelike').submit(function(e) {
-  e.preventDefault();
-  const id = this.id;
-  const idnro = id.replace('lmf', '');
-  const target = $('#lmb' + idnro).val().split('-');
-  const user = target[0];
-  const title = $('#lmb' + idnro).attr('data-original-title');
-  $.ajax({
-    url: '/' + user + '/messages/' + idnro + '/like',
-    type: 'POST',
-    data: $('#' + id).serialize(),
-    success: function() {
-      $('#lmb' + idnro).load('/' + user + ' #lmb' + idnro + ' i');
-      $('#lm' + idnro).load('/' + user + ' #lm' + idnro);
-      if (!isTouchDevice()) {
-        if (!title.localeCompare('Tykkää')) {
-          $('#lmb' + idnro).attr('data-original-title', 'En tykkääkään').tooltip('show');
-        } else {
-          $('#lmb' + idnro).attr('data-original-title', 'Tykkää').tooltip('show');
+updateLikeMessage = function() {
+  $('.messagelike').submit(function(e) {
+    e.preventDefault();
+    const id = this.id;
+    const idnro = id.replace('lmf', '');
+    const target = $('#lmb' + idnro).val().split('-');
+    const user = target[0];
+    const title = $('#lmb' + idnro).attr('data-original-title');
+    $.ajax({
+      url: '/' + user + '/messages/' + idnro + '/like',
+      type: 'POST',
+      data: $('#' + id).serialize(),
+      success: function() {
+        $('#lmb' + idnro).load('/' + user + ' #lmb' + idnro + ' i');
+        $('#lm' + idnro).load('/' + user + ' #lm' + idnro);
+        if (!isTouchDevice()) {
+          if (!title.localeCompare('Tykkää')) {
+            $('#lmb' + idnro).attr('data-original-title', 'En tykkääkään').tooltip('show');
+          } else {
+            $('#lmb' + idnro).attr('data-original-title', 'Tykkää').tooltip('show');
+          }
         }
       }
-    }
+    });
   });
-});
+};
+updateLikeMessage(); // Kutsutaan funktiota.
 
 // Tykätään kuvasta, ei päivitetä sivua.
 $('.picturelike').submit(function(e) {

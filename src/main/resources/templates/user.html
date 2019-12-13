@@ -21,7 +21,7 @@
                         <div class="text-break">
                             <h1 th:text="${name}">OMA NIMI</h1>
                         </div>
-                        <div th:replace="fragments/layout :: profilePicture(${profilePicture})"></div>
+                        <div th:replace="fragments/layout :: profilePicture(${account}, false)"></div>
 
                         <div th:if="${friendStatus >= 1}">
                             <button type="button" id="btn-allmessages" class="nav-btn btn btn-sm btn-dark d-xl-none">Viestit</button>
@@ -33,7 +33,7 @@
                             <div class="row justify-content-center">
                                 <div th:each="user : ${followees}" class="col-4 p-0">
                                     <a th:href="@{/{username}(username=${user.followee.username})}" data-toggle="tooltip" data-placement="bottom" data-html="true" th:title="${user.followee.name} + '<br> alkaen ' + ${#temporals.format(user.startOfFollow, 'd.M.yyyy')}">
-                                        <div th:replace="fragments/layout :: profilePictureSmallOnHover(${user.followee})"></div>
+                                        <div th:replace="fragments/layout :: profilePicture(${user.followee}, true)"></div>
                                     </a>
                                 </div>
                             </div>
@@ -45,7 +45,7 @@
                             <div class="row justify-content-center follow-users">
                                 <div th:each="user : ${followers}" class="col-4 p-0">
                                     <a th:href="@{/{username}(username=${user.follower.username})}" data-toggle="tooltip" data-placement="bottom" data-html="true" th:title="${user.follower.name} + '<br> alkaen ' + ${#temporals.format(user.startOfFollow, 'd.M.yyyy')}">
-                                        <div th:replace="fragments/layout :: profilePictureSmallOnHover(${user.follower})"></div>
+                                        <div th:replace="fragments/layout :: profilePicture(${user.follower}, true)"></div>
                                     </a>
                                 </div>
                             </div>
@@ -63,7 +63,7 @@
                                                 <div class="card-body">
                                                     <button th:id="'fr-' + ${username} + '-' + ${user.username}" class="btn btn-light pending-request-button">
                                                         <div class="media">
-                                                            <div th:replace="fragments/layout :: profilePictureSmallOnHover(${user})"></div>
+                                                            <div th:replace="fragments/layout :: profilePicture(${user}, true)"></div>
                                                             <div class="media-body">
                                                                 <p th:text="${user.name.length() < 20 ? user.name : user.name.substring(0,20) + '...' }" class="text"></p>
                                                                 <p>@<span th:text="${user.username}" class="text"></span></p>
@@ -121,70 +121,26 @@
 
                             <div th:if="${friendStatus == 2}" class="mb-4">
                                 <h4>Mitä mietit?</h4>
-                                <form th:id="${username} + '-sm'" class="messagesend">
+                                <form th:id="${username} + '-sm'" class="messagesend"> <!--method="POST" th:action="@{/{username}/messages(username=${username})}"-->
                                     <textarea name="messageText" placeholder="Jaa ajatuksesi!" id="newMessage" class="form-control" rows="3"></textarea>
                                     <input type="submit" class="btn btn-sm btn-dark mt-2 ml-1" />            
                                 </form>
                             </div>
 
-                            <div>
-                                <div id="allmessages">
+                            <div id="allmessages">
+                                <div id="allmessagesc">
                                     <h2>Viestit</h2>
                                     <div th:each="message : ${messages}" class="media p-l-3 pt-3 pb-3">
-                                        <div th:replace="fragments/layout :: profilePictureSmall(${message.owner})"></div>
+                                        <div th:replace="fragments/layout :: profilePictureLink(${message.owner}, 'small')"></div>
                                         <div class="media-body">
                                             <div class="message-section">
                                                 <h5><a th:href="@{/{username}(username=${message.owner.username})}" th:text="${message.owner.name}">LÄHETTÄJÄ</h5></a>
                                                 <p th:text="${message.message}" class="text">VIESTI</p>
                                             </div>
-                                            <div th:replace="fragments/layout :: messageTimeStamp(${message.timeSent})"></div>
-                                            <div>
-                                                <form th:id="'lmf' + ${message.id}" class="form-inline messagelike">
-                                                    <button th:if="${message.owner != currentUser}" th:id="'lmb' + ${message.id}" name="messageId" th:value="${message.owner.username} + '-' + ${message.id}" type="submit" data-toggle="tooltip" data-placement="bottom" class="btn btn-like" th:title="${!currentUserLikedMessages.contains(message) ? 'Tykkää' : 'En tykkääkään'}">
-                                                        <i th:if="${!currentUserLikedMessages.contains(message)}" class="far fa-heart"></i>
-                                                        <i th:if="${currentUserLikedMessages.contains(message)}" class="fas fa-heart"></i>
-                                                    </button>
-                                                    <button th:if="${message.owner == currentUser}" th:id="'lmb' + ${message.id}" class="btn btn-like" disabled>
-                                                        <i class="far fa-heart"></i>
-                                                    </button>
-
-                                                    <span th:id="'lm' + ${message.id}" th:text="${message.likes.size()}" class="btn-like">TYKKÄÄJIÄ</span>
-                                                </form>
-                                            </div>
-                                            <div>
-                                                <h6>Kommentit</h6>
-                                                <div th:id="'c-' + ${message.id}">
-                                                    <p th:if="${message.comments.size() == 0}" class="small text-muted">Ei vielä kommentteja.</p>
-                                                    <p th:if="${message.comments.size() > 10}" class="small text-muted">Näytetään 10 uusinta kommenttia yhteensä <span th:text="${message.comments.size()}">MÄÄRÄ</span> kommentista.</p>
-                                                    <div th:each="comment,iStat : ${message.getLatest10()}">
-                                                        <div class="media">
-                                                            <div th:replace="fragments/layout :: profilePictureSmall(${comment.commenter})"></div>
-                                                            <div class="media-body">
-                                                                <div class="comment-section">
-                                                                    <p class="text">
-                                                                        <a th:href="@{/{username}(username=${comment.commenter.username})}" th:text="${comment.commenter.name}" class="commenter-link">KOMMENTOIJA</a>
-                                                                        <span th:text="${comment.comment}">KOMMENTTI</span>
-                                                                    </p>
-                                                                </div>
-                                                                <div th:replace="fragments/layout :: timeStamp(${comment.timeSent})"></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="container-fluid">
-                                                    <div class="row">
-                                                        <div class="flex-left">
-                                                            <div th:replace="fragments/layout :: profilePictureSmall(${currentUser})"></div>
-                                                        </div>
-                                                        <div class="flex-right">
-                                                            <form th:id="${username} + '-cm-' + ${message.id}" class="commentmessage">
-                                                                <textarea name="commentText" placeholder="Kirjoita kommentti..." id="newComment" class="form-control" rows="3"></textarea>
-                                                                <button name="messageId" th:value="${message.id}" type="submit" class="btn btn-sm btn-dark mt-2 ml-1">Lähetä</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <div th:replace="fragments/layout :: timeStamp(${message.timeSent}, true)"></div>
+                                            <div th:replace="fragments/layout :: likeSection(${message}, 'message', ${currentUser}, ${currentUserLikedMessages})"></div>
+                                            <div th:replace="fragments/layout :: commentSection(${message.comments.size()}, ${message.getLatest10()}, ${message.id})"></div>
+                                            <div th:replace="fragments/layout :: sendComment(${username}, ${currentUser}, ${message}, 'message')"></div>
                                         </div>
                                     </div>
                                 </div>

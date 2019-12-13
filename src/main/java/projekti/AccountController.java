@@ -65,6 +65,7 @@ public class AccountController {
     public String showUser(Model model, @PathVariable String username) {
         Account account = accountService.findByUsername(username); // SQL
         Account currentUser = accountService.currentUser(); // SQL
+        model.addAttribute("account", account);
         model.addAttribute("name", account.getName());
         model.addAttribute("profilePicture", account.getProfilePicture());
         model.addAttribute("currentUser", currentUser);
@@ -120,7 +121,7 @@ public class AccountController {
         model.addAttribute("currentUser", currentUser.getUsername());
         model.addAttribute("followedUsernames", accountService.getFollowedUsernames(currentUser)); // SQL
         model.addAttribute("follows", accountService.getAllFollowees(account)); // SQL
-        model.addAttribute("id", "search" + account.getId());
+        model.addAttribute("id", "search" + account.getId() + "1");
         if (accountService.isCurrentUser(username)) {
             model.addAttribute("title", "Käyttäjät, joita seuraat:");
         } else {
@@ -140,7 +141,7 @@ public class AccountController {
         model.addAttribute("currentUser", currentUser.getUsername());
         model.addAttribute("followedUsernames", accountService.getFollowedUsernames(currentUser)); // SQL
         model.addAttribute("follows", accountService.getAllFollowers(account)); // SQL
-        model.addAttribute("id", "search" + account.getId());
+        model.addAttribute("id", "search" + account.getId() + "2");
         if (accountService.isCurrentUser(username)) {
             model.addAttribute("title", "Sinun seuraajasi:");
         } else {

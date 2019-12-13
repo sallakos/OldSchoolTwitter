@@ -30,114 +30,127 @@
             <hr />
         </header>
 
-        <div th:fragment="listUsers(users, follows, followedUsernames, title, id)" class="container-fluid my-content setwidth">
+        <div th:fragment="userListHeader(title, id)">
             <h1 th:text="${title}">Käyttäjät</h1>
             <input type="text" th:id="${id}" placeholder="Etsi käyttäjiä" class="usersearch search-width form-control col-6" />
             <small class="form-text text-muted mb-4 ml-1">Voit etsiä käyttäjiä nimellä, tai käyttäjänimellä kirjoittamalla alkuun @.</small>
+        </div>
+
+        <div th:fragment="listUser(user, startOfFollow, currentUser, followedUsernames)" class="media">
+            <div th:replace="fragments/layout :: profilePictureLink(${user}, 'medium')"></div>
+            <div class="media-body pl-3">
+                <h5 class="mt-3 mb-0"><a th:href="@{/{id}(id=${user.username})}" th:text="${user.name}">NIMI</a></h5>
+                <p th:classappend="${startOfFollow != null} ? 'text'">@<span th:text="${user.username}" class="text">KÄYTTÄJÄNIMI</span></p>
+                <div th:if="${startOfFollow != null}" class="text-muted xtra-small ml-1">alkaen <span th:text="${#temporals.format(startOfFollow, 'd.M.yyyy')}">AIKA</span></div>
+                <form th:if="${!currentUser.equals(user.username)}" th:id="'f_' + ${user.username}" class="follow">
+                    <button th:id="'fb_' + ${user.username}" name="followUser" type="submit" class="btn btn-sm btn-dark" th:classappend="${startOfFollow != null} ? 'mt-3'">
+                        <span th:if="${!followedUsernames.containsKey(user.username)}" th:id="'fs_' + ${user.username}">Seuraa</span>
+                        <span th:if="${followedUsernames.containsKey(user.username) && followedUsernames.get(user.username)}" th:id="'fs_' + ${user.username}">Peru pyyntö</span>
+                        <span th:if="${followedUsernames.containsKey(user.username) && !followedUsernames.get(user.username)}" th:id="'fs_' + ${user.username}">Lopeta seuraaminen</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div th:fragment="listUsers(users, followedUsernames, title, id)" class="container-fluid my-content setwidth">
+            <div th:replace="fragments/layout :: userListHeader(${title}, ${id})"></div>
             <div class="container-fluid">
                 <div class="row justify-content-center" id="userList">
-                    <div th:each="user : ${users}" class="col-12 mb-3">
-                        <div class="media">
-                            <img th:if="${user.profilePicture == null}" src="/img/default.jpg" class="medium-profile-img align-self-center" />
-                            <img th:if="${user.profilePicture != null}" th:src="@{/{username}/kuvat/profiilikuva(username=${user.username})}" class="medium-profile-img align-self-center" />
-                            <div class="media-body pl-3">
-                                <h5 class="mt-3 mb-0"><a th:href="@{/{id}(id=${user.username})}" th:text="${user.name}">NIMI</a></h5>
-                                <p>@<span th:text="${user.username}" class="text">KÄYTTÄJÄNIMI</span></p>
-                                <form th:if="${!currentUser.equals(user.username)}" th:id="'f_' + ${user.username}" class="follow">
-                                    <button th:id="'fb_' + ${user.username}" name="followUser" type="submit" class="btn btn-sm btn-dark">
-                                        <span th:if="${!followedUsernames.containsKey(user.username)}" th:id="'fs_' + ${user.username}">Seuraa</span>
-                                        <span th:if="${followedUsernames.containsKey(user.username) && followedUsernames.get(user.username)}" th:id="'fs_' + ${user.username}">Peru pyyntö</span>
-                                        <span th:if="${followedUsernames.containsKey(user.username) && !followedUsernames.get(user.username)}" th:id="'fs_' + ${user.username}">Lopeta seuraaminen</span>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
+                    <div th:each="user : ${users}" class="col-12 mb-3 userData">
+                        <div th:replace="fragments/layout :: listUser(${user}, null, ${currentUser}, ${followedUsernames})"></div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div th:fragment="listFollowees(follows, followedUsernames, title, id)" class="container-fluid my-content setwidth">
-            <h1 th:text="${title}">Käyttäjät</h1>
-            <input type="text" th:id="${id}" placeholder="Etsi käyttäjiä" class="usersearch search-width form-control col-6" />
-            <small class="form-text text-muted mb-4 ml-1">Voit etsiä käyttäjiä nimellä, tai käyttäjänimellä kirjoittamalla alkuun @.</small>
+            <div th:replace="fragments/layout :: userListHeader(${title}, ${id})"></div>
             <div class="container-fluid">
                 <div class="row justify-content-center" id="userList">
-                    <div th:each="user : ${follows}" class="col-12 mb-3">
-                        <div class="media">
-                            <img th:if="${user.followee.profilePicture == null}" src="/img/default.jpg" class="medium-profile-img align-self-center" />
-                            <img th:if="${user.followee.profilePicture != null}" th:src="@{/{username}/kuvat/profiilikuva(username=${user.followee.username})}" class="medium-profile-img align-self-center" />
-                            <div class="media-body pl-3">
-                                <h5 class="mt-3 mb-0"><a th:href="@{/{id}(id=${user.followee.username})}" th:text="${user.followee.name}">NIMI</a></h5>
-                                <p class="text">@<span th:text="${user.followee.username}" class="text">KÄYTTÄJÄNIMI</span></p>
-                                <small class="text-muted">Alkaen <span th:text="${#temporals.format(user.startOfFollow, 'd.M.yyyy')}">AIKA</span></small>
-                                <form th:if="${!currentUser.equals(user.followee.username)}" th:id="'f_' + ${user.followee.username}" class="follow">
-                                    <button th:id="'fb_' + ${user.followee.username}" name="followUser" type="submit" class="btn btn-sm btn-dark mt-3">
-                                        <span th:if="${!followedUsernames.containsKey(user.followee.username)}" th:id="'fs_' + ${user.followee.username}">Seuraa</span>
-                                        <span th:if="${followedUsernames.containsKey(user.followee.username) && followedUsernames.get(user.followee.username)}" th:id="'fs_' + ${user.followee.username}">Peru pyyntö</span>
-                                        <span th:if="${followedUsernames.containsKey(user.followee.username) && !followedUsernames.get(user.followee.username)}" th:id="'fs_' + ${user.followee.username}">Lopeta seuraaminen</span>
-                                    </button>
-                                </form>
+                    <div th:each="user : ${follows}" class="col-12 mb-3 userData">
+                        <div th:replace="fragments/layout :: listUser(${user.followee}, ${user.startOfFollow}, ${currentUser}, ${followedUsernames})"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:fragment="listFollowers(follows, followedUsernames, title, id)" class="container-fluid my-content setwidth">
+            <div th:replace="fragments/layout :: userListHeader(${title}, ${id})"></div>
+            <div class="container-fluid">
+                <div class="row justify-content-center" id="userList">
+                    <div th:each="user : ${follows}" class="col-12 mb-3 userData">
+                        <div th:replace="fragments/layout :: listUser(${user.follower}, ${user.startOfFollow}, ${currentUser}, ${followedUsernames})"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:fragment="likeSection(target, type, currentUser, currentUserLikedX)">
+            <form th:id="'l' + ${type.substring(0,1)} + 'f' + ${target.id}" class="form-inline" th:classappend="${type == 'message'} ? 'messagelike' : 'picturelike'">
+                <button th:if="${target.owner != currentUser}" th:id="'l' + ${type.substring(0,1)} + 'b' + ${target.id}" th:name="${type} + 'Id'" th:value="${target.owner.username} + '-' + ${target.id}" type="submit" data-toggle="tooltip" data-placement="bottom" class="btn btn-like" th:title="${!currentUserLikedX.contains(target) ? 'Tykkää' : 'En tykkääkään'}">
+                    <i th:if="${!currentUserLikedX.contains(target)}" class="far fa-heart"></i>
+                    <i th:if="${currentUserLikedX.contains(target)}" class="fas fa-heart"></i>
+                </button>
+                <button th:if="${target.owner == currentUser}" th:id="'l' + ${type.substring(0,1)} + 'b' + ${target.id}" class="btn btn-like" disabled>
+                    <i class="far fa-heart"></i>
+                </button>
+                <span th:id="'l' + ${type.substring(0,1)} + ${target.id}" th:text="${target.likes.size()}" class="btn-like">TYKKÄÄJIÄ</span>
+            </form>
+        </div>
+
+        <div th:fragment="commentSection(allComments, comments, id)">
+            <h6>Kommentit</h6>
+            <div th:id="'c-' + ${id}">
+                <p th:if="${allComments == 0}" class="small text-muted">Ei vielä kommentteja.</p>
+                <p th:if="${allComments > 10}" class="small text-muted">Näytetään 10 uusinta kommenttia yhteensä <span th:text="${allComments}">MÄÄRÄ</span> kommentista.</p>
+                <div th:each="comment : ${comments}">
+                    <div class="media">
+                        <div th:replace="fragments/layout :: profilePictureLink(${comment.commenter}, 'small')"></div>
+                        <div class="media-body">
+                            <div class="comment-section">
+                                <p class="text">
+                                    <a th:href="@{/{username}(username=${comment.commenter.username})}" th:text="${comment.commenter.name}" class="commenter-link">KOMMENTOIJA</a>
+                                    <span th:text="${comment.comment}">KOMMENTTI</span>
+                                </p>
                             </div>
+                            <div th:replace="fragments/layout :: timeStamp(${comment.timeSent}, ${false})"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div th:fragment="listFollowers(follows, followedUsernames, title, id)" class="container-fluid my-content setwidth">
-            <h1 th:text="${title}">Käyttäjät</h1>
-            <input type="text" th:id="${id}" placeholder="Etsi käyttäjiä" class="usersearch search-width form-control col-6" />
-            <small class="form-text text-muted mb-4 ml-1">Voit etsiä käyttäjiä nimellä, tai käyttäjänimellä kirjoittamalla alkuun @.</small>
-            <div class="container-fluid">
-                <div class="row justify-content-center" id="userList">
-                    <div th:each="user : ${follows}" class="col-12 mb-3">
-                        <div class="media">
-                            <img th:if="${user.follower.profilePicture == null}" src="/img/default.jpg" class="medium-profile-img align-self-center" />
-                            <img th:if="${user.follower.profilePicture != null}" th:src="@{/{username}/kuvat/profiilikuva(username=${user.follower.username})}" class="medium-profile-img align-self-center" />
-                            <div class="media-body pl-3">
-                                <h5 class="mt-3 mb-0"><a th:href="@{/{id}(id=${user.follower.username})}" th:text="${user.follower.name}">NIMI</a></h5>
-                                <p class="text">@<span th:text="${user.follower.username}" class="text">KÄYTTÄJÄNIMI</span></p>
-                                <small class="text-muted">Alkaen <span th:text="${#temporals.format(user.startOfFollow, 'd.M.yyyy')}">AIKA</span></small>
-                                <form th:if="${!currentUser.equals(user.follower.username)}" th:id="'f_' + ${user.follower.username}" class="follow">
-                                    <button th:id="'fb_' + ${user.follower.username}" name="followUser" type="submit" class="btn btn-sm btn-dark mt-3">
-                                        <span th:if="${!followedUsernames.containsKey(user.follower.username)}" th:id="'fs_' + ${user.followee.username}">Seuraa</span>
-                                        <span th:if="${followedUsernames.containsKey(user.follower.username) && followedUsernames.get(user.follower.username)}" th:id="'fs_' + ${user.follower.username}">Peru pyyntö</span>
-                                        <span th:if="${followedUsernames.containsKey(user.follower.username) && !followedUsernames.get(user.follower.username)}" th:id="'fs_' + ${user.follower.username}">Lopeta seuraaminen</span>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+        
+        <div th:fragment="sendComment(username, currentUser, target, type)" class="container-fluid">
+            <div class="row">
+                <div class="flex-left">
+                    <div th:replace="fragments/layout :: profilePictureLink(${currentUser}, 'small')"></div>
+                </div>
+                <div class="flex-right">
+                    <form th:id="${username} + '-c' + ${type.substring(0,1)} + '-' + ${target.id}" th:class="comment + ${type}">
+                        <textarea name="commentText" placeholder="Kirjoita kommentti..." id="newComment" class="form-control" rows="3"></textarea>
+                        <button th:name="${type} + 'Id'" th:value="${target.id}" type="submit" class="btn btn-sm btn-dark mt-2 ml-1">Lähetä</button>
+                    </form>
                 </div>
             </div>
         </div>
 
-        <div th:fragment="profilePicture(isNull)" th:switch="${isNull}">
-            <img th:case="null" src="/img/default.jpg" class="profile-img" />
-            <img th:case="*" th:src="@{/{username}/kuvat/profiilikuva(username=${username})}" class="profile-img" />
+        <div th:fragment="profilePicture(account, isSmall)">
+            <img th:if="${account.profilePicture == null}" src="/img/default.jpg" th:classappend="${isSmall} ? 'small-profile-img' : 'profile-img'" />
+            <img th:if="${account.profilePicture != null}" th:src="@{/{username}/kuvat/profiilikuva(username=${account.username})}" th:classappend="${isSmall} ? 'small-profile-img' : 'profile-img'" />
         </div>
 
-        <div th:fragment="profilePictureSmall(account)">
-            <a th:if="${account.profilePicture == null}" th:href="@{/{username}(username=${account.username})}">
-                <img src="/img/default.jpg" class="small-profile-img" />
+        <div th:fragment="profilePictureLink(account, size)" th:classappend="${size.equals('medium')} ? 'align-self-center'">
+            <a th:if="${account.profilePicture == null}" th:href="@{/{username}(username=${account.username})}" th:classappend="${size.equals('medium')} ? 'align-self-center'">
+                <img src="/img/default.jpg" th:classappend="${size.equals('small')} ? 'small-profile-img' : 'medium-profile-img'" />
             </a>
-            <a th:if="${account.profilePicture != null}" th:href="@{/{username}(username=${account.username})}">
-                <img th:src="@{/{username}/kuvat/profiilikuva(username=${account.username})}"  class="small-profile-img" />
+            <a th:if="${account.profilePicture != null}" th:href="@{/{username}(username=${account.username})}" th:classappend="${size.equals('medium')} ? 'align-self-center'">
+                <img th:src="@{/{username}/kuvat/profiilikuva(username=${account.username})}" th:classappend="${size.equals('small')} ? 'small-profile-img' : 'medium-profile-img'" />
             </a>
         </div>
 
-        <div th:fragment="profilePictureSmallOnHover(account)">
-            <img th:if="${account.profilePicture == null}" src="/img/default.jpg" class="small-profile-img hover" />
-            <img th:if="${account.profilePicture != null}" th:src="@{/{username}/kuvat/profiilikuva(username=${account.username})}"  class="small-profile-img hover" />
-        </div>
-
-        <div th:fragment="timeStamp(date)">
-            <p th:text="${#temporals.format(date, 'd.M.yyyy HH:mm')}" class="small text-muted ml-2">AIKA</p>
-        </div>
-
-        <div th:fragment="messageTimeStamp(date)">
-            <p th:text="${#temporals.format(date, 'd.M.yyyy HH:mm')}" class="small text-muted ml-2 mb-1">AIKA</p>
+        <div th:fragment="timeStamp(date, isMessage)">
+            <p th:text="${#temporals.format(date, 'd.M.yyyy HH:mm')}" class="small text-muted ml-2" th:classappend="${isMessage} ? 'mb-1'">AIKA</p>
         </div>
 
         <footer th:fragment="footer">

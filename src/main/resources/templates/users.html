@@ -12,7 +12,7 @@
 
         <div th:switch="${whatToShow}">
             <div th:case="0">
-                <div th:replace="fragments/layout :: listUsers(users=${users}, follows=${follows}, followedUsernames=${followedUsernames}, title=${title}, id=${id})"></div>
+                <div th:replace="fragments/layout :: listUsers(users=${users}, followedUsernames=${followedUsernames}, title=${title}, id=${id})"></div>
             </div>
             <div th:case="1">
                 <div th:replace="fragments/layout :: listFollowees(follows=${follows}, followedUsernames=${followedUsernames}, title=${title}, id=${id})"></div>

@@ -97,6 +97,11 @@ a:hover {
     text-align: center;
 }
 
+.xtra-small {
+    font-size: small;
+    line-height: 10px;
+}
+
 .profile-img {
     width: 150px;
     height: 150px;
