@@ -3,13 +3,6 @@ body {
     padding: 0 10%;
 }
 
-.heading {
-    font-family: 'Lakki Reddy', cursive;
-    font-size: 100px;
-    margin-top: 30px;
-    margin-bottom: 0px;
-}
-
 h6 {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -24,29 +17,15 @@ a:hover {
     text-decoration: none;
 }
 
+.heading {
+    font-family: 'Lakki Reddy', cursive;
+    font-size: 100px;
+    margin-top: 30px;
+    margin-bottom: 0px;
+}
+
 .align-text-right {
     text-align: right;
-}
-
-.follow-users {
-    margin: auto;
-}
-
-.setwidth {
-    width: 95%;
-}
-
-.my-nav {
-    background-color: white;
-    padding: 10px 20px;
-    border-radius: 10px;
-    margin-right: 20px;
-}
-
-.my-content {
-    background-color: white;    
-    padding: 20px;
-    border-radius: 10px;
 }
 
 .big-a {
@@ -58,8 +37,71 @@ a:hover {
     text-decoration: none;
 }
 
+.btn-like {
+    font-weight: 400;
+    color: #335d33;
+    text-decoration: none;
+}
+
+.btn-like:hover {
+    color: #68ab68;
+    text-decoration: none;
+}
+
+.btn-like:focus, .btn-like.focus {
+    text-decoration: none;
+    box-shadow: none;
+}
+
+.btn-like:disabled, .btn-like.disabled {
+    color: #335d33;
+    pointer-events: none;
+}
+
+.btn-link {
+    color: black;
+}
+
+.btn-link:hover {
+    color: grey;
+    text-decoration: none;
+}
+
+.card {
+    width: 80%;
+    max-width: 250px;
+}
+
+.card-body {
+    padding: 0;
+}
+
+.card .small-profile-img {
+    margin-left: 0;
+}
+
 .center {
     text-align: center;
+}
+
+.center-form {
+    text-align: center;
+}
+
+.comment-section {
+    background: #e6ffe6;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.commenter-link {
+    color: grey;
+    font-weight: bold;
+}
+
+.commenter-link:hover {
+    color: #bbbbbb;
+    text-decoration: none;
 }
 
 .flex-left {
@@ -70,73 +112,19 @@ a:hover {
     flex: 1;
 }
 
-.message-section {
-    background: #b8deb8;
-    border-radius: 5px;
-    padding: 10px;
+.follow-users {
+    margin: auto;
 }
 
-.comment-section {
-    background: #e6ffe6;
-    border-radius: 5px;
-    padding: 5px;
+.gallery-img {
+    max-width: 100%;
 }
 
-.userdata-section {
-    background: #e6ffe6;
-    border-radius: 5px;
-    padding: 5px;
-    /*margin: 5px;*/
-}
-
-.text {
-    margin: 0;
-}
-
-.center-form {
-    text-align: center;
-}
-
-.xtra-small {
-    font-size: small;
-    line-height: 10px;
-}
-
-.profile-img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 50%;
-    border: solid black 1px;
-    margin: 10px;
-}
-
-.medium-profile-img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 50%;
-    margin: 0 10px;
-}
-
-.small-profile-img {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 50%;
-    margin: 0 10px;
-}
-
-.small-profile-img.hover {
-    margin: 0px;
-}
-
-.search-width {
-    width: 80%;
-    max-width: 1000px;
+.gallery-item {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    border: solid 1px #b8deb8;
 }
 
 .gallery-preview {
@@ -152,27 +140,6 @@ a:hover {
 .gallery-preview:hover {
     cursor: pointer;
     opacity: 1;
-}
-
-.gallery-img {
-    max-width: 100%;
-}
-
-.gallery-item {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    border: solid 1px #b8deb8;
-}
-
-.commenter-link {
-    color: grey;
-    font-weight: bold;
-}
-
-.commenter-link:hover {
-    color: #bbbbbb;
-    text-decoration: none;
 }
 
 .go-up {
@@ -197,26 +164,82 @@ a:hover {
     background-color: #b8deb8;
 }
 
-.btn-like {
-    font-weight: 400;
-    color: #335d33;
-    text-decoration: none;
+.medium-profile-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    margin: 0 10px;
 }
 
-.btn-like:hover {
-    color: #68ab68;
-    text-decoration: none;
+.message-section {
+    background: #b8deb8;
+    border-radius: 5px;
+    padding: 10px;
 }
 
-.btn-like:focus, .btn-like.focus {
-    text-decoration: none;
-    box-shadow: none;
+.my-content {
+    background-color: white;    
+    padding: 20px;
+    border-radius: 10px;
 }
 
-.btn-like:disabled, .btn-like.disabled {
-    color: #335d33;
-    pointer-events: none;
+.my-nav {
+    background-color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-right: 20px;
 }
+
+.profile-img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    border: solid black 1px;
+    margin: 10px;
+}
+
+.search-width {
+    width: 80%;
+    max-width: 1000px;
+}
+
+.setwidth {
+    width: 95%;
+}
+
+.small-profile-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    margin: 0 10px;
+}
+
+.small-profile-img.hover {
+    margin: 0px;
+}
+
+.text {
+    margin: 0;
+}
+
+.userdata-section {
+    background: #e6ffe6;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.xtra-small {
+    font-size: small;
+    line-height: 10px;
+}
+
+/*Override Bootstrap*/
 
 .btn-xs, .btn-group-xs > .btn {
     max-width: 70px;
@@ -232,33 +255,11 @@ a:hover {
     padding-left: 0.375rem;
 }
 
-.btn-link {
-    color: black;
-}
-
-.btn-link:hover {
-    color: grey;
-    text-decoration: none;
-}
-
 [hidden] {
     display: none !important;
 }
 
-.card {
-    /*border: none;*/
-    width: 80%;
-    max-width: 250px;
-}
-
-.card-body {
-    padding: 0;
-}
-
-.card .small-profile-img {
-    margin-left: 0;
-}
-
+/*Smaller screens*/
 @media( max-width: 1650px ) {
     .card {
         width: 100%;
