@@ -58,7 +58,6 @@ $('.usersearch').keyup(function() {
   let filter = input.value.toUpperCase();
   const ul = document.getElementById('userList');
   const li = ul.getElementsByClassName('userData');
-  console.log(li)
 
   if (filter.startsWith('@')) {
     for (let i = 0; i < li.length; i++) {
