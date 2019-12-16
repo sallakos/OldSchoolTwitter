@@ -1,7 +1,10 @@
 package projekti;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import org.fluentlenium.core.FluentPage;
 import static org.fluentlenium.core.filter.FilterConstructor.containingText;
+import static org.fluentlenium.core.filter.FilterConstructor.withClass;
 import static org.fluentlenium.core.filter.FilterConstructor.withId;
 import static org.fluentlenium.core.filter.FilterConstructor.withText;
 import static org.junit.Assert.assertFalse;
@@ -251,6 +254,44 @@ public class ProjektiTest extends org.fluentlenium.adapter.junit.FluentTest {
         
     }
     
+    @Test
+    public void M_postingAndCommentingWorksWithoutRefresh() throws Exception {
+        
+        Account kukkis = accountRepo.findByUsername("kukkis");
+        Account rolle = accountRepo.findByUsername("rolle");
+        
+        // Lähetetään kukkiksen sivuille viesti, tämä näkyy Rollen sivuilla.
+        mockMvc.perform(post("/kukkis/messages").param("messageText", "Kukkiksen viesti").with(user("kukkis")));
+        List<Message> kukkisMessages = messageRepo.getUserMessages(kukkis.getId());
+        Long kukkisId = kukkisMessages.get(kukkisMessages.size() - 1).getId();
+        
+        login("rolle");
+        
+        assertTrue(pageSource().contains("Kukkiksen viesti"));
+        assertFalse(pageSource().contains("Rollen testiviesti!"));
+        assertFalse(pageSource().contains("Rollen testikommentti!"));
+        assertFalse(pageSource().contains("Rollen toinen testikommentti!"));
+        
+        find(".messagesend > .form-control").fill().with("Rollen testiviesti!");
+        find("form", withClass("messagesend")).submit();
+        
+        List<Message> rollesMessages = messageRepo.getUserMessages(rolle.getId());
+        Long rolleId = rollesMessages.get(rollesMessages.size() - 1).getId();
+              
+        assertTrue("Viestin lähettäminen onnistuu.", pageSource().contains("Rollen testiviesti!"));
+        
+        find("#rolle-cm-" + kukkisId + " > .form-control").fill().with("Rollen testikommentti!");
+        find("form", withId("rolle-cm-" + kukkisId)).submit();
+                
+        assertTrue("Kommentin lähettäminen onnistuu.", pageSource().contains("Rollen testikommentti!"));
+        
+        find("#rolle-cm-" + rolleId + " > .form-control").fill().with("Rollen toinen testikommentti!");
+        find("form", withId("rolle-cm-" + rolleId)).submit();
+              
+        assertTrue("Kommentin lähettäminen onnistuu.", pageSource().contains("Rollen toinen testikommentti!"));
+        
+    }
+    
     public void login(String username) {
         goTo("http://localhost:" + port + "/logout");
         goTo("http://localhost:" + port + "/login");
@@ -277,4 +318,5 @@ public class ProjektiTest extends org.fluentlenium.adapter.junit.FluentTest {
         Follow follow = new Follow(account1, account2, LocalDateTime.now(), true);
         followRepo.save(follow);
     }
+    
 }
